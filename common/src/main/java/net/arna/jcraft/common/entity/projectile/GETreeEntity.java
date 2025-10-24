@@ -1,14 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
 import lombok.NonNull;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.GeoAnimatable;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.api.registry.JEntityTypeRegistry;
@@ -25,7 +17,7 @@ import java.util.Set;
 
 import static net.arna.jcraft.api.Attacks.damageLogic;
 
-public class GETreeEntity extends AbstractArrow implements GeoEntity {
+public class GETreeEntity extends AbstractArrow {
     private final Vec3 launchVec;
     private final LivingEntity livingOwner;
 
@@ -98,6 +90,7 @@ public class GETreeEntity extends AbstractArrow implements GeoEntity {
     }
 
     // Animations
+    /*
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     @Override
@@ -116,5 +109,5 @@ public class GETreeEntity extends AbstractArrow implements GeoEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
-    }
+    }*/
 }

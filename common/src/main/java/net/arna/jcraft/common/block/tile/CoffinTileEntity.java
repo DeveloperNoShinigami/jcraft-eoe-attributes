@@ -6,16 +6,15 @@ import net.arna.jcraft.api.registry.JBlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import mod.azure.azurelib.util.AzureLibUtil;
 
 public class CoffinTileEntity extends BlockEntity {
-    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
+    //private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     public CoffinTileEntity(final BlockPos pos, final BlockState state) {
         super(JBlockEntityTypeRegistry.COFFIN_TILE.get(), pos, state);
     }
 
-
+    /*
     @Override
     public void registerControllers(final AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "controller", 30, this::predicate));
@@ -34,5 +33,5 @@ public class CoffinTileEntity extends BlockEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
-    }
+    }*/
 }

@@ -1,12 +1,6 @@
 package net.arna.jcraft.common.entity.vehicle;
 
 import lombok.NonNull;
-import mod.azure.azurelib.core.animatable.GeoAnimatable;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.arna.jcraft.api.registry.JItemRegistry;
@@ -359,6 +353,7 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
     public void addAdditionalSaveData(CompoundTag compound) {}
 
     // Animations
+    /*
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "death", 0, this::deathPredicate));
@@ -402,5 +397,5 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
     private <T extends GeoAnimatable> PlayState deathPredicate(AnimationState<T> state) {
         if (deathTime > 0) return state.setAndContinue(DEATH);
         return PlayState.STOP;
-    }
+    }*/
 }

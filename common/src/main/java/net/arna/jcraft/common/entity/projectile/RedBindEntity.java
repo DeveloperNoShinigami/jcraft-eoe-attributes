@@ -1,14 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
 import lombok.NonNull;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.arna.jcraft.api.registry.JStatusRegistry;
@@ -27,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 import static net.arna.jcraft.api.Attacks.damageLogic;
 
-public class RedBindEntity extends JAttackEntity implements GeoEntity {
+public class RedBindEntity extends JAttackEntity {
     private LivingEntity boundEntity;
     private float boundHealth;
     public static final int LIFE_TIME = 60;
@@ -146,6 +138,7 @@ public class RedBindEntity extends JAttackEntity implements GeoEntity {
     }
 
     // Animations
+    /*
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     @Override
@@ -162,5 +155,5 @@ public class RedBindEntity extends JAttackEntity implements GeoEntity {
     private static final RawAnimation EXPLODE = RawAnimation.begin().thenLoop("animation.red_bind.explode");
     private PlayState predicate(AnimationState<RedBindEntity> state) {
         return state.setAndContinue(hasExploded() ? EXPLODE : IDLE);
-    }
+    }*/
 }

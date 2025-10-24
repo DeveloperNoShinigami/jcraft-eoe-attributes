@@ -1,5 +1,7 @@
 package net.arna.jcraft.common.entity;
 
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.ai.goal.SHAAttackGoal;
@@ -206,18 +208,17 @@ public class SheerHeartAttackEntity extends Mob implements IOwnable {
     }
 
     // Animations
-    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
+    /*private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
-    }
+    }*/
 
-    public static final RawAnimation
-            SHA_WALK = RawAnimation.begin().thenLoop("animation.sha.walk"),
-            SHA_IDLE = RawAnimation.begin().thenLoop("animation.sha.idle");
+    public static final AzCommand SHA_WALK = AzCommand.create("base_controller", "animation.sha.walk", AzPlayBehaviors.LOOP);
+    public static final AzCommand SHA_IDLE = AzCommand.create("base_controller", "animation.sha.idle", AzPlayBehaviors.LOOP);
 
-    private PlayState predicate(AnimationState<SheerHeartAttackEntity> state) {
+    /*private PlayState predicate(AnimationState<SheerHeartAttackEntity> state) {
         state.setAnimation(
                 state.isMoving() ? SHA_WALK : SHA_IDLE
         );
@@ -227,5 +228,5 @@ public class SheerHeartAttackEntity extends Mob implements IOwnable {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
-    }
+    }*/
 }

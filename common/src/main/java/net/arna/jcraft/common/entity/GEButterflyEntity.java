@@ -1,13 +1,5 @@
 package net.arna.jcraft.common.entity;
 
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.common.util.IOwnable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
@@ -30,7 +22,7 @@ import java.util.Arrays;
 
 //todo: possibly merging multiple of these into a bird? it would be essentially another one of these but with more storage
 
-public class GEButterflyEntity extends FlyingMob implements GeoEntity, IOwnable {
+public class GEButterflyEntity extends FlyingMob implements IOwnable {
     public GEButterflyEntity(EntityType<? extends FlyingMob> entityType, Level world) {
         super(entityType, world);
         this.moveControl = new FlyingMoveControl(this, 10, false);
@@ -116,6 +108,7 @@ public class GEButterflyEntity extends FlyingMob implements GeoEntity, IOwnable 
     }
 
     // Animations
+    /*
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     @Override
@@ -135,5 +128,5 @@ public class GEButterflyEntity extends FlyingMob implements GeoEntity, IOwnable 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
-    }
+    }*/
 }

@@ -1,13 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
 import lombok.NonNull;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
@@ -38,7 +31,7 @@ import java.util.Set;
 
 import static net.arna.jcraft.api.Attacks.damageLogic;
 
-public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
+public class LargeIcicleProjectile extends AbstractArrow {
     public static final BlockParticleOption ICE_PARTICLE = new BlockParticleOption(ParticleTypes.BLOCK, Blocks.ICE.defaultBlockState());
     private int ticksInAir;
     private LivingEntity livingOwner;
@@ -314,6 +307,7 @@ public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
     }
 
     // Animations
+    /*
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
@@ -329,5 +323,5 @@ public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
-    }
+    }*/
 }

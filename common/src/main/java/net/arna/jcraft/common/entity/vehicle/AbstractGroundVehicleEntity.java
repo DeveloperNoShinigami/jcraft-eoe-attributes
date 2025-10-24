@@ -3,7 +3,6 @@ package net.arna.jcraft.common.entity.vehicle;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JUtils;
@@ -227,13 +226,4 @@ public abstract class AbstractGroundVehicleEntity extends LivingEntity {
         return null;
     }
 
-    // Animations
-    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
-
-    @Override
-    public final AnimatableInstanceCache getAnimatableInstanceCache() {
-        return cache;
-    }
-
-    // Subclasses must implement registerControllers
 }

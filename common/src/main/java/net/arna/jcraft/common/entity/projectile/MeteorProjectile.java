@@ -1,15 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
 import lombok.NonNull;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.GeoAnimatable;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.entity.stand.MagiciansRedEntity;
@@ -47,7 +38,7 @@ import java.util.Set;
 import static net.arna.jcraft.api.Attacks.damageLogic;
 import static net.arna.jcraft.common.util.JUtils.canDamage;
 
-public class MeteorProjectile extends AbstractArrow implements GeoEntity {
+public class MeteorProjectile extends AbstractArrow {
     private static final EntityDataAccessor<Integer> SKIN;
     private int ticksInAir = 0;
     private int ticksInGround = 0;
@@ -225,6 +216,7 @@ public class MeteorProjectile extends AbstractArrow implements GeoEntity {
     }
 
     // Animations
+    /*
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     @Override
@@ -250,5 +242,5 @@ public class MeteorProjectile extends AbstractArrow implements GeoEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
-    }
+    }*/
 }

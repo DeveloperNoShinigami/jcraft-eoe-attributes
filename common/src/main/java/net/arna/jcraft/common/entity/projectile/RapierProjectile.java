@@ -1,10 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
 import lombok.NonNull;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
@@ -34,7 +30,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public class RapierProjectile extends AbstractArrow implements GeoEntity {
+public class RapierProjectile extends AbstractArrow {
     public static final ResourceLocation POSSESSED_TEXTURE = JCraft.id("textures/entity/stands/silver_chariot/rapier_possessed.png");
     public static final ResourceLocation ARMOR_OFF_TEXTURE = JCraft.id("textures/entity/stands/silver_chariot/rapier_no_armor.png");
     private static final EntityDataAccessor<Integer> SKIN;
@@ -156,14 +152,4 @@ public class RapierProjectile extends AbstractArrow implements GeoEntity {
         this.ticksInAir = tag.getShort("life");
     }
 
-    // Animations
-    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
-
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) { }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return cache;
-    }
 }

@@ -302,6 +302,7 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
         }
     }
 
+    /*
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         super.registerControllers(controllers);
@@ -315,7 +316,7 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
-    }
+    }*/
 
     @Override
     protected ShadowTheWorldEntity.State[] getStateValues() {

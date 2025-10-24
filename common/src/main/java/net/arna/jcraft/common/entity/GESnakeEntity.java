@@ -1,14 +1,6 @@
 package net.arna.jcraft.common.entity;
 
 import lombok.NonNull;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.common.entity.ai.goal.StunningMeleeAttackGoal;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.AgeableMob;
@@ -27,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
-public class GESnakeEntity extends TamableAnimal implements GeoEntity {
+public class GESnakeEntity extends TamableAnimal {
     public GESnakeEntity(EntityType<? extends TamableAnimal> entityType, Level world) {
         super(entityType, world);
         Arrays.fill(this.handDropChances, 1F);
@@ -75,6 +67,7 @@ public class GESnakeEntity extends TamableAnimal implements GeoEntity {
     }
 
     // Animations
+    /*
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     @Override
@@ -106,5 +99,5 @@ public class GESnakeEntity extends TamableAnimal implements GeoEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
-    }
+    }*/
 }

@@ -1,15 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
 import lombok.NonNull;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.GeoAnimatable;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.splatter.SplatterType;
@@ -33,7 +24,7 @@ import net.minecraft.world.phys.Vec3;
 
 import static net.arna.jcraft.api.Attacks.damageLogic;
 
-public class WSAcidProjectile extends AbstractArrow implements GeoEntity {
+public class WSAcidProjectile extends AbstractArrow {
     private static final EntityDataAccessor<Boolean> MYH; // Melt your Heart variant
 
     static {
@@ -168,6 +159,7 @@ public class WSAcidProjectile extends AbstractArrow implements GeoEntity {
     }
 
     // Animations
+    /*
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     @Override
@@ -184,5 +176,5 @@ public class WSAcidProjectile extends AbstractArrow implements GeoEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
-    }
+    }*/
 }

@@ -1,15 +1,5 @@
 package net.arna.jcraft.api.spec;
 
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.constant.DefaultAnimations;
-import mod.azure.azurelib.core.animatable.GeoAnimatable;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.component.player.CommonSpecComponent;
 import net.arna.jcraft.api.registry.JStandTypeRegistry;
@@ -42,13 +32,12 @@ import java.util.Map;
 
 import static net.arna.jcraft.api.stand.StandTypeUtil.generateStandTypeForMob;
 
-public class SpecUserMob extends PathfinderMob implements JSpecHolder, GeoEntity, IFoodData {
+public class SpecUserMob extends PathfinderMob implements JSpecHolder, IFoodData {
     // TODO: add metallica anims to the player anims these guys use
     // TODO: healing
     // TODO: anubis-specific sheathing
 
     protected final CommonSpecComponent component;
-    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     private static final EntityDataAccessor<Boolean> ANIMATION_RESET = SynchedEntityData.defineId(SpecUserMob.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(SpecUserMob.class, EntityDataSerializers.STRING);
@@ -210,6 +199,7 @@ public class SpecUserMob extends PathfinderMob implements JSpecHolder, GeoEntity
         entityData.set(ANIMATION_SPEED, animationSpeed);
     }
 
+    /*
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(DefaultAnimations.genericWalkIdleController(this));
@@ -236,5 +226,5 @@ public class SpecUserMob extends PathfinderMob implements JSpecHolder, GeoEntity
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
-    }
+    }*/
 }

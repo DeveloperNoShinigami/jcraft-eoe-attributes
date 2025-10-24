@@ -1,16 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
 import lombok.NonNull;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.GeoAnimatable;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
-import net.arna.jcraft.api.Attacks;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.arna.jcraft.common.util.IOwnable;
@@ -39,7 +29,7 @@ import java.util.Set;
 
 import static net.arna.jcraft.api.Attacks.*;
 
-public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
+public class LifeDetectorEntity extends JAttackEntity {
     private static final EntityDataAccessor<Boolean> EXPLODED;
     private LivingEntity target;
 
@@ -222,6 +212,7 @@ public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
     }
 
     // Animations
+    /*
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     @Override
@@ -239,4 +230,5 @@ public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
     }
+    */
 }

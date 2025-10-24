@@ -1,12 +1,5 @@
 package net.arna.jcraft.common.entity;
 
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
@@ -35,7 +28,7 @@ import java.util.*;
 import static net.arna.jcraft.api.Attacks.damageLogic;
 import static net.arna.jcraft.common.util.JUtils.canDamage;
 
-public class GERScorpionEntity extends Mob implements GeoEntity, IOwnable {
+public class GERScorpionEntity extends Mob implements IOwnable {
     private static final EntityDataAccessor<Optional<UUID>> OWNERUUID;
     private static final EntityDataAccessor<Boolean> ISROCK;
     private static final EntityDataAccessor<Boolean> CHARGED;
@@ -271,6 +264,7 @@ public class GERScorpionEntity extends Mob implements GeoEntity, IOwnable {
     }
 
     // Animations
+    /*
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     @Override
@@ -291,4 +285,5 @@ public class GERScorpionEntity extends Mob implements GeoEntity, IOwnable {
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
     }
+    */
 }
