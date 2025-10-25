@@ -3,12 +3,10 @@ package net.arna.jcraft.client.renderer.entity.npc;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import mod.azure.azurelib.cache.object.BakedGeoModel;
-import mod.azure.azurelib.cache.object.GeoBone;
-import mod.azure.azurelib.model.GeoModel;
-import mod.azure.azurelib.renderer.GeoEntityRenderer;
-import mod.azure.azurelib.renderer.layer.BlockAndItemGeoLayer;
+import lombok.NonNull;
+import mod.azure.azurelib.animation.AzAnimator;
 import net.arna.jcraft.api.spec.SpecUserMob;
+import net.arna.jcraft.client.renderer.entity.AbstractEntityRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -17,15 +15,22 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
+import java.util.function.Supplier;
 
-public class SpecUserRenderer<T extends SpecUserMob> extends GeoEntityRenderer<T> {
+public class SpecUserRenderer<T extends SpecUserMob> extends AbstractEntityRenderer<T> {
     protected ItemStack mainHandItem, offHandItem;
 
     protected static final String LEFT_HAND = "bipedHandLeft";
     protected static final String RIGHT_HAND = "bipedHandRight";
 
+    public SpecUserRenderer(EntityRendererProvider.@NonNull Context context, @NonNull Supplier<AzAnimator<UUID, T>> azAnimatorSupplier, @NonNull String id) {
+        super(context, azAnimatorSupplier, id);
+    }
+
     // TODO: armor rendering support
 
+    /*
     public SpecUserRenderer(EntityRendererProvider.Context renderManager, GeoModel<T> model) {
         super(renderManager, model);
 
@@ -83,5 +88,5 @@ public class SpecUserRenderer<T extends SpecUserMob> extends GeoEntityRenderer<T
         this.offHandItem = animatable.getOffhandItem();
 
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-    }
+    }*/
 }
