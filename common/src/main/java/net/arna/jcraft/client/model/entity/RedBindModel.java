@@ -1,20 +1,19 @@
 package net.arna.jcraft.client.model.entity;
 
-import mod.azure.azurelib.model.GeoModel;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.RedBindEntity;
 import net.minecraft.resources.ResourceLocation;
 
 /**
- * The {@link GeoModel} for {@link RedBindEntity}.
+ * The model for {@link RedBindEntity}.
  * @see net.arna.jcraft.client.renderer.entity.projectiles.RedBindRenderer RedBindRenderer
  */
-public final class RedBindModel extends GeoModel<RedBindEntity> {
+public final class RedBindModel {
     private static final ResourceLocation model = JCraft.id("geo/red_bind.geo.json");
     private static final ResourceLocation texture = JCraft.id("textures/entity/red_bind.png");
     private static final ResourceLocation animation = JCraft.id("animations/red_bind.animation.json");
 
-    @Override
+    /*@Override
     public ResourceLocation getModelResource(final RedBindEntity animatable) {
         return model;
     }
@@ -27,6 +26,6 @@ public final class RedBindModel extends GeoModel<RedBindEntity> {
     @Override
     public ResourceLocation getAnimationResource(final RedBindEntity animatable) {
         return animation;
-    }
+    }*/
 
 }

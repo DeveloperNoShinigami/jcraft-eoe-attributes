@@ -1,6 +1,5 @@
 package net.arna.jcraft.client.model.entity;
 
-import mod.azure.azurelib.model.GeoModel;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.RapierProjectile;
 import net.minecraft.resources.ResourceLocation;
@@ -9,10 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The {@link GeoModel} for {@link RapierProjectile}.
+ * The model for {@link RapierProjectile}.
  * @see net.arna.jcraft.client.renderer.entity.projectiles.RapierRenderer RapierRenderer
  */
-public final class RapierModel extends GeoModel<RapierProjectile> {
+public final class RapierModel {
     private static final Map<Integer, ResourceLocation> skins = new HashMap<>();
 
     static {
@@ -25,7 +24,7 @@ public final class RapierModel extends GeoModel<RapierProjectile> {
     private static final ResourceLocation model = JCraft.id("geo/rapier.geo.json");
     private static final ResourceLocation animation = JCraft.id("animations/knife.animation.json");
 
-    @Override
+    /*@Override
     public ResourceLocation getModelResource(final RapierProjectile animatable) {
         return model;
     }
@@ -43,5 +42,5 @@ public final class RapierModel extends GeoModel<RapierProjectile> {
     @Override
     public ResourceLocation getAnimationResource(final RapierProjectile animatable) {
         return animation;
-    }
+    }*/
 }

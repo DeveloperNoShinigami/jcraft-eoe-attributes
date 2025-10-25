@@ -1,15 +1,14 @@
 package net.arna.jcraft.client.model.entity;
 
-import mod.azure.azurelib.model.GeoModel;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.GERScorpionEntity;
 import net.minecraft.resources.ResourceLocation;
 
 /**
- * The {@link GeoModel} for {@link GERScorpionEntity}.
+ * The model for {@link GERScorpionEntity}.
  * @see net.arna.jcraft.client.renderer.entity.GERScorpionRenderer GERScorpionRenderer
  */
-public final class GERScorpionModel extends GeoModel<GERScorpionEntity> {
+public final class GERScorpionModel { //extends GeoModel<GERScorpionEntity> {
     private static final ResourceLocation model = JCraft.id("geo/gerscorpion.geo.json");
 
     private static final ResourceLocation
@@ -18,6 +17,7 @@ public final class GERScorpionModel extends GeoModel<GERScorpionEntity> {
 
     private static final ResourceLocation animation = JCraft.id("animations/gerscorpion.animation.json");
 
+    /*
     @Override
     public ResourceLocation getModelResource(final GERScorpionEntity animatable) {
         return model;
@@ -31,6 +31,6 @@ public final class GERScorpionModel extends GeoModel<GERScorpionEntity> {
     @Override
     public ResourceLocation getAnimationResource(final GERScorpionEntity animatable) {
         return animation;
-    }
+    }*/
 
 }

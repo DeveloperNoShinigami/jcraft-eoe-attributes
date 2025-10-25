@@ -1,7 +1,5 @@
 package net.arna.jcraft.client.util;
 
-import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
-import mod.azure.azurelib.core.animation.AnimationProcessor;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.client.model.entity.stand.StandEntityModel;
@@ -81,6 +79,7 @@ public class JClientUtils {
     }
 
     // Torso/Head rotation for stands
+    /*
     public static void animateGenericHumanoid(final StandEntityModel<?> model, final StandEntity<?, ?> entity, final LivingEntity player, final float partialTick) {
         animateGenericHumanoid(model, entity, player, partialTick, false, false);
     }
@@ -140,7 +139,7 @@ public class JClientUtils {
                 }
             }
         }
-    }
+    }*/
 
     public static boolean shouldForceRender(Entity entity) {
         if (entity instanceof final D4CEntity d4c && d4c.getState() == D4CEntity.State.FLAG ||

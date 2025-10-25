@@ -1,20 +1,19 @@
 package net.arna.jcraft.client.model.entity.npc;
 
-import mod.azure.azurelib.model.GeoModel;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.npc.PetshopEntity;
 import net.minecraft.resources.ResourceLocation;
 
 /**
- * The {@link GeoModel} for {@link PetshopEntity}.
+ * The model for {@link PetshopEntity}.
  * @see net.arna.jcraft.client.renderer.entity.npc.PetshopRenderer PetshopRenderer
  */
-public final class PetshopModel extends GeoModel<PetshopEntity> {
+public final class PetshopModel {
     private static final ResourceLocation model = JCraft.id("geo/aya_tsuji.geo.json");
     private static final ResourceLocation texture = JCraft.id("textures/entity/aya_tsuji.png");
     private static final ResourceLocation animation = JCraft.id("animations/aya_tsuji.animation.json");
 
-    @Override
+    /*@Override
     public ResourceLocation getModelResource(final PetshopEntity animatable) {
         return model;
     }
@@ -27,5 +26,5 @@ public final class PetshopModel extends GeoModel<PetshopEntity> {
     @Override
     public ResourceLocation getAnimationResource(final PetshopEntity animatable) {
         return animation;
-    }
+    }*/
 }

@@ -1,9 +1,5 @@
 package net.arna.jcraft.client.renderer.armor;
 
-import mod.azure.azurelib.animatable.GeoItem;
-import mod.azure.azurelib.cache.object.GeoBone;
-import mod.azure.azurelib.model.GeoModel;
-import mod.azure.azurelib.renderer.GeoArmorRenderer;
 import net.arna.jcraft.mixin.client.PlayerModelAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -17,8 +13,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-public class JArmor<T extends Item & GeoItem> extends GeoArmorRenderer<T> {
+public class JArmor<T extends Item> {
 
+    /*
     public JArmor(final GeoModel<T> model) {
         super(model);
     }
@@ -99,5 +96,5 @@ public class JArmor<T extends Item & GeoItem> extends GeoArmorRenderer<T> {
             rightArm.setScaleX(0.75f);
             rightArm.setPivotX(4.5f);
         }
-    }
+    }*/
 }

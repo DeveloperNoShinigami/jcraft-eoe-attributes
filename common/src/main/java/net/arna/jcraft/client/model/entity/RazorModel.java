@@ -1,19 +1,18 @@
 package net.arna.jcraft.client.model.entity;
 
-import mod.azure.azurelib.model.GeoModel;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.RazorProjectile;
 import net.minecraft.resources.ResourceLocation;
 
 /**
- * The {@link GeoModel} for {@link RazorProjectile}.
+ * The model for {@link RazorProjectile}.
  */
-public final class RazorModel extends GeoModel<RazorProjectile> {
+public final class RazorModel {
 
     private static final ResourceLocation model = JCraft.id("geo/razor.geo.json");
     private static final ResourceLocation animation = JCraft.id("animations/razor.animation.json");
 
-    @Override
+    /*@Override
     public ResourceLocation getModelResource(final RazorProjectile animatable) {
         return model;
     }
@@ -34,5 +33,5 @@ public final class RazorModel extends GeoModel<RazorProjectile> {
     @Override
     public ResourceLocation getAnimationResource(final RazorProjectile animatable) {
         return animation;
-    }
+    }*/
 }

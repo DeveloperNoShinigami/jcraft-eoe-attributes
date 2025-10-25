@@ -1,16 +1,6 @@
 package net.arna.jcraft.common.item;
 
 import lombok.NonNull;
-import mod.azure.azurelib.animatable.GeoItem;
-import mod.azure.azurelib.animatable.client.RenderProvider;
-import mod.azure.azurelib.constant.DataTickets;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.renderer.GeoArmorRenderer;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.client.renderer.armor.*;
 import net.arna.jcraft.common.util.JUtils;
@@ -31,14 +21,15 @@ import java.util.function.Supplier;
 /**
  * {@link ArmorItem} animated by GeckoLib to flutter when its wearer is moving.
  */
-public class FlutteringArmorItem extends ArmorItem implements GeoItem {
-    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
-    private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
+public class FlutteringArmorItem extends ArmorItem {
+    //private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
+    //private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
 
     public FlutteringArmorItem(ArmorMaterial materialIn, Type slot, Properties builder) {
         super(materialIn, slot, builder);
     }
 
+    /*
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "controller", 10, this::predicate));
@@ -89,5 +80,5 @@ public class FlutteringArmorItem extends ArmorItem implements GeoItem {
     @Override
     public Supplier<Object> getRenderProvider() {
         return renderProvider;
-    }
+    }*/
 }

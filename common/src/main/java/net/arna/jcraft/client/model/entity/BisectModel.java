@@ -1,16 +1,14 @@
 package net.arna.jcraft.client.model.entity;
 
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.model.GeoModel;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.BisectProjectile;
 import net.minecraft.resources.ResourceLocation;
 
 /**
- * The {@link GeoModel} for {@link BisectProjectile}.
+ * The model for {@link BisectProjectile}.
  */
-public class BisectModel extends GeoModel<BisectProjectile> {
-    @Override
+public class BisectModel {
+    /*@Override
     public ResourceLocation getModelResource(final BisectProjectile animatable) {
         return JCraft.id("geo/bisect.geo.json");
     }
@@ -36,4 +34,5 @@ public class BisectModel extends GeoModel<BisectProjectile> {
             }
         });
     }
+    */
 }

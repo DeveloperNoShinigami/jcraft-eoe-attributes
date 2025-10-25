@@ -1,6 +1,5 @@
 package net.arna.jcraft.client.model.entity;
 
-import mod.azure.azurelib.model.GeoModel;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.TrainingDummyEntity;
 import net.minecraft.resources.ResourceLocation;
@@ -8,12 +7,12 @@ import net.minecraft.resources.ResourceLocation;
 /**
  * Model for the TrainingDummyEntity
  */
-public final class TrainingDummyModel extends GeoModel<TrainingDummyEntity> {
+public final class TrainingDummyModel {
     private static final ResourceLocation model = JCraft.id("geo/training_dummy.geo.json");
     private static final ResourceLocation texture = JCraft.id("textures/entity/training_dummy.png");
     private static final ResourceLocation animation = JCraft.id("animations/training_dummy.animation.json");
 
-    @Override
+    /*@Override
     public ResourceLocation getModelResource(final TrainingDummyEntity animatable) {
         return model;
     }
@@ -26,5 +25,5 @@ public final class TrainingDummyModel extends GeoModel<TrainingDummyEntity> {
     @Override
     public ResourceLocation getAnimationResource(final TrainingDummyEntity animatable) {
         return animation;
-    }
+    }*/
 }
