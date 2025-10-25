@@ -64,8 +64,8 @@ public interface JEntityRendererRegister {
             new RendererData<>(JEntityTypeRegistry.GE_BUTTERFLY, GEButterflyRenderer::new),
 
             new RendererData<>(JEntityTypeRegistry.HIEROPHANT_GREEN, HGRenderer::new),
-            new RendererData<>(JEntityTypeRegistry.EMERALD, EmeraldRenderer::new),
-            new RendererData<>(JEntityTypeRegistry.BISECT, context -> new GeoProjectileRenderer<>(context, new BisectModel())),
+            new RendererData<>(JEntityTypeRegistry.EMERALD, context -> new ProjectileRenderer<>(context, "emerald")),
+            new RendererData<>(JEntityTypeRegistry.BISECT, context -> new ProjectileRenderer<>(context, new BisectModel())),
             new RendererData<>(JEntityTypeRegistry.HG_NET, HGNetRenderer::new),
 
             new RendererData<>(JEntityTypeRegistry.THE_SUN, SunRenderer::new),
@@ -106,9 +106,9 @@ public interface JEntityRendererRegister {
             new RendererData<>(JEntityTypeRegistry.BULLET, BulletRenderer::new),
             new RendererData<>(JEntityTypeRegistry.RAPIER, RapierRenderer::new),
             new RendererData<>(JEntityTypeRegistry.METEOR, MeteorRenderer::new),
-            new RendererData<>(JEntityTypeRegistry.PH_CAPSULE, PHCapsuleRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.PH_CAPSULE, context -> new ProjectileRenderer<>(context, "ph_capsule")),
             new RendererData<>(JEntityTypeRegistry.PURPLE_HAZE_CLOUD, JEntityRendererRegister::createEmpty),
-            new RendererData<>(JEntityTypeRegistry.STAND_ARROW_PROJECTILE, StandArrowRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.STAND_ARROW_PROJECTILE, context -> new ProjectileRenderer<>(context, "stand_arrow")),
 
             new RendererData<>(JEntityTypeRegistry.ROAD_ROLLER, RoadRollerRenderer::new),
 

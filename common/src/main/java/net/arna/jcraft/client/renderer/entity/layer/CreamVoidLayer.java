@@ -2,9 +2,9 @@ package net.arna.jcraft.client.renderer.entity.layer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import mod.azure.azurelib.cache.object.BakedGeoModel;
-import mod.azure.azurelib.renderer.GeoRenderer;
-import mod.azure.azurelib.renderer.layer.GeoRenderLayer;
+import mod.azure.azurelib.model.AzBone;
+import mod.azure.azurelib.render.AzRendererPipelineContext;
+import mod.azure.azurelib.render.layer.AzRenderLayer;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.stand.CreamEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -13,13 +13,14 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.IntStream;
 
-public class CreamVoidLayer extends GeoRenderLayer<CreamEntity> {
+public class CreamVoidLayer implements AzRenderLayer<UUID, CreamEntity> {
     private static final List<ResourceLocation> skins = IntStream.range(0, 4).mapToObj(
             i -> JCraft.id("textures/entity/stands/cream/void" + i + ".png")).toList();
 
-    public CreamVoidLayer(final GeoRenderer<CreamEntity> entityRendererIn) {
+    /*public CreamVoidLayer(final GeoRenderer<CreamEntity> entityRendererIn) {
         super(entityRendererIn);
     }
 
@@ -31,5 +32,20 @@ public class CreamVoidLayer extends GeoRenderLayer<CreamEntity> {
 
         getRenderer().reRender(bakedModel, poseStack, bufferSource, animatable, cameo,
                 bufferSource.getBuffer(cameo), partialTick, 15728640, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1f);
+    }*/
+
+    @Override
+    public void preRender(AzRendererPipelineContext<UUID, CreamEntity> context) {
+
+    }
+
+    @Override
+    public void render(AzRendererPipelineContext<UUID, CreamEntity> context) {
+
+    }
+
+    @Override
+    public void renderForBone(AzRendererPipelineContext<UUID, CreamEntity> context, AzBone bone) {
+
     }
 }

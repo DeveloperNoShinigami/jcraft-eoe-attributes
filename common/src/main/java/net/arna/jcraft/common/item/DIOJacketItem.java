@@ -1,14 +1,6 @@
 package net.arna.jcraft.common.item;
 
 import lombok.NonNull;
-import mod.azure.azurelib.animatable.GeoItem;
-import mod.azure.azurelib.animatable.client.RenderProvider;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.renderer.GeoArmorRenderer;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.client.renderer.armor.DIOJacketRenderer;
 import net.minecraft.client.model.HumanoidModel;
@@ -21,12 +13,13 @@ import net.minecraft.world.item.ItemStack;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class DIOJacketItem extends ArmorItem implements GeoItem {
+public class DIOJacketItem extends ArmorItem {
 
     public DIOJacketItem(ArmorMaterial materialIn, Type slot, Properties builder) {
         super(materialIn, slot, builder);
     }
 
+    /*
     @Override
     public void createRenderer(Consumer<Object> consumer) {
         consumer.accept(new RenderProvider() {
@@ -60,5 +53,5 @@ public class DIOJacketItem extends ArmorItem implements GeoItem {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
-    }
+    }*/
 }

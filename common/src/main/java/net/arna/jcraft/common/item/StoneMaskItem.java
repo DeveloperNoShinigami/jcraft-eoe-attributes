@@ -7,16 +7,6 @@ import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
-import mod.azure.azurelib.animatable.GeoItem;
-import mod.azure.azurelib.animatable.client.RenderProvider;
-import mod.azure.azurelib.constant.DataTickets;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.renderer.GeoArmorRenderer;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.component.player.CommonSpecComponent;
@@ -47,11 +37,11 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class StoneMaskItem extends ArmorItem implements GeoItem {
+public class StoneMaskItem extends ArmorItem {
     private static final int CLENCH_DURATION = 100; // Duration in ticks for which the clench animation plays
     private static final Int2IntMap CLENCH = new Int2IntOpenHashMap();
-    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
-    private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
+    //private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
+    //private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
 
     static {
         if (Platform.getEnv() == EnvType.CLIENT) {
@@ -120,6 +110,7 @@ public class StoneMaskItem extends ArmorItem implements GeoItem {
         super.appendHoverText(stack, world, tooltip, context);
     }
 
+    /*
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "controller", 5, this::predicate));
@@ -159,5 +150,5 @@ public class StoneMaskItem extends ArmorItem implements GeoItem {
     @Override
     public Supplier<Object> getRenderProvider() {
         return renderProvider;
-    }
+    }*/
 }

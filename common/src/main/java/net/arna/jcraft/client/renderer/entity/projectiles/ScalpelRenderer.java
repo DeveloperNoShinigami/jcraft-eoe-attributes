@@ -8,15 +8,15 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 
 /**
- * The {@link GeoProjectileRenderer} for {@link ScalpelProjectile}.
+ * The {@link ProjectileRenderer} for {@link ScalpelProjectile}.
  */
-public class ScalpelRenderer extends GeoProjectileRenderer<ScalpelProjectile> {
+public class ScalpelRenderer extends ProjectileRenderer<ScalpelProjectile> {
     public ScalpelRenderer(final EntityRendererProvider.Context renderManagerIn) {
-        super(renderManagerIn, new JProjectileModel<>("scalpel"));
+        super(renderManagerIn, "scalpel");
     }
 
-    @Override
+    /*@Override
     public RenderType getRenderType(final ScalpelProjectile animatable, final ResourceLocation texture, final MultiBufferSource bufferSource, final float partialTick) {
         return RenderType.entityTranslucent(texture);
-    }
+    }*/
 }

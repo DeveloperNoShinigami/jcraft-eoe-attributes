@@ -11,9 +11,9 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * The {@link GeoProjectileRenderer} for {@link AnkhProjectile}.
+ * The {@link ProjectileRenderer} for {@link AnkhProjectile}.
  */
-public class AnkhRenderer extends GeoProjectileRenderer<AnkhProjectile> {
+public class AnkhRenderer extends ProjectileRenderer<AnkhProjectile> {
     public AnkhRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new JProjectileModel<>("ankh"));
     }

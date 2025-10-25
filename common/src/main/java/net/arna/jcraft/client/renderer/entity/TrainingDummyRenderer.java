@@ -2,11 +2,12 @@ package net.arna.jcraft.client.renderer.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import mod.azure.azurelib.cache.object.BakedGeoModel;
-import mod.azure.azurelib.renderer.GeoEntityRenderer;
+import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.model.entity.TrainingDummyModel;
 import net.arna.jcraft.common.entity.TrainingDummyEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -15,17 +16,16 @@ import net.minecraft.resources.ResourceLocation;
 /**
  * Renderer for the TrainingDummyEntity using AzureLib
  */
-public class TrainingDummyRenderer extends GeoEntityRenderer<TrainingDummyEntity> {
+@Environment(EnvType.CLIENT)
+public class TrainingDummyRenderer extends AbstractEntityRenderer<TrainingDummyEntity> {
 
-    public TrainingDummyRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager, new TrainingDummyModel());
+    public static final String ID = "training_dummy";
+
+    public TrainingDummyRenderer(final @NonNull EntityRendererProvider.Context context) {
+        super(context, () -> new EntityAnimator<>(ID), ID);
     }
 
-    @Override
-    public ResourceLocation getTextureLocation(TrainingDummyEntity animatable) {
-        return JCraft.id("textures/entity/training_dummy.png");
-    }
-
+    /*
     @Override
     public void preRender(PoseStack poseStack, TrainingDummyEntity animatable, BakedGeoModel model,
                           MultiBufferSource bufferSource, VertexConsumer buffer,
@@ -35,7 +35,7 @@ public class TrainingDummyRenderer extends GeoEntityRenderer<TrainingDummyEntity
         // Remove wobble effect - let animations handle it
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick,
                 packedLight, packedOverlay, red, green, blue, alpha);
-    }
+    }*/
 
     @Override
     public void render(TrainingDummyEntity entity, float entityYaw, float partialTick, PoseStack poseStack,
@@ -48,6 +48,7 @@ public class TrainingDummyRenderer extends GeoEntityRenderer<TrainingDummyEntity
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
     }
 
+    /*
     @Override
     protected void applyRotations(TrainingDummyEntity animatable, PoseStack poseStack, float ageInTicks,
                                   float rotationYaw, float partialTick, float nativeScale) {
@@ -59,7 +60,7 @@ public class TrainingDummyRenderer extends GeoEntityRenderer<TrainingDummyEntity
     protected float getDeathMaxRotation(TrainingDummyEntity animatable) {
         // Training dummies don't die, so no death rotation
         return 0.0F;
-    }
+    }*/
 
     @Override
     public boolean shouldRender(TrainingDummyEntity entity, Frustum frustum,

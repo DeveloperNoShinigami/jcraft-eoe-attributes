@@ -3,12 +3,17 @@ package net.arna.jcraft.client.renderer.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import mod.azure.azurelib.cache.object.BakedGeoModel;
-import mod.azure.azurelib.cache.object.GeoBone;
-import mod.azure.azurelib.renderer.DynamicGeoEntityRenderer;
-import mod.azure.azurelib.renderer.layer.BlockAndItemGeoLayer;
+import lombok.NonNull;
+import mod.azure.azurelib.animation.controller.AzAnimationController;
+import mod.azure.azurelib.animation.controller.AzAnimationControllerContainer;
+import mod.azure.azurelib.animation.impl.AzEntityAnimator;
+import mod.azure.azurelib.render.entity.AzEntityRenderer;
+import mod.azure.azurelib.render.entity.AzEntityRendererConfig;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.model.entity.GEButterflyModel;
 import net.arna.jcraft.common.entity.GEButterflyEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -17,16 +22,23 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * The {@link DynamicGeoEntityRenderer} for {@link GEButterflyEntity}.
- * @see GEButterflyModel
+ * The {@link AbstractEntityRenderer} for {@link GEButterflyEntity}.
  */
-public class GEButterflyRenderer extends DynamicGeoEntityRenderer<GEButterflyEntity> {
+@Environment(EnvType.CLIENT)
+public class GEButterflyRenderer extends AbstractEntityRenderer<GEButterflyEntity> {
+    public static final String ID = "gebutterfly";
+
     protected ItemStack mainHandItem;
 
-    @Override
+    protected GEButterflyRenderer(final @NonNull EntityRendererProvider.Context context) {
+        super(context, () -> new AbstractEntityRenderer.EntityAnimator<>(ID), ID);
+    }
+
+    /*@Override
     public RenderType getRenderType(final GEButterflyEntity animatable, final ResourceLocation texture, final @Nullable MultiBufferSource bufferSource, final float partialTick) {
         return RenderType.entityTranslucent(texture);
     }
@@ -72,5 +84,5 @@ public class GEButterflyRenderer extends DynamicGeoEntityRenderer<GEButterflyEnt
     public void preRender(final PoseStack poseStack, final GEButterflyEntity animatable, final BakedGeoModel model, final MultiBufferSource bufferSource, final VertexConsumer buffer, final boolean isReRender, final float partialTick, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha) {
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
         this.mainHandItem = animatable.getItemBySlot(EquipmentSlot.MAINHAND);
-    }
+    }*/
 }

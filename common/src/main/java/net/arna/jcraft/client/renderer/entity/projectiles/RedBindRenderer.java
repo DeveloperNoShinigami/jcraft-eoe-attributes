@@ -9,18 +9,18 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 
 /**
- * The {@link GeoProjectileRenderer} for {@link RedBindEntity}.
+ * The {@link ProjectileRenderer} for {@link RedBindEntity}.
  * @see RedBindModel
  */
-public class RedBindRenderer extends GeoProjectileRenderer<RedBindEntity> {
+public class RedBindRenderer extends ProjectileRenderer<RedBindEntity> {
     public RedBindRenderer(final EntityRendererProvider.Context renderManagerIn) {
-        super(renderManagerIn, new RedBindModel());
+        super(renderManagerIn, "red_bind");
     }
 
-    @Override
+    /*@Override
     public RenderType getRenderType(final RedBindEntity animatable, final ResourceLocation texture, final MultiBufferSource bufferSource, final float partialTick) {
         return RenderType.eyes(texture);
-    }
+    }*/
 
     @Override
     public void render(final RedBindEntity animatable, final float yaw, final float partialTick, final PoseStack poseStack, final MultiBufferSource bufferSource, final int packedLight) {

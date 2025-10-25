@@ -4,10 +4,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import lombok.NonNull;
-import mod.azure.azurelib.cache.object.BakedGeoModel;
-import mod.azure.azurelib.renderer.GeoEntityRenderer;
 import net.arna.jcraft.client.model.JProjectileModel;
+import net.arna.jcraft.client.renderer.entity.AbstractEntityRenderer;
 import net.arna.jcraft.common.entity.projectile.LargeIcicleProjectile;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -16,11 +17,15 @@ import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * The {@link GeoEntityRenderer} for {@link LargeIcicleProjectile}.
+ * The {@link AbstractEntityRenderer} for {@link LargeIcicleProjectile}.
  */
-public class LargeIcicleRenderer extends GeoEntityRenderer<LargeIcicleProjectile> {
-    public LargeIcicleRenderer(final EntityRendererProvider.Context renderManagerIn) {
-        super(renderManagerIn, new JProjectileModel<>("large_icicle", true));
+@Environment(EnvType.CLIENT)
+public class LargeIcicleRenderer extends AbstractEntityRenderer<LargeIcicleProjectile> {
+
+    public static final String ID = "large_icicle";
+
+    public LargeIcicleRenderer(final @NonNull EntityRendererProvider.Context context) {
+        super(context, () -> new EntityAnimator<>(ID), ID);
     }
 
     @Override
@@ -28,6 +33,7 @@ public class LargeIcicleRenderer extends GeoEntityRenderer<LargeIcicleProjectile
         return false;
     }
 
+    /*
     @Override
     public RenderType getRenderType(final @NonNull LargeIcicleProjectile animatable, final ResourceLocation texture,
                                     final @Nullable MultiBufferSource bufferSource, final float partialTick) {
@@ -44,5 +50,5 @@ public class LargeIcicleRenderer extends GeoEntityRenderer<LargeIcicleProjectile
         float scale = animatable.getScale();
         poseStack.scale(scale, scale, scale);
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-    }
+    }*/
 }

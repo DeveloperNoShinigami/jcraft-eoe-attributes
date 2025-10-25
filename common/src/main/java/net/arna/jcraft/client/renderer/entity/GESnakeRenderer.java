@@ -1,29 +1,40 @@
 package net.arna.jcraft.client.renderer.entity;
 
-import mod.azure.azurelib.cache.object.BakedGeoModel;
-import mod.azure.azurelib.cache.object.GeoBone;
-import mod.azure.azurelib.renderer.DynamicGeoEntityRenderer;
-import mod.azure.azurelib.renderer.layer.BlockAndItemGeoLayer;
+import lombok.NonNull;
+import mod.azure.azurelib.animation.AzAnimator;
+import mod.azure.azurelib.animation.controller.AzAnimationController;
+import mod.azure.azurelib.animation.controller.AzAnimationControllerContainer;
+import mod.azure.azurelib.animation.impl.AzEntityAnimator;
+import mod.azure.azurelib.render.entity.AzEntityRenderer;
+import mod.azure.azurelib.render.entity.AzEntityRendererConfig;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.model.entity.GESnakeModel;
 import net.arna.jcraft.common.entity.GESnakeEntity;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ShieldItem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.UUID;
+import java.util.function.Supplier;
 
 /**
- * The {@link DynamicGeoEntityRenderer} for {@link GESnakeEntity}.
- * @see GESnakeModel
+ * The {@link AbstractEntityRenderer} for {@link GESnakeEntity}.
  */
-public class GESnakeRenderer extends DynamicGeoEntityRenderer<GESnakeEntity> {
+@Environment(EnvType.CLIENT)
+public class GESnakeRenderer extends AbstractEntityRenderer<GESnakeEntity> {
+    
+    private static final String ID = "gesnake";
+    
     protected ItemStack mainHandItem;
 
+    protected GESnakeRenderer(final @NonNull  EntityRendererProvider.Context context) {
+        super(context, () -> new EntityAnimator<>(ID), ID);
+    }
+
+    /*
     public GESnakeRenderer(final EntityRendererProvider.Context renderManager) {
         super(renderManager, new GESnakeModel());
         addRenderLayer(new BlockAndItemGeoLayer<>(this) {
@@ -64,5 +75,5 @@ public class GESnakeRenderer extends DynamicGeoEntityRenderer<GESnakeEntity> {
     public void preRender(final PoseStack poseStack, final GESnakeEntity animatable, final BakedGeoModel model, final MultiBufferSource bufferSource, final VertexConsumer buffer, final boolean isReRender, final float partialTick, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha) {
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
         this.mainHandItem = animatable.getItemBySlot(EquipmentSlot.MAINHAND);
-    }
+    }*/
 }
