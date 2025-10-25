@@ -5,6 +5,8 @@ import mod.azure.azurelib.render.AzRendererPipelineContext;
 import mod.azure.azurelib.render.layer.AzRenderLayer;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.HGNetEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -16,7 +18,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-public class HGNetGlowLayer implements AzRenderLayer<UUID, HGNetEntity> {
+@Environment(EnvType.CLIENT)
+public class HGNetGlowLayer extends AbstractRenderLayer<HGNetEntity> {
     private static final List<ResourceLocation> skins = IntStream.range(0, 4).mapToObj(
             i -> JCraft.id("textures/entity/hg_nets/glow_" + i + ".png")).toList();
 
@@ -31,19 +34,4 @@ public class HGNetGlowLayer implements AzRenderLayer<UUID, HGNetEntity> {
                     bufferSource.getBuffer(cameo), partialTicks, 15728640, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1f);
         }
     }*/
-
-    @Override
-    public void preRender(AzRendererPipelineContext context) {
-
-    }
-
-    @Override
-    public void render(AzRendererPipelineContext context) {
-
-    }
-
-    @Override
-    public void renderForBone(AzRendererPipelineContext context, AzBone bone) {
-
-    }
 }

@@ -1,10 +1,9 @@
 package net.arna.jcraft.client.renderer.entity.layer;
 
-import mod.azure.azurelib.cache.object.BakedGeoModel;
-import mod.azure.azurelib.renderer.GeoRenderer;
-import mod.azure.azurelib.renderer.layer.GeoRenderLayer;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.stand.TheSunEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -15,20 +14,17 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import java.util.List;
 import java.util.stream.IntStream;
 
-public class SunGlowLayer extends GeoRenderLayer<TheSunEntity> {
+@Environment(EnvType.CLIENT)
+public class SunGlowLayer extends AbstractRenderLayer<TheSunEntity> {
     private static final List<ResourceLocation> skins = IntStream.range(0, 4).mapToObj(
             i -> JCraft.id("textures/entity/stands/the_sun/glow_" + i + ".png")).toList();
 
-    public SunGlowLayer(GeoRenderer<TheSunEntity> entityRendererIn) {
-        super(entityRendererIn);
-    }
-
-    @Override
+    /*@Override
     public void render(final PoseStack poseStack, final TheSunEntity animatable, final BakedGeoModel bakedModel, final RenderType renderType,
                        final MultiBufferSource bufferSource, final VertexConsumer buffer, final float partialTick, final int packedLight, final int packedOverlay) {
         final RenderType cameo = RenderType.eyes(skins.get(animatable.getSkin()));
 
         getRenderer().reRender(bakedModel, poseStack, bufferSource, animatable, cameo,
                 bufferSource.getBuffer(cameo), partialTick, 15728640, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1f);
-    }
+    }*/
 }

@@ -7,6 +7,8 @@ import mod.azure.azurelib.render.AzRendererPipelineContext;
 import mod.azure.azurelib.render.layer.AzRenderLayer;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.stand.CreamEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -16,7 +18,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-public class CreamVoidLayer implements AzRenderLayer<UUID, CreamEntity> {
+@Environment(EnvType.CLIENT)
+public class CreamVoidLayer extends AbstractRenderLayer<CreamEntity> {
     private static final List<ResourceLocation> skins = IntStream.range(0, 4).mapToObj(
             i -> JCraft.id("textures/entity/stands/cream/void" + i + ".png")).toList();
 
@@ -33,19 +36,4 @@ public class CreamVoidLayer implements AzRenderLayer<UUID, CreamEntity> {
         getRenderer().reRender(bakedModel, poseStack, bufferSource, animatable, cameo,
                 bufferSource.getBuffer(cameo), partialTick, 15728640, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1f);
     }*/
-
-    @Override
-    public void preRender(AzRendererPipelineContext<UUID, CreamEntity> context) {
-
-    }
-
-    @Override
-    public void render(AzRendererPipelineContext<UUID, CreamEntity> context) {
-
-    }
-
-    @Override
-    public void renderForBone(AzRendererPipelineContext<UUID, CreamEntity> context, AzBone bone) {
-
-    }
 }

@@ -16,15 +16,12 @@ import net.minecraft.util.Mth;
 import java.util.List;
 import java.util.stream.IntStream;
 
-public class STWGlowLayer extends GeoRenderLayer<ShadowTheWorldEntity> {
-    public STWGlowLayer(final GeoRenderer<ShadowTheWorldEntity> entityRendererIn) {
-        super(entityRendererIn);
-    }
+public class STWGlowLayer extends AbstractRenderLayer<ShadowTheWorldEntity> {
 
     private static final List<ResourceLocation> skins = IntStream.range(0, 4).mapToObj(
             i -> JCraft.id("textures/entity/stands/shadow_the_world/"+ "shade_" + i + ".png")).toList();
 
-    @Override
+    /*@Override
     public void render(final PoseStack poseStack, final ShadowTheWorldEntity animatable, final BakedGeoModel bakedModel, final RenderType renderType,
                        final MultiBufferSource bufferSource, final VertexConsumer buffer, final float partialTick, final int packedLight, final int packedOverlay) {
         final RenderType cameo = RenderType.entityTranslucentEmissive(skins.get(animatable.getSkin()));
@@ -38,7 +35,7 @@ public class STWGlowLayer extends GeoRenderLayer<ShadowTheWorldEntity> {
             mod += desummonProgress;
             tick *= desummonProgress;
         }
-         */
+         *//*
         final float x = Mth.sin(tick) * mod,
                 y = Mth.cos(tick) * mod,
                 z = Mth.cos(tick) * mod;
@@ -49,5 +46,5 @@ public class STWGlowLayer extends GeoRenderLayer<ShadowTheWorldEntity> {
         getRenderer().reRender(bakedModel, poseStack, bufferSource, animatable, cameo,
                 bufferSource.getBuffer(cameo), partialTick, 15728640, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
         poseStack.popPose();
-    }
+    }*/
 }
