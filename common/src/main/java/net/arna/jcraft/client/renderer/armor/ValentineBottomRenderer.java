@@ -5,7 +5,7 @@ import net.arna.jcraft.common.item.FlutteringArmorItem;
 import net.minecraft.world.entity.EquipmentSlot;
 
 public class ValentineBottomRenderer extends JArmor<FlutteringArmorItem> {
-    public ValentineBottomRenderer() {
+    /*public ValentineBottomRenderer() {
         super(new JArmorModel<>("valentinebottom"));
     }
 
@@ -24,5 +24,5 @@ public class ValentineBottomRenderer extends JArmor<FlutteringArmorItem> {
             setBoneVisible(this.leftBoot, true);
             setBoneVisible(this.rightBoot, true);
         }
-    }
+    }*/
 }

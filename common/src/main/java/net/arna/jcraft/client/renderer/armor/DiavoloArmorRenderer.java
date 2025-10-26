@@ -5,7 +5,7 @@ import net.arna.jcraft.common.item.FlutteringArmorItem;
 import net.minecraft.world.entity.EquipmentSlot;
 
 public class DiavoloArmorRenderer extends JArmor<FlutteringArmorItem> {
-    public DiavoloArmorRenderer() {
+    /*public DiavoloArmorRenderer() {
         super(new JArmorModel<>("diavoloclothes"));
     }
 
@@ -25,5 +25,5 @@ public class DiavoloArmorRenderer extends JArmor<FlutteringArmorItem> {
         else if (currentSlot == EquipmentSlot.HEAD) {
             setBoneVisible(this.head, true);
         }
-    }
+    }*/
 }

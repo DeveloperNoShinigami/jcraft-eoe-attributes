@@ -5,7 +5,7 @@ import net.arna.jcraft.common.item.FlutteringArmorItem;
 import net.minecraft.world.entity.EquipmentSlot;
 
 public class GiornoArmorRenderer extends JArmor<FlutteringArmorItem> {
-    public GiornoArmorRenderer() {
+    /*public GiornoArmorRenderer() {
         super(new JArmorModel<>("giornoclothes"));
     }
 
@@ -25,5 +25,5 @@ public class GiornoArmorRenderer extends JArmor<FlutteringArmorItem> {
         else if (currentSlot == EquipmentSlot.HEAD) {
             setBoneVisible(this.head, true);
         }
-    }
+    }*/
 }

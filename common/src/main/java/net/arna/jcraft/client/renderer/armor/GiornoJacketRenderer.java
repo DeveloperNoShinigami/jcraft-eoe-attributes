@@ -5,7 +5,7 @@ import net.arna.jcraft.common.item.FlutteringArmorItem;
 import net.minecraft.world.entity.EquipmentSlot;
 
 public class GiornoJacketRenderer extends JArmor<FlutteringArmorItem> {
-    public GiornoJacketRenderer() {
+    /*public GiornoJacketRenderer() {
         super(new JArmorModel<>("giornojacket"));
     }
     @Override
@@ -19,5 +19,5 @@ public class GiornoJacketRenderer extends JArmor<FlutteringArmorItem> {
             setBoneVisible(this.leftArm, true);
             setBoneVisible(this.rightArm, true);
         }
-    }
+    }*/
 }

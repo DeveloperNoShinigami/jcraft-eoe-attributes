@@ -5,7 +5,7 @@ import net.arna.jcraft.common.item.FlutteringArmorItem;
 
 //renders coat
 public class FinalKiraJacketRenderer extends JArmor<FlutteringArmorItem> {
-    public FinalKiraJacketRenderer() {
+    /*public FinalKiraJacketRenderer() {
         super(new JArmorModel<>("kirajacket", "finalkirajacket"));
-    }
+    }*/
 }

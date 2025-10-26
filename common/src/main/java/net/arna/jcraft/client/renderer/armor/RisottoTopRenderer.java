@@ -6,7 +6,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 
 //renders jacket
 public class RisottoTopRenderer extends JArmor<FlutteringArmorItem> {
-    public RisottoTopRenderer() {
+    /*public RisottoTopRenderer() {
         super(new JArmorModel<>("risottotop"));
-    }
+    }*/
 }

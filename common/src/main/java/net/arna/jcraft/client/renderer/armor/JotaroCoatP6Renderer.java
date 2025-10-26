@@ -6,7 +6,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 
 //renders coat
 public class JotaroCoatP6Renderer extends JArmor<FlutteringArmorItem> {
-    public JotaroCoatP6Renderer() {
+    /*public JotaroCoatP6Renderer() {
         super(new JArmorModel<>("jotarocoatp6"));
     }
     @Override
@@ -21,5 +21,5 @@ public class JotaroCoatP6Renderer extends JArmor<FlutteringArmorItem> {
             setBoneVisible(this.rightArm, true);
             setBoneVisible(this.head, true);
         }
-    }
+    }*/
 }

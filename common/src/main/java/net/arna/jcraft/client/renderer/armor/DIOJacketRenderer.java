@@ -5,7 +5,7 @@ import net.arna.jcraft.common.item.DIOJacketItem;
 
 //renders jacket, headband, and belt
 public class DIOJacketRenderer extends JArmor<DIOJacketItem> {
-    public DIOJacketRenderer() {
+    /*public DIOJacketRenderer() {
         super(new JArmorModel<>("diojacket"));
-    }
+    }*/
 }

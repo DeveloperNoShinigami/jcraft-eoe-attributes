@@ -5,7 +5,7 @@ import net.arna.jcraft.common.item.FlutteringArmorItem;
 
 //renders poncho
 public class StraizoPonchoRenderer extends JArmor<FlutteringArmorItem> {
-    public StraizoPonchoRenderer() {
+    /*public StraizoPonchoRenderer() {
         super(new JArmorModel<>("straizoponcho"));
-    }
+    }*/
 }

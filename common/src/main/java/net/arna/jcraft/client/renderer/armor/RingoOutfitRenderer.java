@@ -5,7 +5,7 @@ import net.arna.jcraft.common.item.FlutteringArmorItem;
 import net.minecraft.world.entity.EquipmentSlot;
 
 public class RingoOutfitRenderer extends JArmor<FlutteringArmorItem> {
-    public RingoOutfitRenderer() {
+    /*public RingoOutfitRenderer() {
         super(new JArmorModel<>("ringooutfit"));
     }
 
@@ -24,5 +24,5 @@ public class RingoOutfitRenderer extends JArmor<FlutteringArmorItem> {
             setBoneVisible(this.leftBoot, true);
             setBoneVisible(this.rightBoot, true);
         }
-    }
+    }*/
 }

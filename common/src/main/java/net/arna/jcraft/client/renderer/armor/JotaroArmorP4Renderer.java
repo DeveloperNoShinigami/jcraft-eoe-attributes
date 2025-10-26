@@ -5,7 +5,7 @@ import net.arna.jcraft.common.item.FlutteringArmorItem;
 import net.minecraft.world.entity.EquipmentSlot;
 
 public class JotaroArmorP4Renderer extends JArmor<FlutteringArmorItem> {
-    public JotaroArmorP4Renderer() {
+    /*public JotaroArmorP4Renderer() {
         super(new JArmorModel<>("jotaroclothesp4"));
     }
 
@@ -27,5 +27,5 @@ public class JotaroArmorP4Renderer extends JArmor<FlutteringArmorItem> {
         else if (currentSlot == EquipmentSlot.HEAD) {
             setBoneVisible(this.head, true);
         }
-    }
+    }*/
 }

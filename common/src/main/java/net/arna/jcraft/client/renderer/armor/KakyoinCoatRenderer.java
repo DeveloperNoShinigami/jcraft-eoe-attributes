@@ -6,7 +6,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 
 //renders coat
 public class KakyoinCoatRenderer extends JArmor<FlutteringArmorItem> {
-    public KakyoinCoatRenderer() {
+    /*public KakyoinCoatRenderer() {
         super(new JArmorModel<>("kakyoinshirt"));
     }
     @Override
@@ -21,5 +21,5 @@ public class KakyoinCoatRenderer extends JArmor<FlutteringArmorItem> {
             setBoneVisible(this.rightArm, true);
             setBoneVisible(this.head, true);
         }
-    }
+    }*/
 }

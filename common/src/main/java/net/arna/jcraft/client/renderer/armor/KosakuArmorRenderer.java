@@ -5,7 +5,7 @@ import net.arna.jcraft.common.item.FlutteringArmorItem;
 import net.minecraft.world.entity.EquipmentSlot;
 
 public class KosakuArmorRenderer extends JArmor<FlutteringArmorItem> {
-    public KosakuArmorRenderer() {
+    /*public KosakuArmorRenderer() {
         super(new JArmorModel<>("kiraoutfit", "kosakuoutfit"));
     }
 
@@ -27,5 +27,5 @@ public class KosakuArmorRenderer extends JArmor<FlutteringArmorItem> {
         else if (currentSlot == EquipmentSlot.HEAD) {
             setBoneVisible(this.head, true);
         }
-    }
+    }*/
 }

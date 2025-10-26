@@ -5,7 +5,7 @@ import net.arna.jcraft.common.item.HatItem;
 
 
 public class PuccisHatRenderer extends JArmor<HatItem> {
-    public PuccisHatRenderer() {
+    /*public PuccisHatRenderer() {
         super(new JArmorModel<>("puccis_hat"));
-    }
+    }*/
 }

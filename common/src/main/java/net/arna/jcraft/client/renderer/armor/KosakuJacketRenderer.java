@@ -5,7 +5,7 @@ import net.arna.jcraft.common.item.FlutteringArmorItem;
 
 //renders coat
 public class KosakuJacketRenderer extends JArmor<FlutteringArmorItem> {
-    public KosakuJacketRenderer() {
+    /*public KosakuJacketRenderer() {
         super(new JArmorModel<>("kirajacket", "kosakujacket"));
-    }
+    }*/
 }

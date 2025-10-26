@@ -6,7 +6,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 
 //renders leotard and boots
 public class DIOtardRenderer extends JArmor<DIOJacketItem> {
-    public DIOtardRenderer() {
+    /*public DIOtardRenderer() {
         super(new JArmorModel<>("diotard"));
     }
 
@@ -23,5 +23,5 @@ public class DIOtardRenderer extends JArmor<DIOJacketItem> {
             setBoneVisible(this.leftBoot, true);
             setBoneVisible(this.rightBoot, true);
         }
-    }
+    }*/
 }

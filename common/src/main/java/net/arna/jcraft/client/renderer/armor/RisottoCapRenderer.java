@@ -6,7 +6,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 
 //renders cap
 public class RisottoCapRenderer extends JArmor<FlutteringArmorItem> {
-    public RisottoCapRenderer() {
+   /* public RisottoCapRenderer() {
         super(new JArmorModel<>("risottocap"));
     }
     @Override
@@ -17,5 +17,5 @@ public class RisottoCapRenderer extends JArmor<FlutteringArmorItem> {
             setBoneVisible(this.body, true);
             setBoneVisible(this.head, true);
         }
-    }
+    }*/
 }

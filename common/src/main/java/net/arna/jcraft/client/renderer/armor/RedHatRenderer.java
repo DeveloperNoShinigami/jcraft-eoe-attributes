@@ -5,7 +5,7 @@ import net.arna.jcraft.common.item.HatItem;
 
 
 public class RedHatRenderer extends JArmor<HatItem> {
-    public RedHatRenderer() {
+    /*public RedHatRenderer() {
         super(new JArmorModel<>("red_hat"));
-    }
+    }*/
 }

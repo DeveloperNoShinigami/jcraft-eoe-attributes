@@ -4,7 +4,7 @@ import net.arna.jcraft.client.model.armor.JArmorModel;
 import net.arna.jcraft.common.item.FlutteringArmorItem;
 
 public class DioP1ArmorRenderer extends JArmor<FlutteringArmorItem> {
-    public DioP1ArmorRenderer() {
+    /*public DioP1ArmorRenderer() {
         super(new JArmorModel<>("diooutfit"));
-    }
+    }*/
 }

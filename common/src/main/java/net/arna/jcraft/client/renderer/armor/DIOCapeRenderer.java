@@ -5,7 +5,7 @@ import net.arna.jcraft.common.item.FlutteringArmorItem;
 import net.minecraft.world.entity.EquipmentSlot;
 
 public class DIOCapeRenderer extends JArmor<FlutteringArmorItem> {
-    public DIOCapeRenderer() {
+    /*public DIOCapeRenderer() {
         super(new JArmorModel<>("diocape"));
     }
 
@@ -19,5 +19,5 @@ public class DIOCapeRenderer extends JArmor<FlutteringArmorItem> {
             setBoneVisible(this.leftArm, true);
             setBoneVisible(this.rightArm, true);
         }
-    }
+    }*/
 }

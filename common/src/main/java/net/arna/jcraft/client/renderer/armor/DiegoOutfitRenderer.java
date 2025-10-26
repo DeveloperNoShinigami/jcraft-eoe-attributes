@@ -4,7 +4,7 @@ import net.arna.jcraft.client.model.armor.JArmorModel;
 import net.arna.jcraft.common.item.FlutteringArmorItem;
 
 public class DiegoOutfitRenderer extends JArmor<FlutteringArmorItem> {
-    public DiegoOutfitRenderer() {
+    /*public DiegoOutfitRenderer() {
         super(new JArmorModel<>("diegooutfit"));
-    }
+    }*/
 }

@@ -5,7 +5,7 @@ import net.arna.jcraft.common.item.StoneMaskItem;
 
 
 public class StoneMaskRenderer extends JArmor<StoneMaskItem> {
-    public StoneMaskRenderer() {
+    /*public StoneMaskRenderer() {
         super(new JArmorModel<>("stone_mask"));
-    }
+    }*/
 }

@@ -6,7 +6,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 
 //renders legs and shoes
 public class RisottoBottomRenderer extends JArmor<FlutteringArmorItem> {
-    public RisottoBottomRenderer() {
+    /*public RisottoBottomRenderer() {
         super(new JArmorModel<>("risottobottom"));
     }
     @Override
@@ -22,5 +22,5 @@ public class RisottoBottomRenderer extends JArmor<FlutteringArmorItem> {
             setBoneVisible(this.leftBoot, true);
             setBoneVisible(this.rightBoot, true);
         }
-    }
+    }*/
 }

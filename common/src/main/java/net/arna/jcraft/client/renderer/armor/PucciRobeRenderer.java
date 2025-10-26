@@ -6,7 +6,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 
 //renders coat
 public class PucciRobeRenderer extends JArmor<FlutteringArmorItem> {
-    public PucciRobeRenderer() {
+    /*public PucciRobeRenderer() {
         super(new JArmorModel<>("puccirobe"));
     }
     @Override
@@ -20,5 +20,5 @@ public class PucciRobeRenderer extends JArmor<FlutteringArmorItem> {
             setBoneVisible(this.leftArm, true);
             setBoneVisible(this.rightArm, true);
         }
-    }
+    }*/
 }

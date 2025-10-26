@@ -5,7 +5,7 @@ import net.arna.jcraft.common.item.FlutteringArmorItem;
 import net.minecraft.world.entity.EquipmentSlot;
 
 public class GyroBottomRenderer extends JArmor<FlutteringArmorItem> {
-    public GyroBottomRenderer() {
+    /*public GyroBottomRenderer() {
         super(new JArmorModel<>("gyrobottom"));
     }
 
@@ -22,5 +22,5 @@ public class GyroBottomRenderer extends JArmor<FlutteringArmorItem> {
             setBoneVisible(this.leftBoot, true);
             setBoneVisible(this.rightBoot, true);
         }
-    }
+    }*/
 }

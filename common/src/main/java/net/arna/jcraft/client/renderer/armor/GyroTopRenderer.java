@@ -5,7 +5,7 @@ import net.arna.jcraft.common.item.FlutteringArmorItem;
 
 //renders shirt
 public class GyroTopRenderer extends JArmor<FlutteringArmorItem> {
-    public GyroTopRenderer() {
+    /*public GyroTopRenderer() {
         super(new JArmorModel<>("gyrotop"));
-    }
+    }*/
 }

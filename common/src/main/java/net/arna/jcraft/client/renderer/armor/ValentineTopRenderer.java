@@ -5,7 +5,7 @@ import net.arna.jcraft.common.item.FlutteringArmorItem;
 import net.minecraft.world.entity.EquipmentSlot;
 
 public class ValentineTopRenderer extends JArmor<FlutteringArmorItem> {
-    public ValentineTopRenderer() {
+    /*public ValentineTopRenderer() {
         super(new JArmorModel<>("valentinetop"));
     }
 
@@ -23,5 +23,5 @@ public class ValentineTopRenderer extends JArmor<FlutteringArmorItem> {
         else if (currentSlot == EquipmentSlot.HEAD) {
             setBoneVisible(this.head, true);
         }
-    }
+    }*/
 }
