@@ -41,7 +41,7 @@ public abstract class AbstractEntityRenderer<T extends Entity> extends AzEntityR
     protected final @NonNull ResourceLocation texture;
 
     /**
-     * Constructs a renderer with a fully customizable config and any model/texture paths.
+     * Constructs a renderer with a fully customizable config and the given model/texture paths.
      */
     protected AbstractEntityRenderer(final @NonNull AzEntityRendererConfig<T> config, final @NonNull EntityRendererProvider.Context context,
                                      final @NonNull ResourceLocation model, final @NonNull ResourceLocation texture) {
@@ -63,7 +63,7 @@ public abstract class AbstractEntityRenderer<T extends Entity> extends AzEntityR
     }
 
     /**
-     * Constructs a renderer with a simple config based on the {@link AzAnimator} {@link Supplier} and any model/texture paths.
+     * Constructs a renderer with a simple config based on the {@link AzAnimator} {@link Supplier} and the given model/texture paths.
      */
     protected AbstractEntityRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull Supplier<AzAnimator<UUID, T>> animatorSupplier,
                                      final @NonNull ResourceLocation model, final @NonNull ResourceLocation texture) {
