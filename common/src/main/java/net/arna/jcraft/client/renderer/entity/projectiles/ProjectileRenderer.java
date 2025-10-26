@@ -26,7 +26,7 @@ public class ProjectileRenderer<T extends Entity> extends AbstractEntityRenderer
     }
 
     public ProjectileRenderer(final @NonNull AzEntityRendererConfig<T> config, final @NonNull EntityRendererProvider.Context context, final @NonNull ResourceLocation model, final @NonNull ResourceLocation texture, final @NonNull ResourceLocation animation) {
-        super(config, context, model, texture, animation);
+        super(config, context, model, texture);
     }
 
     public ProjectileRenderer(final @NonNull AzEntityRendererConfig<T> config, final @NonNull EntityRendererProvider.Context context, final @NonNull String id) {
@@ -34,7 +34,7 @@ public class ProjectileRenderer<T extends Entity> extends AbstractEntityRenderer
     }
 
     public ProjectileRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull Supplier<AzAnimator<UUID, T>> azAnimatorSupplier, final @NonNull ResourceLocation model, final @NonNull ResourceLocation texture, final @NonNull ResourceLocation animation) {
-        super(context, azAnimatorSupplier, model, texture, animation);
+        super(context, azAnimatorSupplier, model, texture);
     }
 
     public ProjectileRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull Supplier<AzAnimator<UUID, T>> azAnimatorSupplier, final @NonNull String id) {

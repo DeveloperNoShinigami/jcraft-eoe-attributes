@@ -1,16 +1,8 @@
 package net.arna.jcraft.common.item;
 
 import lombok.NonNull;
-import mod.azure.azurelib.util.AzureLibUtil;
-import net.arna.jcraft.client.renderer.armor.KarsArmorRenderer;
-import net.arna.jcraft.client.renderer.armor.PuccisHatRenderer;
-import net.arna.jcraft.client.renderer.armor.RedHatRenderer;
-import net.arna.jcraft.api.registry.JItemRegistry;
 import net.arna.jcraft.api.registry.JTagRegistry;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
@@ -20,8 +12,6 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class HatItem extends ArmorItem {
     //private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);

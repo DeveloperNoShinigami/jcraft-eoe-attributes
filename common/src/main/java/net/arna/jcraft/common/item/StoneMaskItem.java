@@ -6,18 +6,14 @@ import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
-import lombok.NonNull;
-import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.component.player.CommonSpecComponent;
 import net.arna.jcraft.api.registry.JSoundRegistry;
 import net.arna.jcraft.api.registry.JSpecTypeRegistry;
-import net.arna.jcraft.client.renderer.armor.StoneMaskRenderer;
 import net.arna.jcraft.common.network.s2c.StoneMaskClenchPacket;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.fabricmc.api.EnvType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -34,8 +30,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class StoneMaskItem extends ArmorItem {
     private static final int CLENCH_DURATION = 100; // Duration in ticks for which the clench animation plays

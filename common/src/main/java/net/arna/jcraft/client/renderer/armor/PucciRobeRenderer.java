@@ -1,15 +1,17 @@
 package net.arna.jcraft.client.renderer.armor;
 
-import net.arna.jcraft.client.model.armor.JArmorModel;
 import net.arna.jcraft.common.item.FlutteringArmorItem;
-import net.minecraft.world.entity.EquipmentSlot;
 
 //renders coat
-public class PucciRobeRenderer extends JArmor<FlutteringArmorItem> {
-    /*public PucciRobeRenderer() {
-        super(new JArmorModel<>("puccirobe"));
+public class PucciRobeRenderer extends ArmorRenderer {
+
+    public static final String ID = "puccirobe";
+
+    public PucciRobeRenderer() {
+        super(() -> new ArmorAnimator(ID), ID);
     }
-    @Override
+
+    /*@Override
     protected void applyBoneVisibilityBySlot(EquipmentSlot currentSlot) {
         setAllVisible(false);
 

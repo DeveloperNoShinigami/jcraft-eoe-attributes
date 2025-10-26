@@ -1,15 +1,16 @@
 package net.arna.jcraft.client.renderer.armor;
 
-import net.arna.jcraft.client.model.armor.JArmorModel;
 import net.arna.jcraft.common.item.FlutteringArmorItem;
-import net.minecraft.world.entity.EquipmentSlot;
 
-public class JotaroArmorP6Renderer extends JArmor<FlutteringArmorItem> {
-    /*public JotaroArmorP6Renderer() {
-        super(new JArmorModel<>("jotaroclothesp6"));
+public class JotaroArmorP6Renderer extends ArmorRenderer {
+
+    public static final String ID = "jotaroclothesp6";
+
+    public JotaroArmorP6Renderer() {
+        super(() -> new ArmorAnimator(ID), ID);
     }
 
-    @Override
+    /*@Override
     protected void applyBoneVisibilityBySlot(EquipmentSlot currentSlot) {
         setAllVisible(false);
 

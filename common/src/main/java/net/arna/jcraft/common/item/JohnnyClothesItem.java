@@ -1,17 +1,7 @@
 package net.arna.jcraft.common.item;
 
-import lombok.NonNull;
-import mod.azure.azurelib.util.AzureLibUtil;
-import net.arna.jcraft.client.renderer.armor.JohnnyArmorRenderer;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.ItemStack;
-
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class JohnnyClothesItem extends ArmorItem {
     public JohnnyClothesItem(ArmorMaterial materialIn, Type slot, Properties builder) {
