@@ -41,7 +41,7 @@ public abstract class AbstractEntityRenderer<T extends Entity> extends AzEntityR
     protected final @NonNull ResourceLocation texture;
 
     /**
-     * Constructs a renderer with a fully customizable config and any model/texture/animation paths.
+     * Constructs a renderer with a fully customizable config and any model/texture paths.
      */
     protected AbstractEntityRenderer(final @NonNull AzEntityRendererConfig<T> config, final @NonNull EntityRendererProvider.Context context,
                                      final @NonNull ResourceLocation model, final @NonNull ResourceLocation texture) {
@@ -51,12 +51,11 @@ public abstract class AbstractEntityRenderer<T extends Entity> extends AzEntityR
     }
 
     /**
-     * Constructs a renderer with a fully customizable config and model/texture/animation paths based on the specified ID.
+     * Constructs a renderer with a fully customizable config and model/texture paths based on the specified ID.
      *
      * <ul>
      * <li>Resulting model path will be equivalent to <code>JCraft.id("geo/" + id + ".geo.json")</code></li>
      * <li>Resulting texture path will be equivalent to <code>JCraft.id("textures/entity/" + id + ".png")</code></li>
-     * <li>Resulting animation path will be equivalent to <code>JCraft.id("animations/" + id + ".animation.json")</code></li>
      * </ul>
      */
     protected AbstractEntityRenderer(final @NonNull AzEntityRendererConfig<T> config, final @NonNull EntityRendererProvider.Context context, final @NonNull String id) {
@@ -64,7 +63,7 @@ public abstract class AbstractEntityRenderer<T extends Entity> extends AzEntityR
     }
 
     /**
-     * Constructs a renderer with a simple config based on the {@link AzAnimator} {@link Supplier} and any model/texture/animation paths.
+     * Constructs a renderer with a simple config based on the {@link AzAnimator} {@link Supplier} and any model/texture paths.
      */
     protected AbstractEntityRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull Supplier<AzAnimator<UUID, T>> animatorSupplier,
                                      final @NonNull ResourceLocation model, final @NonNull ResourceLocation texture) {
@@ -72,12 +71,11 @@ public abstract class AbstractEntityRenderer<T extends Entity> extends AzEntityR
     }
 
     /**
-     * Constructs a renderer with a simple config based on the {@link AzAnimator} {@link Supplier} and model/texture/animation paths based on the specified ID.
+     * Constructs a renderer with a simple config based on the {@link AzAnimator} {@link Supplier} and model/texture paths based on the specified ID.
      *
      * <ul>
      * <li>Resulting model path will be equivalent to <code>JCraft.id("geo/" + id + ".geo.json")</code></li>
      * <li>Resulting texture path will be equivalent to <code>JCraft.id("textures/entity/" + id + ".png")</code></li>
-     * <li>Resulting animation path will be equivalent to <code>JCraft.id("animations/" + id + ".animation.json")</code></li>
      * </ul>
      */
     protected AbstractEntityRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull Supplier<AzAnimator<UUID, T>> animatorSupplier, final @NonNull String id) {
@@ -85,12 +83,11 @@ public abstract class AbstractEntityRenderer<T extends Entity> extends AzEntityR
     }
 
     /**
-     * Constructs a renderer with a config based on the {@link AzAnimator} {@link Supplier} and the {@link mod.azure.azurelib.render.entity.AzEntityRendererConfig.Builder} {@link UnaryOperator}, and model/texture/animation paths based on the specified ID.
+     * Constructs a renderer with a config based on the {@link AzAnimator} {@link Supplier} and the {@link mod.azure.azurelib.render.entity.AzEntityRendererConfig.Builder} {@link UnaryOperator}, and model/texture paths based on the specified ID.
      *
      * <ul>
      * <li>Resulting model path will be equivalent to <code>JCraft.id("geo/" + id + ".geo.json")</code></li>
      * <li>Resulting texture path will be equivalent to <code>JCraft.id("textures/entity/" + id + ".png")</code></li>
-     * <li>Resulting animation path will be equivalent to <code>JCraft.id("animations/" + id + ".animation.json")</code></li>
      * </ul>
      */
     protected AbstractEntityRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull Supplier<AzAnimator<UUID, T>> animatorSupplier, final @NonNull UnaryOperator<AzEntityRendererConfig.Builder<T>> additionalConfigs, final @NonNull String id) {
@@ -113,10 +110,18 @@ public abstract class AbstractEntityRenderer<T extends Entity> extends AzEntityR
          */
         protected final @NonNull ResourceLocation animation;
 
+        /**
+         * Constructs an animator with the given animation path.
+         */
         public EntityAnimator(final @NonNull ResourceLocation animation) {
             this.animation = animation;
         }
 
+        /**
+         * Constructs an animator with the given ID.
+         * <p>
+         * Resulting animation path will be equivalent to <code>JCraft.id("animations/" + id + ".animation.json")</code>
+         */
         public EntityAnimator(final @NonNull String id) {
             this(JCraft.id(ANIMATION_STR_TEMPLATE.formatted(id)));
         }
