@@ -3,12 +3,9 @@ package net.arna.jcraft.client.registry;
 import dev.architectury.registry.client.level.entity.EntityRendererRegistry;
 import dev.architectury.registry.registries.RegistrySupplier;
 import lombok.NonNull;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.arna.jcraft.api.registry.JStandTypeRegistry;
-import net.arna.jcraft.client.model.entity.BisectModel;
-import net.arna.jcraft.client.model.entity.spec.AnubisSpecUserModel;
-import net.arna.jcraft.client.model.entity.spec.BrawlerSpecUserModel;
-import net.arna.jcraft.client.model.entity.spec.VampireSpecUserModel;
 import net.arna.jcraft.client.renderer.entity.*;
 import net.arna.jcraft.client.renderer.entity.npc.*;
 import net.arna.jcraft.client.renderer.entity.projectiles.*;
@@ -66,7 +63,7 @@ public interface JEntityRendererRegister {
 
             new RendererData<>(JEntityTypeRegistry.HIEROPHANT_GREEN, HGRenderer::new),
             new RendererData<>(JEntityTypeRegistry.EMERALD, context -> new ProjectileRenderer<>(context, "emerald")),
-            new RendererData<>(JEntityTypeRegistry.BISECT, context -> new ProjectileRenderer<>(context, new BisectModel())),
+            new RendererData<>(JEntityTypeRegistry.BISECT, context -> new ProjectileRenderer<>(context, "bisect")),
             new RendererData<>(JEntityTypeRegistry.HG_NET, HGNetRenderer::new),
 
             new RendererData<>(JEntityTypeRegistry.THE_SUN, TheSunRenderer::new),
@@ -128,9 +125,9 @@ public interface JEntityRendererRegister {
 
             new RendererData<>(JEntityTypeRegistry.ITEM_TOSS_PROJECTILE, ItemTossProjectileRenderer::new),
 
-            new RendererData<>(JEntityTypeRegistry.BRAWLER_SPEC_USER, context -> new SpecUserRenderer<>(context, new BrawlerSpecUserModel())),
-            new RendererData<>(JEntityTypeRegistry.VAMPIRE_SPEC_USER, context -> new SpecUserRenderer<>(context, new VampireSpecUserModel())),
-            new RendererData<>(JEntityTypeRegistry.ANUBIS_SPEC_USER, context -> new SpecUserRenderer<>(context, new AnubisSpecUserModel())),
+            new RendererData<>(JEntityTypeRegistry.BRAWLER_SPEC_USER, context -> new SpecUserRenderer<>(context, JCraft.id("geo/humanoid.geo.json"), JCraft.id("textures/entity/jonathan.png"))),
+            new RendererData<>(JEntityTypeRegistry.VAMPIRE_SPEC_USER, context -> new SpecUserRenderer<>(context, JCraft.id("geo/humanoid.geo.json"), JCraft.id("textures/entity/vampire_spec_user.png"))),
+            new RendererData<>(JEntityTypeRegistry.ANUBIS_SPEC_USER, context -> new SpecUserRenderer<>(context, JCraft.id("geo/chaka.geo.json"), JCraft.id("textures/entity/chaka.png"))),
     };
 
     static void registerEntityRenderers(Consumer<RendererData<?>> consumer) {
