@@ -34,7 +34,7 @@ public class GEButterflyRenderer extends AbstractEntityRenderer<GEButterflyEntit
 
     protected ItemStack mainHandItem;
 
-    protected GEButterflyRenderer(final @NonNull EntityRendererProvider.Context context) {
+    public GEButterflyRenderer(final @NonNull EntityRendererProvider.Context context) {
         super(context, () -> new AbstractEntityRenderer.EntityAnimator<>(ID), ID);
     }
 

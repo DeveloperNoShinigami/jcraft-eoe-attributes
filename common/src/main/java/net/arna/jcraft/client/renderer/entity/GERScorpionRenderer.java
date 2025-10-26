@@ -32,7 +32,7 @@ public class GERScorpionRenderer extends AbstractEntityRenderer<GERScorpionEntit
             texture = JCraft.id("textures/entity/rock.png"),
             rock = JCraft.id("textures/entity/gerscorpion.png");
 
-    protected GERScorpionRenderer(final @NonNull EntityRendererProvider.Context context) {
+    public GERScorpionRenderer(final @NonNull EntityRendererProvider.Context context) {
         super(context, () -> new EntityAnimator<>(ID), ID);
     }
 }

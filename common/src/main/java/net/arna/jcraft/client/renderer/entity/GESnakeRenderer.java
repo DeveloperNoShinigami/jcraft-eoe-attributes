@@ -30,7 +30,7 @@ public class GESnakeRenderer extends AbstractEntityRenderer<GESnakeEntity> {
     
     protected ItemStack mainHandItem;
 
-    protected GESnakeRenderer(final @NonNull  EntityRendererProvider.Context context) {
+    public GESnakeRenderer(final @NonNull EntityRendererProvider.Context context) {
         super(context, () -> new EntityAnimator<>(ID), ID);
     }
 
