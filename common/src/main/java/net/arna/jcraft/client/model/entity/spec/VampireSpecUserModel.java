@@ -8,7 +8,7 @@ public class VampireSpecUserModel extends SpecUserModel<VampireSpecUser> {
     private static final ResourceLocation model = JCraft.id("geo/humanoid.geo.json");
     private static final ResourceLocation texture = JCraft.id("textures/entity/vampire_spec_user.png");
 
-    @Override
+    /*@Override
     public ResourceLocation getModelResource(final VampireSpecUser animatable) {
         return model;
     }
@@ -16,6 +16,6 @@ public class VampireSpecUserModel extends SpecUserModel<VampireSpecUser> {
     @Override
     public ResourceLocation getTextureResource(final VampireSpecUser animatable) {
         return texture;
-    }
+    }*/
 
 }

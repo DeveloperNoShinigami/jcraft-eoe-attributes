@@ -16,8 +16,8 @@ public class TheFoolModel extends StandEntityModel<TheFoolEntity> {
         super(JStandTypeRegistry.THE_FOOL.get(), 0.7854f, -0.349f, 30f);
     }
 
-    @Override
+    /*@Override
     public ResourceLocation getTextureResource(final TheFoolEntity entity) {
         return entity.isSand() ? SAND_TEXTURE : super.getTextureResource(entity);
-    }
+    }*/
 }

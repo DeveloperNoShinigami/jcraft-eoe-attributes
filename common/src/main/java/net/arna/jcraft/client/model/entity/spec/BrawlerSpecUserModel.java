@@ -8,7 +8,7 @@ public class BrawlerSpecUserModel extends SpecUserModel<BrawlerSpecUser> {
     private static final ResourceLocation model = JCraft.id("geo/humanoid.geo.json");
     private static final ResourceLocation texture = JCraft.id("textures/entity/jonathan.png");
 
-    @Override
+    /*@Override
     public ResourceLocation getModelResource(final BrawlerSpecUser animatable) {
         return model;
     }
@@ -16,6 +16,6 @@ public class BrawlerSpecUserModel extends SpecUserModel<BrawlerSpecUser> {
     @Override
     public ResourceLocation getTextureResource(final BrawlerSpecUser animatable) {
         return texture;
-    }
+    }*/
 
 }

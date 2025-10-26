@@ -18,8 +18,8 @@ public class StarPlatinumModel extends StandEntityModel<AbstractStarPlatinumEnti
         super(theWorld ? JStandTypeRegistry.STAR_PLATINUM_THE_WORLD.get() : JStandTypeRegistry.STAR_PLATINUM.get());
     }
 
-    @Override
+    /*@Override
     public ResourceLocation getModelResource(final AbstractStarPlatinumEntity<?, ?> animatable) {
         return MODEL;
-    }
+    }*/
 }

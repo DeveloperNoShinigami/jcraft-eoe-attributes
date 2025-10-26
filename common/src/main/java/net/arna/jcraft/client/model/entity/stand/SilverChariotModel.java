@@ -17,12 +17,12 @@ public class SilverChariotModel extends StandEntityModel<SilverChariotEntity> {
         super(JStandTypeRegistry.SILVER_CHARIOT.get(), 0, -0.2f);
     }
 
-    @Override
+    /*@Override
     public ResourceLocation getTextureResource(final SilverChariotEntity entity) {
         return switch (entity.getMode()) {
             case ARMORLESS -> NO_ARMOR_TEXTURE;
             case POSSESSED -> POSSESSED_TEXTURE;
             default -> super.getTextureResource(entity);
         };
-    }
+    }*/
 }

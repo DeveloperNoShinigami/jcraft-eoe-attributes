@@ -18,8 +18,8 @@ public class ShadowTheWorldModel extends StandEntityModel<ShadowTheWorldEntity> 
         super(JStandTypeRegistry.SHADOW_THE_WORLD.get(), -0.1745329251f, -0.1745329251f);
     }
 
-    @Override
+    /*@Override
     public ResourceLocation getModelResource(final ShadowTheWorldEntity entity) {
         return MODEL;
-    }
+    }*/
 }

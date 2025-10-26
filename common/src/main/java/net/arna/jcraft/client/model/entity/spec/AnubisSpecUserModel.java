@@ -8,7 +8,7 @@ public class AnubisSpecUserModel extends SpecUserModel<AnubisSpecUser> {
     private static final ResourceLocation model = JCraft.id("geo/chaka.geo.json");
     private static final ResourceLocation texture = JCraft.id("textures/entity/chaka.png");
 
-    @Override
+    /*@Override
     public ResourceLocation getModelResource(final AnubisSpecUser animatable) {
         return model;
     }
@@ -16,6 +16,6 @@ public class AnubisSpecUserModel extends SpecUserModel<AnubisSpecUser> {
     @Override
     public ResourceLocation getTextureResource(final AnubisSpecUser animatable) {
         return texture;
-    }
+    }*/
 
 }
