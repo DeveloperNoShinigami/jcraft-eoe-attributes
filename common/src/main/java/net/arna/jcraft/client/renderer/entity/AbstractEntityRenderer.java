@@ -39,20 +39,15 @@ public abstract class AbstractEntityRenderer<T extends Entity> extends AzEntityR
      * Path to the texture to be used for this entity.
      */
     protected final @NonNull ResourceLocation texture;
-    /**
-     * Path to the animation to be used for this entity.
-     */
-    protected final @NonNull ResourceLocation animation;
 
     /**
      * Constructs a renderer with a fully customizable config and any model/texture/animation paths.
      */
     protected AbstractEntityRenderer(final @NonNull AzEntityRendererConfig<T> config, final @NonNull EntityRendererProvider.Context context,
-                                     final @NonNull ResourceLocation model, final @NonNull ResourceLocation texture, final @NonNull ResourceLocation animation) {
+                                     final @NonNull ResourceLocation model, final @NonNull ResourceLocation texture) {
         super(config, context);
         this.model = model;
         this.texture = texture;
-        this.animation = animation;
     }
 
     /**
@@ -65,15 +60,15 @@ public abstract class AbstractEntityRenderer<T extends Entity> extends AzEntityR
      * </ul>
      */
     protected AbstractEntityRenderer(final @NonNull AzEntityRendererConfig<T> config, final @NonNull EntityRendererProvider.Context context, final @NonNull String id) {
-        this(config, context, JCraft.id(MODEL_STR_TEMPLATE.formatted(id)), JCraft.id(TEXTURE_STR_TEMPLATE.formatted(id)), JCraft.id(ANIMATION_STR_TEMPLATE.formatted(id)));
+        this(config, context, JCraft.id(MODEL_STR_TEMPLATE.formatted(id)), JCraft.id(TEXTURE_STR_TEMPLATE.formatted(id)));
     }
 
     /**
      * Constructs a renderer with a simple config based on the {@link AzAnimator} {@link Supplier} and any model/texture/animation paths.
      */
     protected AbstractEntityRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull Supplier<AzAnimator<UUID, T>> animatorSupplier,
-                                     final @NonNull ResourceLocation model, final @NonNull ResourceLocation texture, final @NonNull ResourceLocation animation) {
-        this(AzEntityRendererConfig.<T>builder(model, texture).setAnimatorProvider(animatorSupplier).build(), context, model, texture, animation);
+                                     final @NonNull ResourceLocation model, final @NonNull ResourceLocation texture) {
+        this(AzEntityRendererConfig.<T>builder(model, texture).setAnimatorProvider(animatorSupplier).build(), context, model, texture);
     }
 
     /**
@@ -86,7 +81,7 @@ public abstract class AbstractEntityRenderer<T extends Entity> extends AzEntityR
      * </ul>
      */
     protected AbstractEntityRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull Supplier<AzAnimator<UUID, T>> animatorSupplier, final @NonNull String id) {
-        this(context, animatorSupplier, JCraft.id(MODEL_STR_TEMPLATE.formatted(id)), JCraft.id(TEXTURE_STR_TEMPLATE.formatted(id)), JCraft.id(ANIMATION_STR_TEMPLATE.formatted(id)));
+        this(context, animatorSupplier, JCraft.id(MODEL_STR_TEMPLATE.formatted(id)), JCraft.id(TEXTURE_STR_TEMPLATE.formatted(id)));
     }
 
     /**
@@ -100,7 +95,7 @@ public abstract class AbstractEntityRenderer<T extends Entity> extends AzEntityR
      */
     protected AbstractEntityRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull Supplier<AzAnimator<UUID, T>> animatorSupplier, final @NonNull UnaryOperator<AzEntityRendererConfig.Builder<T>> additionalConfigs, final @NonNull String id) {
         this(additionalConfigs.apply(AzEntityRendererConfig.<T>builder(JCraft.id(MODEL_STR_TEMPLATE.formatted(id)), JCraft.id(TEXTURE_STR_TEMPLATE.formatted(id))).setAnimatorProvider(animatorSupplier)).build(),
-                context, JCraft.id(MODEL_STR_TEMPLATE.formatted(id)), JCraft.id(TEXTURE_STR_TEMPLATE.formatted(id)), JCraft.id(ANIMATION_STR_TEMPLATE.formatted(id)));
+                context, JCraft.id(MODEL_STR_TEMPLATE.formatted(id)), JCraft.id(TEXTURE_STR_TEMPLATE.formatted(id)));
     }
 
     @Override
@@ -113,6 +108,9 @@ public abstract class AbstractEntityRenderer<T extends Entity> extends AzEntityR
      */
     public static class EntityAnimator<T extends Entity> extends AzEntityAnimator<T> {
 
+        /**
+         * Path to the animation to be used for this entity.
+         */
         protected final @NonNull ResourceLocation animation;
 
         public EntityAnimator(final @NonNull ResourceLocation animation) {
