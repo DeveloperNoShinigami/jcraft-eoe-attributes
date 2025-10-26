@@ -39,7 +39,6 @@ import java.util.Objects;
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Horus">Horus</a>.
  * @see JStandTypeRegistry#HORUS
- * @see net.arna.jcraft.client.model.entity.stand.HorusModel HorusModel
  * @see net.arna.jcraft.client.renderer.entity.stands.HorusRenderer HorusRenderer
  * @see net.arna.jcraft.common.entity.npc.PetshopEntity PetshopEntity
  * @see HorusBarrageAttack

@@ -4,6 +4,7 @@ import dev.architectury.registry.client.level.entity.EntityRendererRegistry;
 import dev.architectury.registry.registries.RegistrySupplier;
 import lombok.NonNull;
 import net.arna.jcraft.api.registry.JEntityTypeRegistry;
+import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.arna.jcraft.client.model.entity.BisectModel;
 import net.arna.jcraft.client.model.entity.spec.AnubisSpecUserModel;
 import net.arna.jcraft.client.model.entity.spec.BrawlerSpecUserModel;
@@ -68,12 +69,12 @@ public interface JEntityRendererRegister {
             new RendererData<>(JEntityTypeRegistry.BISECT, context -> new ProjectileRenderer<>(context, new BisectModel())),
             new RendererData<>(JEntityTypeRegistry.HG_NET, HGNetRenderer::new),
 
-            new RendererData<>(JEntityTypeRegistry.THE_SUN, SunRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.THE_SUN, TheSunRenderer::new),
 
-            new RendererData<>(JEntityTypeRegistry.GER, GERRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.GER, context -> new StandEntityRenderer<>(context, JStandTypeRegistry.GOLD_EXPERIENCE_REQUIEM.get())),
             new RendererData<>(JEntityTypeRegistry.GER_SCORPION, GERScorpionRenderer::new),
 
-            new RendererData<>(JEntityTypeRegistry.PURPLE_HAZE_DISTORTION, PurpleHazeDistortionRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.PURPLE_HAZE_DISTORTION, context -> new StandEntityRenderer<>(context, JStandTypeRegistry.PURPLE_HAZE_DISTORTION.get())),
             new RendererData<>(JEntityTypeRegistry.PURPLE_HAZE, PurpleHazeRenderer::new),
 
             new RendererData<>(JEntityTypeRegistry.HORUS, HorusRenderer::new),
@@ -81,14 +82,14 @@ public interface JEntityRendererRegister {
             new RendererData<>(JEntityTypeRegistry.LARGE_ICICLE, LargeIcicleRenderer::new),
             new RendererData<>(JEntityTypeRegistry.ICE_BRANCH, IceBranchRenderer::new),
 
-            new RendererData<>(JEntityTypeRegistry.CINDERELLA, CinderellaRenderer::new),
-            new RendererData<>(JEntityTypeRegistry.OSIRIS, OsirisRenderer::new),
-            new RendererData<>(JEntityTypeRegistry.ATUM, AtumRenderer::new),
-            new RendererData<>(JEntityTypeRegistry.DIVER_DOWN, DiverDownRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.CINDERELLA, context -> new StandEntityRenderer<>(context, JStandTypeRegistry.CINDERELLA.get())),
+            new RendererData<>(JEntityTypeRegistry.OSIRIS, context -> new StandEntityRenderer<>(context, JStandTypeRegistry.OSIRIS.get())),
+            new RendererData<>(JEntityTypeRegistry.ATUM, context -> new StandEntityRenderer<>(context, JStandTypeRegistry.ATUM.get())),
+            new RendererData<>(JEntityTypeRegistry.DIVER_DOWN, context -> new StandEntityRenderer<>(context, JStandTypeRegistry.DIVER_DOWN.get())),
             new RendererData<>(JEntityTypeRegistry.CHARIOT_REQUIEM, ChariotRequiemRenderer::new),
             new RendererData<>(JEntityTypeRegistry.DRAGONS_DREAM, DragonsDreamRenderer::new),
-            new RendererData<>(JEntityTypeRegistry.FOO_FIGHTERS, FooFightersRenderer::new),
-            new RendererData<>(JEntityTypeRegistry.GOO_GOO_DOLLS, GooGooDollsRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.FOO_FIGHTERS, context -> new StandEntityRenderer<>(context, JStandTypeRegistry.FOO_FIGHTERS.get())),
+            new RendererData<>(JEntityTypeRegistry.GOO_GOO_DOLLS, context -> new StandEntityRenderer<>(context, JStandTypeRegistry.GOO_GOO_DOLLS.get())),
 
             new RendererData<>(JEntityTypeRegistry.LASER_PROJECTILE, LaserProjectileRenderer::new),
             new RendererData<>(JEntityTypeRegistry.BLOOD_PROJECTILE, BloodProjectileRenderer::new),

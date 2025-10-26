@@ -1,55 +1,68 @@
 package net.arna.jcraft.client.renderer.entity.stands;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import mod.azure.azurelib.cache.object.BakedGeoModel;
-import mod.azure.azurelib.cache.object.GeoBone;
-import mod.azure.azurelib.constant.DataTickets;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.model.data.EntityModelData;
-import mod.azure.azurelib.renderer.GeoEntityRenderer;
+import lombok.NonNull;
+import mod.azure.azurelib.render.AzRendererPipelineContext;
+import mod.azure.azurelib.render.entity.AzEntityRendererConfig;
+import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.client.JClientConfig;
-import net.arna.jcraft.client.model.entity.stand.StandEntityModel;
-import net.arna.jcraft.client.util.JClientUtils;
+import net.arna.jcraft.client.renderer.entity.AbstractEntityRenderer;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4f;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 /**
- * The {@link GeoEntityRenderer} for stands of any {@link net.arna.jcraft.api.stand.StandType StandType}.
+ * The {@link AbstractEntityRenderer} for stands of any {@link StandType StandType}.
  * @param <T> the entity to render
- * @see StandEntityModel
  */
-public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityRenderer<T> {
+@Environment(EnvType.CLIENT)
+public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEntityRenderer<T> {
 
     protected ItemStack mainHandItem, offHandItem;
 
     protected static final String LEFT_HAND = "bipedHandLeft";
     protected static final String RIGHT_HAND = "bipedHandRight";
 
-    //private final StandEntityModel<T> standEntityModel;
-    protected StandEntityRenderer(final EntityRendererProvider.Context renderManager, final StandEntityModel<T> modelProvider) {
-        super(renderManager, modelProvider);
+    public StandEntityRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull StandType type) {
+        this(context, UnaryOperator.identity(), type);
     }
 
-    @Override
-    public ResourceLocation getTextureLocation(T animatable) {
-        return getGeoModel().getTextureResource(animatable);
+    protected StandEntityRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull UnaryOperator<AzEntityRendererConfig.Builder<T>> additionalConfigs, final @NonNull StandType type) {
+        super(context, () -> new EntityAnimator<>(type.getId().getPath()),
+                (UnaryOperator<AzEntityRendererConfig.Builder<T>>)additionalConfigs.<AzEntityRendererConfig.Builder<T>>compose(
+                        b -> b
+                                .setRenderType(renderType(type))
+                                .setPrerenderEntry(preRenderEntry())),
+                type.getId().getPath());
     }
+
+    protected static @NotNull <T extends StandEntity<?,?>> Function<T, RenderType> renderType(final @NotNull StandType type) {
+        return stand -> StandEntityRenderer.renderTypeOf(stand, JCraft.id(TEXTURE_STR_TEMPLATE.formatted(type.getId().getPath())));
+    }
+
+    protected static @NotNull <T extends StandEntity<?,?>> Function<AzRendererPipelineContext<UUID, T>, AzRendererPipelineContext<UUID, T>> preRenderEntry() {
+        return pc -> {
+            float a = getAlpha(pc.animatable(), pc.partialTick());
+            a *= pc.alpha();
+            if (a > 0.01f) {
+                pc.setAlpha(a);
+            }
+            return pc;
+        };
+    }
+
 
     public static boolean standIsFirstPersonViewers(final StandEntity<?, ?> stand)
     {
@@ -72,23 +85,10 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
         return standIsFirstPersonViewers(stand) ? RenderType.entityNoOutline(textureLocation) : RenderType.entityTranslucent(textureLocation);
     }
 
+    /*
     @Override
     public RenderType getRenderType(final T animatable, final ResourceLocation texture, final @Nullable MultiBufferSource bufferSource, final float partialTick) {
         return renderTypeOf(animatable, texture);
-    }
-
-    // Adds the ability to change render alpha
-    @Override
-    public void preRender(final PoseStack poseStack, final T stand, final BakedGeoModel model, final MultiBufferSource bufferSource, final VertexConsumer buffer,
-                          final boolean isReRender, final float partialTick, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha) {
-
-        float a = getAlpha(stand, partialTick);
-        a *= alpha;
-        if (a <= 0.01f) {
-            return;
-        }
-
-        super.preRender(poseStack, stand, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, getRed(stand, red, a), getGreen(stand, green, a), getBlue(stand, blue, a), alpha);
     }
 
     // Better than a mixin, makes stands look towards the users HEAD rotation as opposed to body
@@ -192,7 +192,7 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
 
         // Clear rotation modifications - SUPER hacky, please find a better way :)
         // better way found - just zero out all the anims at the start (THANKS GECKO!(irony))
-        /*
+        *//*
         AnimationProcessor<?> animationProcessor = this.standEntityModel.getAnimationProcessor();
         CoreGeoBone torso = animationProcessor.getBone("torso");
         if (torso != null) torso.setRotX(standEntityModel.prevTorsoPitch);
@@ -200,7 +200,7 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
         if (head != null) head.setRotX(standEntityModel.prevHeadPitch);
         CoreGeoBone base = animationProcessor.getBone("base");
         if (base != null) base.setRotX(standEntityModel.prevBasePitch);
-         */
+         *//*
     }
 
     @Override
@@ -228,7 +228,7 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
         }
 
         return super.firePreRenderEvent(poseStack, model, bufferSource, partialTick, packedLight);
-    }
+    }*/
 
     public static boolean shouldApplyAlpha(final StandEntity<?, ?> stand) {
         final Minecraft mcClient = Minecraft.getInstance();

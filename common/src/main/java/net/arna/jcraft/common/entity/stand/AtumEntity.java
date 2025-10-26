@@ -16,8 +16,6 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Atum">Atum</a>.
  * @see JStandTypeRegistry#ATUM
- * @see net.arna.jcraft.client.model.entity.stand.AtumModel AtumModel
- * @see net.arna.jcraft.client.renderer.entity.stands.AtumRenderer AtumRenderer
  * @see net.arna.jcraft.common.entity.npc.DarbyYoungerEntity DarbyYoungerEntity
  */
 public class AtumEntity extends StandEntity<AtumEntity, AtumEntity.State> {

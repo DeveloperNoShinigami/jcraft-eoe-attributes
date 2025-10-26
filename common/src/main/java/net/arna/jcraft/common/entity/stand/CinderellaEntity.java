@@ -22,8 +22,6 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Cinderella">Cinderella</a>.
  * @see JStandTypeRegistry#CINDERELLA
- * @see net.arna.jcraft.client.model.entity.stand.CinderellaModel CinderellaModel
- * @see net.arna.jcraft.client.renderer.entity.stands.CinderellaRenderer CinderellaRenderer
  * @see net.arna.jcraft.common.entity.npc.AyaTsujiEntity AyaTsujiEntity
  */
 public class CinderellaEntity extends StandEntity<CinderellaEntity, CinderellaEntity.State> {

@@ -3,11 +3,13 @@ package net.arna.jcraft.client.renderer.entity.stands;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import mod.azure.azurelib.cache.object.BakedGeoModel;
-import mod.azure.azurelib.cache.object.GeoBone;
-import mod.azure.azurelib.renderer.layer.BlockAndItemGeoLayer;
+import lombok.NonNull;
+import net.arna.jcraft.api.registry.JStandTypeRegistry;
+import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.client.model.entity.stand.WhiteSnakeModel;
 import net.arna.jcraft.common.entity.stand.WhiteSnakeEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -21,8 +23,14 @@ import org.jetbrains.annotations.Nullable;
  * The {@link StandEntityRenderer} for {@link WhiteSnakeEntity}.
  * @see WhiteSnakeModel
  */
+@Environment(EnvType.CLIENT)
 public class WhiteSnakeRenderer extends StandEntityRenderer<WhiteSnakeEntity> {
-    public WhiteSnakeRenderer(final EntityRendererProvider.Context context) {
+
+    public WhiteSnakeRenderer(final @NonNull EntityRendererProvider.Context context) {
+        super(context, JStandTypeRegistry.WHITE_SNAKE.get());
+    }
+
+    /*public WhiteSnakeRenderer(final EntityRendererProvider.Context context) {
         super(context, new WhiteSnakeModel());
 
         addRenderLayer(new BlockAndItemGeoLayer<>(this) {
@@ -92,5 +100,5 @@ public class WhiteSnakeRenderer extends StandEntityRenderer<WhiteSnakeEntity> {
         this.offHandItem = animatable.getOffhandItem();
 
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, a);
-    }
+    }*/
 }

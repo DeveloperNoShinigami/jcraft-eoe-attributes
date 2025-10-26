@@ -13,6 +13,7 @@ import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.api.attack.enums.MoveClass;
 import net.arna.jcraft.api.attack.enums.MoveInputType;
 import net.arna.jcraft.api.attack.MoveMap;
+import net.arna.jcraft.client.renderer.entity.stands.TheSunRenderer;
 import net.arna.jcraft.common.attack.moves.shared.NoOpMove;
 import net.arna.jcraft.common.attack.moves.thesun.FireMeteorAttack;
 import net.arna.jcraft.common.attack.moves.thesun.FireSunBeamAttack;
@@ -63,7 +64,7 @@ import java.util.Objects;
  * The {@link StandEntity} for <a href="https://jojowiki.com/Sun">The Sun</a>.
  * @see JStandTypeRegistry#THE_SUN
  * @see net.arna.jcraft.client.model.entity.stand.TheSunModel TheSunModel
- * @see net.arna.jcraft.client.renderer.entity.stands.SunRenderer SunRenderer
+ * @see TheSunRenderer SunRenderer
  */
 public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.State> {
     public static final MoveSet<TheSunEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.THE_SUN,

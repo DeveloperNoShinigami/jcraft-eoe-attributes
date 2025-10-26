@@ -1,8 +1,12 @@
 package net.arna.jcraft.client.renderer.entity.vehicles;
 
-import mod.azure.azurelib.renderer.GeoEntityRenderer;
+import lombok.NonNull;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.model.entity.RoadRollerModel;
+import net.arna.jcraft.client.renderer.entity.AbstractEntityRenderer;
 import net.arna.jcraft.common.entity.vehicle.RoadRollerEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -10,18 +14,15 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * The {@link GeoEntityRenderer} for {@link RoadRollerEntity}.
- * @see RoadRollerModel
+ * The {@link AbstractEntityRenderer} for {@link RoadRollerEntity}.
  */
-public class RoadRollerRenderer extends GeoEntityRenderer<RoadRollerEntity> {
+@Environment(EnvType.CLIENT)
+public class RoadRollerRenderer extends AbstractEntityRenderer<RoadRollerEntity> {
 
-    public RoadRollerRenderer(final EntityRendererProvider.Context context) {
-        super(context, new RoadRollerModel());
-    }
+    public static final String ID = "road_roller";
 
-    @Override
-    public RenderType getRenderType(final RoadRollerEntity animatable, final ResourceLocation texture, final @Nullable MultiBufferSource bufferSource, final float partialTick) {
-        return RenderType.entityTranslucent(getGeoModel().getTextureResource(animatable));
+    public RoadRollerRenderer(final @NonNull EntityRendererProvider.Context context) {
+        super(context, () -> new EntityAnimator<>(ID), b -> b.setRenderType(RenderType.entityTranslucent(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID)))), ID);
     }
 
     @Override

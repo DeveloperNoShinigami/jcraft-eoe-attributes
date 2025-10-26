@@ -16,8 +16,6 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Diver_Down">Diver Down</a>.
  * @see JStandTypeRegistry#DIVER_DOWN
- * @see net.arna.jcraft.client.model.entity.stand.DiverDownModel DiverDownModel
- * @see net.arna.jcraft.client.renderer.entity.stands.DiverDownRenderer DiverDownRenderer
  */
 public class DiverDownEntity extends StandEntity<DiverDownEntity, DiverDownEntity.State> {
     public static final MoveSet<DiverDownEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.DIVER_DOWN,

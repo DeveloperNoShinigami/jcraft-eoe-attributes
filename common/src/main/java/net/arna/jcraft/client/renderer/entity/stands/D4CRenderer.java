@@ -3,12 +3,13 @@ package net.arna.jcraft.client.renderer.entity.stands;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import mod.azure.azurelib.cache.object.BakedGeoModel;
-import mod.azure.azurelib.cache.object.GeoBone;
-import mod.azure.azurelib.renderer.layer.BlockAndItemGeoLayer;
+import lombok.NonNull;
+import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.client.model.entity.stand.StandEntityModel;
 import net.arna.jcraft.common.entity.stand.D4CEntity;
 import net.arna.jcraft.api.registry.JStandTypeRegistry;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -21,8 +22,19 @@ import javax.annotation.Nullable;
 /**
  * The {@link StandEntityRenderer} for {@link D4CEntity}.
  */
+@Environment(EnvType.CLIENT)
 public class D4CRenderer extends StandEntityRenderer<D4CEntity> {
-    public D4CRenderer(final EntityRendererProvider.Context context) {
+
+    /*
+        /execute as @e[type=jcraft:d4c] run data merge entity @s {HandItems:[{id:"jcraft:fv_revolver", Count:1b},{id:"jcraft:fv_revolver", Count:1b}]}
+     */
+    protected float partialTick = 0f;
+
+    public D4CRenderer(final @NonNull EntityRendererProvider.Context context) {
+        super(context, JStandTypeRegistry.D4C.get());
+    }
+
+    /*public D4CRenderer(final EntityRendererProvider.Context context) {
         super(context, new StandEntityModel<>(JStandTypeRegistry.D4C.get()));
 
         addRenderLayer(new BlockAndItemGeoLayer<>(this) {
@@ -53,13 +65,13 @@ public class D4CRenderer extends StandEntityRenderer<D4CEntity> {
             @Override
             protected void renderStackForBone(final PoseStack poseStack, final GeoBone bone, final ItemStack stack, final D4CEntity animatable,
                                               final MultiBufferSource bufferSource, final float partialTick, final int packedLight, final int packedOverlay) {
-                /*
+                *//*
                 float ang = -90f;
                 D4CEntity.State state = animatable.getState();
                 if (state == D4CEntity.State.THROW || state == D4CEntity.State.GIVE_GUN) {
                     ang += (animatable.getMoveStun() + 1f - partialTick) * 65f;
                 }
-                 */
+                 *//*
                 poseStack.mulPose(Axis.XP.rotationDegrees(bone.getRotX() * 57.29578f));
 
                 if (stack == D4CRenderer.this.mainHandItem) {
@@ -91,10 +103,5 @@ public class D4CRenderer extends StandEntityRenderer<D4CEntity> {
         this.offHandItem = animatable.getOffhandItem();
 
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green - gR, blue, a);
-    }
-
-    /*
-        /execute as @e[type=jcraft:d4c] run data merge entity @s {HandItems:[{id:"jcraft:fv_revolver", Count:1b},{id:"jcraft:fv_revolver", Count:1b}]}
-     */
-    protected float partialTick = 0f;
+    }*/
 }

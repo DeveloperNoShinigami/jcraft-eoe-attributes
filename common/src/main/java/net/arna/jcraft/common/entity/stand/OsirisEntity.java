@@ -16,8 +16,6 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Osiris">Osiris</a>.
  * @see JStandTypeRegistry#OSIRIS
- * @see net.arna.jcraft.client.model.entity.stand.OsirisModel OsirisModel
- * @see net.arna.jcraft.client.renderer.entity.stands.OsirisRenderer OsirisRenderer
  * @see net.arna.jcraft.common.entity.npc.DarbyOlderEntity DarbyOlderEntity
  */
 public class OsirisEntity extends StandEntity<OsirisEntity, OsirisEntity.State> {

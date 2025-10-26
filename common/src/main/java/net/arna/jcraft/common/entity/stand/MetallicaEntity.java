@@ -60,7 +60,6 @@ import java.util.Optional;
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Metallica">Metallica</a>.
  * @see JStandTypeRegistry#METALLICA
- * @see net.arna.jcraft.client.model.entity.stand.MetallicaModel MetallicaModel
  * @see net.arna.jcraft.client.renderer.entity.stands.MetallicaRenderer MetallicaRenderer
  * @see HarvestMove
  */

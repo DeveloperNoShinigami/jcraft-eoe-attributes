@@ -16,8 +16,6 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Goo_Goo_Dolls">Goo Goo Dolls</a>.
  * @see JStandTypeRegistry#GOO_GOO_DOLLS
- * @see net.arna.jcraft.client.model.entity.stand.GooGooDollsModel GooGooDollsModel
- * @see net.arna.jcraft.client.renderer.entity.stands.GooGooDollsRenderer GooGooDollsRenderer
  */
 public class GooGooDollsEntity extends StandEntity<GooGooDollsEntity, GooGooDollsEntity.State> {
     public static final MoveSet<GooGooDollsEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.GOO_GOO_DOLLS,

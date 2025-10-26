@@ -30,8 +30,6 @@ import org.joml.Vector3f;
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Purple_Haze_Distortion">Purple Haze Distortion</a>.
  * @see JStandTypeRegistry#PURPLE_HAZE_DISTORTION
- * @see net.arna.jcraft.client.model.entity.stand.PurpleHazeModel PurpleHazeModel
- * @see net.arna.jcraft.client.renderer.entity.stands.PurpleHazeDistortionRenderer PurpleHazeDistortionRenderer
  */
 public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<PurpleHazeDistortionEntity, PurpleHazeDistortionEntity.State> {
     public static final MoveSet<PurpleHazeDistortionEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.PURPLE_HAZE_DISTORTION,
