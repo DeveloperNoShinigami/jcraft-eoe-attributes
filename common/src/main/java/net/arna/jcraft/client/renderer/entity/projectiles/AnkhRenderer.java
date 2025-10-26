@@ -3,6 +3,8 @@ package net.arna.jcraft.client.renderer.entity.projectiles;
 import lombok.NonNull;
 import net.arna.jcraft.client.model.JProjectileModel;
 import net.arna.jcraft.common.entity.projectile.AnkhProjectile;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -13,9 +15,11 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The {@link ProjectileRenderer} for {@link AnkhProjectile}.
  */
+@Environment(EnvType.CLIENT)
 public class AnkhRenderer extends ProjectileRenderer<AnkhProjectile> {
-    public AnkhRenderer(final EntityRendererProvider.Context renderManagerIn) {
-        super(renderManagerIn, new JProjectileModel<>("ankh"));
+
+    public AnkhRenderer(final @NonNull EntityRendererProvider.Context context) {
+        super(context, "ankh");
     }
 
     @Override
@@ -23,9 +27,9 @@ public class AnkhRenderer extends ProjectileRenderer<AnkhProjectile> {
         return 15;
     }
 
-    @Override
+    /*@Override
     public RenderType getRenderType(final @NonNull AnkhProjectile animatable, final ResourceLocation texture,
                                     final @Nullable MultiBufferSource bufferSource, final float partialTick) {
         return RenderType.eyes(texture);
-    }
+    }*/
 }

@@ -20,7 +20,7 @@ public class HGNetRenderer extends AbstractEntityRenderer<HGNetEntity> {
 
     public HGNetRenderer(final @NonNull EntityRendererProvider.Context context) {
         super(context, () -> new EntityAnimator<>(ID),
-                b -> b.addRenderLayer(new HGNetGlowLayer(this)).setShadowRadius(1.25f),
+                b -> b.addRenderLayer(new HGNetGlowLayer()).setShadowRadius(1.25f),
                 ID);
     }
 
