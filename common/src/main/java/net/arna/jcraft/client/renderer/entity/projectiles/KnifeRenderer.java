@@ -23,7 +23,7 @@ public class KnifeRenderer extends ProjectileRenderer<KnifeProjectile> {
     }
 
     @Override
-    protected int getBlockLightLevel(final @NonNull KnifeProjectile entityIn, final @NonNull BlockPos blockPos) {
+    public int getBlockLightLevel(final @NonNull KnifeProjectile entityIn, final @NonNull BlockPos blockPos) {
         return (entityIn.getLightning() || entityIn.isOnFire()) ? 15 : entityIn.level().getBrightness(LightLayer.BLOCK, entityIn.blockPosition());
     }
 

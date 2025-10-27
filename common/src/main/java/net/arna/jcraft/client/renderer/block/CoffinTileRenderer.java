@@ -38,6 +38,7 @@ public class CoffinTileRenderer extends AzBlockEntityRenderer<CoffinTileEntity> 
         if (BedPart.HEAD == animatable.getBlockState().getValue(BedBlock.PART)) {
             return;
         }
+        super.render(animatable, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
         //defaultRender(poseStack, this.animatable, bufferSource, null, null, 0, partialTick, packedLight);
     }
 

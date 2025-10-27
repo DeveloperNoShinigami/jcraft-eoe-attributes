@@ -31,7 +31,7 @@ public class TheSunRenderer extends StandEntityRenderer<TheSunEntity> {
     }
 
     @Override
-    protected int getBlockLightLevel(final @NonNull TheSunEntity entity, final @NonNull BlockPos pos) {
+    public int getBlockLightLevel(final @NonNull TheSunEntity entity, final @NonNull BlockPos pos) {
         return 15;
     }
 

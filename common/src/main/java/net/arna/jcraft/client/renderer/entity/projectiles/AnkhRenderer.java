@@ -23,7 +23,7 @@ public class AnkhRenderer extends ProjectileRenderer<AnkhProjectile> {
     }
 
     @Override
-    protected int getBlockLightLevel(final @NonNull AnkhProjectile entity, final @NonNull BlockPos pos) {
+    public int getBlockLightLevel(final @NonNull AnkhProjectile entity, final @NonNull BlockPos pos) {
         return 15;
     }
 

@@ -25,7 +25,7 @@ public class SunBeamRenderer extends ProjectileRenderer<SunBeamProjectile> {
     }
 
     @Override
-    protected int getBlockLightLevel(final SunBeamProjectile entity, final BlockPos pos) {
+    public int getBlockLightLevel(final SunBeamProjectile entity, final BlockPos pos) {
         return 15;
     }
 

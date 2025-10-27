@@ -23,7 +23,7 @@ public class MeteorRenderer extends ProjectileRenderer<MeteorProjectile> {
     }
 
     @Override
-    protected int getBlockLightLevel(final @NonNull MeteorProjectile entity, final @NonNull BlockPos pos) {
+    public int getBlockLightLevel(final @NonNull MeteorProjectile entity, final @NonNull BlockPos pos) {
         return 15;
     }
 

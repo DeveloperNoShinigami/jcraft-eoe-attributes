@@ -28,7 +28,7 @@ public class LifeDetectorRenderer extends ProjectileRenderer<LifeDetectorEntity>
     }
 
     @Override
-    protected int getBlockLightLevel(final LifeDetectorEntity entity, final BlockPos pos) {
+    public int getBlockLightLevel(final LifeDetectorEntity entity, final BlockPos pos) {
         return 15;
     }
 
