@@ -228,6 +228,21 @@ public final class JCraft {
         JStatRegistry.init();
         STATS.register();
 
+        MoveTickQueue.registerMoveTickQueue();
+
+        GravityChannel.registerReceivers();
+
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PLAYER_INPUT, PlayerInputPacket::handle);
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PLAYER_INPUT_HOLD, PlayerInputPacket::handleHold);
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, ConfigUpdatePacket.ID, ConfigUpdatePacket::handle);
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_STAND_BLOCK, StandBlockPacket::handle);
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_COOLDOWN_CANCEL, CooldownCancelPacket::handle);
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_REMOTE_STAND_INTERACT, RemoteStandInteractPacket::handle);
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PREDICTION_TRIGGER, PredictionTriggerPacket::handle);
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_MENU_CALL, MenuCallPacket::handle);
+    }
+
+    private static void registerAzArmor() {
         AzIdentityRegistry.register(
                 JItemRegistry.DIAVOLO_WIG.get(),
                 JItemRegistry.DIAVOLO_SHIRT.get(),
@@ -311,19 +326,6 @@ public final class JCraft {
                 JItemRegistry.VALENTINE_PANTS.get(),
                 JItemRegistry.FINAL_KIRA_BOOTS.get()
         );
-
-        MoveTickQueue.registerMoveTickQueue();
-
-        GravityChannel.registerReceivers();
-
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PLAYER_INPUT, PlayerInputPacket::handle);
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PLAYER_INPUT_HOLD, PlayerInputPacket::handleHold);
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, ConfigUpdatePacket.ID, ConfigUpdatePacket::handle);
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_STAND_BLOCK, StandBlockPacket::handle);
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_COOLDOWN_CANCEL, CooldownCancelPacket::handle);
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_REMOTE_STAND_INTERACT, RemoteStandInteractPacket::handle);
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PREDICTION_TRIGGER, PredictionTriggerPacket::handle);
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_MENU_CALL, MenuCallPacket::handle);
     }
 
     public static void postInit() {
@@ -331,6 +333,7 @@ public final class JCraft {
         EvolutionItemHandler.init();
         initDispenserBehaviors();
         JStatRegistry.initFormatters();
+        registerAzArmor();
     }
 
     private static void initBlockPostLoad() {
