@@ -14,8 +14,8 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.function.UnaryOperator;
 
 public class ArmorRenderer extends AzArmorRenderer {
 
@@ -78,21 +78,21 @@ public class ArmorRenderer extends AzArmorRenderer {
     }
 
     /**
-     * Constructs a renderer with a config based on the {@link AzAnimator} {@link Supplier} and the {@link mod.azure.azurelib.render.entity.AzEntityRendererConfig.Builder} {@link UnaryOperator}, and the given model/texture paths.
+     * Constructs a renderer with a config based on the {@link AzAnimator} {@link Supplier} and the {@link mod.azure.azurelib.render.entity.AzEntityRendererConfig.Builder} {@link Function}, and the given model/texture paths.
      */
-    protected ArmorRenderer(final @NonNull Supplier<AzAnimator<UUID, ItemStack>> animatorSupplier, final @NonNull UnaryOperator<AzArmorRendererConfig.Builder> additionalConfigs, final @NonNull ResourceLocation model, final @NonNull ResourceLocation texture) {
+    protected ArmorRenderer(final @NonNull Supplier<AzAnimator<UUID, ItemStack>> animatorSupplier, final @NonNull Function<AzArmorRendererConfig.Builder, AzArmorRendererConfig.Builder> additionalConfigs, final @NonNull ResourceLocation model, final @NonNull ResourceLocation texture) {
         this(additionalConfigs.apply(AzArmorRendererConfig.builder(model, texture).setAnimatorProvider(animatorSupplier)).build(), model, texture);
     }
 
     /**
-     * Constructs a renderer with a config based on the {@link AzAnimator} {@link Supplier} and the {@link mod.azure.azurelib.render.entity.AzEntityRendererConfig.Builder} {@link UnaryOperator}, and model/texture paths based on the specified ID.
+     * Constructs a renderer with a config based on the {@link AzAnimator} {@link Supplier} and the {@link mod.azure.azurelib.render.entity.AzEntityRendererConfig.Builder} {@link Function}, and model/texture paths based on the specified ID.
      *
      * <ul>
      * <li>Resulting model path will be equivalent to <code>JCraft.id("geo/" + id + ".geo.json")</code></li>
      * <li>Resulting texture path will be equivalent to <code>JCraft.id("textures/armor/" + id + ".png")</code></li>
      * </ul>
      */
-    protected ArmorRenderer(final @NonNull Supplier<AzAnimator<UUID, ItemStack>> animatorSupplier, final @NonNull UnaryOperator<AzArmorRendererConfig.Builder> additionalConfigs, final @NonNull String id) {
+    protected ArmorRenderer(final @NonNull Supplier<AzAnimator<UUID, ItemStack>> animatorSupplier, final @NonNull Function<AzArmorRendererConfig.Builder, AzArmorRendererConfig.Builder> additionalConfigs, final @NonNull String id) {
         this(animatorSupplier, additionalConfigs, JCraft.id(MODEL_STR_TEMPLATE.formatted(id)), JCraft.id(TEXTURE_STR_TEMPLATE.formatted(id)));
     }
 

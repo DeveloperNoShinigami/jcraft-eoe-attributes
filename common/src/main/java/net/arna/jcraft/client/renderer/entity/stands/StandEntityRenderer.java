@@ -39,9 +39,9 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
         this(context, UnaryOperator.identity(), type);
     }
 
-    protected StandEntityRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull UnaryOperator<AzEntityRendererConfig.Builder<T>> additionalConfigs, final @NonNull StandType type) {
+    protected StandEntityRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull Function<AzEntityRendererConfig.Builder<T>, AzEntityRendererConfig.Builder<T>> additionalConfigs, final @NonNull StandType type) {
         super(context, () -> new EntityAnimator<>(type.getId().getPath()),
-                (UnaryOperator<AzEntityRendererConfig.Builder<T>>)additionalConfigs.<AzEntityRendererConfig.Builder<T>>compose(
+                additionalConfigs.compose(
                         b -> b
                                 .setRenderType(renderType(type))
                                 .setPrerenderEntry(preRenderEntry())),
