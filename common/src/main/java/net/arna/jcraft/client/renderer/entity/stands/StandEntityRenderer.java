@@ -3,7 +3,6 @@ package net.arna.jcraft.client.renderer.entity.stands;
 import lombok.NonNull;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
 import mod.azure.azurelib.render.entity.AzEntityRendererConfig;
-import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.client.JClientConfig;
 import net.arna.jcraft.client.renderer.entity.AbstractEntityRenderer;
@@ -17,7 +16,6 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 import java.util.function.Function;
@@ -29,6 +27,8 @@ import java.util.function.UnaryOperator;
  */
 @Environment(EnvType.CLIENT)
 public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEntityRenderer<T> {
+
+    protected static final String TEXTURE_STR_TEMPLATE = "textures/entity/stands/%s/%s.png";
 
     protected ItemStack mainHandItem, offHandItem;
 
@@ -43,16 +43,32 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
         super(context, () -> new EntityAnimator<>(type.getId().getPath()),
                 additionalConfigs.compose(
                         b -> b
-                                .setRenderType(renderType(type))
+                                .setRenderType(renderType())
                                 .setPrerenderEntry(preRenderEntry())),
-                type.getId().getPath());
+                type.getId().withPath(MODEL_STR_TEMPLATE.formatted(type.getId().getPath())),
+                getTextureLocation(type));
     }
 
-    protected static @NotNull <T extends StandEntity<?,?>> Function<T, RenderType> renderType(final @NotNull StandType type) {
-        return stand -> StandEntityRenderer.renderTypeOf(stand, JCraft.id(TEXTURE_STR_TEMPLATE.formatted(type.getId().getPath())));
+    protected static @NonNull <T extends StandEntity<?,?>> Function<T, RenderType> renderType() {
+        return stand -> StandEntityRenderer.renderTypeOf(stand, getTextureLocation(stand));
     }
 
-    protected static @NotNull <T extends StandEntity<?,?>> Function<AzRendererPipelineContext<UUID, T>, AzRendererPipelineContext<UUID, T>> preRenderEntry() {
+    protected static @NonNull <T extends StandEntity<?,?>> Function<T, RenderType> renderType(final @NonNull Function<ResourceLocation, RenderType> renderTypeSelector) {
+        return stand -> renderTypeSelector.apply(getTextureLocation(stand));
+    }
+    
+    protected static @NonNull ResourceLocation getTextureLocation(final @NonNull StandEntity<?,?> stand) {
+        final int skin = stand.getSkin();
+        final ResourceLocation id = stand.getStandType().getId();
+        return id.withPath(TEXTURE_STR_TEMPLATE.formatted(id.getPath(), skin == 0 ? "default" : "skin" + skin));
+    }
+
+    protected static @NonNull ResourceLocation getTextureLocation(final @NonNull StandType type) {
+        final ResourceLocation id = type.getId();
+        return id.withPath(TEXTURE_STR_TEMPLATE.formatted(id.getPath(), "default"));
+    }
+
+    protected static @NonNull <T extends StandEntity<?,?>> Function<AzRendererPipelineContext<UUID, T>, AzRendererPipelineContext<UUID, T>> preRenderEntry() {
         return pc -> {
             float a = getAlpha(pc.animatable(), pc.partialTick());
             a *= pc.alpha();
@@ -62,7 +78,6 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
             return pc;
         };
     }
-
 
     public static boolean standIsFirstPersonViewers(final StandEntity<?, ?> stand)
     {

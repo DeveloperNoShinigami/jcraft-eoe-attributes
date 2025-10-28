@@ -17,7 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 public class MandomRenderer extends StandEntityRenderer<MandomEntity> {
 
     public MandomRenderer(final @NonNull EntityRendererProvider.Context context) {
-        super(context, b -> b.setRenderType(RenderType.entityTranslucentCull(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(JStandTypeRegistry.MANDOM.get().getId().getPath())))), JStandTypeRegistry.MANDOM.get());
+        super(context, b -> b.setRenderType(renderType(RenderType::entityTranslucentCull)), JStandTypeRegistry.MANDOM.get());
     }
 
 }

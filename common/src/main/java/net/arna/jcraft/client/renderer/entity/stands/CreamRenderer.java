@@ -35,9 +35,9 @@ public class CreamRenderer extends StandEntityRenderer<CreamEntity> {
 
     protected static @NotNull RenderType renderType(final @NonNull CreamEntity cream) {
         if (cream.getVoidTime() > 0) {
-            return RenderType.entitySolid(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(JStandTypeRegistry.CREAM.get().getId().getPath())));
+            return renderType(RenderType::entitySolid).apply(cream);
         }
-        return StandEntityRenderer.renderType(JStandTypeRegistry.CREAM.get()).apply(cream);
+        return StandEntityRenderer.renderType().apply(cream);
     }
 
     /*

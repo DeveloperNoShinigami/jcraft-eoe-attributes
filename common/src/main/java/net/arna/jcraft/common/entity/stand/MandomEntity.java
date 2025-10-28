@@ -18,6 +18,7 @@ import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandInfo;
 import net.arna.jcraft.api.stand.SummonData;
+import net.arna.jcraft.client.renderer.entity.AbstractEntityRenderer;
 import net.arna.jcraft.common.attack.moves.mandom.CountdownMove;
 import net.arna.jcraft.common.attack.moves.mandom.RewindMove;
 import net.arna.jcraft.common.util.JUtils;
@@ -169,10 +170,10 @@ public class MandomEntity extends StandEntity<MandomEntity, MandomEntity.State> 
     }
 
     public enum State implements StandAnimationState<MandomEntity> {
-        IDLE(AzCommand.create("base_controller", "summon", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        COUNTDOWN(AzCommand.create("base_controller", "timer", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        REWIND(AzCommand.create("base_controller", "rewind", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(AzCommand.create("base_controller", "idle", AzPlayBehaviors.LOOP));
+        IDLE(AzCommand.create(AbstractEntityRenderer.BASE_CONTROLLER, "summon", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        COUNTDOWN(AzCommand.create(AbstractEntityRenderer.BASE_CONTROLLER, "timer", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        REWIND(AzCommand.create(AbstractEntityRenderer.BASE_CONTROLLER, "rewind", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(AzCommand.create(AbstractEntityRenderer.BASE_CONTROLLER, "idle", AzPlayBehaviors.LOOP));
 
         private final AzCommand animator;
 

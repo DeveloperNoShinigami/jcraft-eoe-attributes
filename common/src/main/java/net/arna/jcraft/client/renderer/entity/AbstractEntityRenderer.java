@@ -83,6 +83,14 @@ public abstract class AbstractEntityRenderer<T extends Entity> extends AzEntityR
     }
 
     /**
+     * Constructs a renderer with a config based on the {@link AzAnimator} {@link Supplier} and the {@link mod.azure.azurelib.render.entity.AzEntityRendererConfig.Builder} {@link Function}, and the given model/texture paths.
+     */
+    protected AbstractEntityRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull Supplier<AzAnimator<UUID, T>> animatorSupplier, final @NonNull Function<AzEntityRendererConfig.Builder<T>, AzEntityRendererConfig.Builder<T>> additionalConfigs,
+                                     final @NonNull ResourceLocation model, final @NonNull ResourceLocation texture) {
+        this(additionalConfigs.apply(AzEntityRendererConfig.<T>builder(model, texture).setAnimatorProvider(animatorSupplier)).build(), context, model, texture);
+    }
+
+    /**
      * Constructs a renderer with a config based on the {@link AzAnimator} {@link Supplier} and the {@link mod.azure.azurelib.render.entity.AzEntityRendererConfig.Builder} {@link Function}, and model/texture paths based on the specified ID.
      *
      * <ul>

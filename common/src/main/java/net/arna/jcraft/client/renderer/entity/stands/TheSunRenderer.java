@@ -26,7 +26,7 @@ public class TheSunRenderer extends StandEntityRenderer<TheSunEntity> {
         super(context, b -> b
                 .addRenderLayer(new SunGlowLayer())
                 //TODO: translucent layer that isn't layered over and has no shading
-                .setRenderType(RenderType.dragonExplosionAlpha(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(JStandTypeRegistry.THE_SUN.get().getId().getPath())))),
+                .setRenderType(renderType(RenderType::dragonExplosionAlpha)),
                 JStandTypeRegistry.THE_SUN.get());
     }
 
