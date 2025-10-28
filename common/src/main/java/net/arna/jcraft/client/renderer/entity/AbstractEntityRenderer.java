@@ -27,11 +27,6 @@ public abstract class AbstractEntityRenderer<T extends Entity> extends AzEntityR
     protected static final String ANIMATION_STR_TEMPLATE = "animations/%s.animation.json";
 
     /**
-     * String ID of the base controller.
-     */
-    public static final String BASE_CONTROLLER = "base_controller";
-
-    /**
      * Path to the model to be used for this entity.
      */
     protected final @NonNull ResourceLocation model;
@@ -136,7 +131,7 @@ public abstract class AbstractEntityRenderer<T extends Entity> extends AzEntityR
 
         @Override
         public void registerControllers(final @NonNull AzAnimationControllerContainer<T> animationControllerContainer) {
-            animationControllerContainer.add(AzAnimationController.builder(this, BASE_CONTROLLER).build());
+            animationControllerContainer.add(AzAnimationController.builder(this, JCraft.BASE_CONTROLLER).build());
         }
 
         @Override

@@ -8,7 +8,6 @@ import mod.azure.azurelib.animation.impl.AzItemAnimator;
 import mod.azure.azurelib.render.armor.AzArmorRenderer;
 import mod.azure.azurelib.render.armor.AzArmorRendererConfig;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.client.renderer.entity.AbstractEntityRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -22,11 +21,6 @@ public class ArmorRenderer extends AzArmorRenderer {
     protected static final String MODEL_STR_TEMPLATE = "geo/%s.geo.json";
     protected static final String TEXTURE_STR_TEMPLATE = "textures/armor/%s.png";
     protected static final String ANIMATION_STR_TEMPLATE = "animations/%s.animation.json";
-
-    /**
-     * String ID of the base controller.
-     */
-    public static final String BASE_CONTROLLER = AbstractEntityRenderer.BASE_CONTROLLER;
 
     /**
      * Path to the model to be used for this armor.
@@ -214,7 +208,7 @@ public class ArmorRenderer extends AzArmorRenderer {
 
         @Override
         public void registerControllers(final @NonNull AzAnimationControllerContainer<ItemStack> animationControllerContainer) {
-            animationControllerContainer.add(AzAnimationController.builder(this, BASE_CONTROLLER).build());
+            animationControllerContainer.add(AzAnimationController.builder(this, JCraft.BASE_CONTROLLER).build());
         }
 
         @Override

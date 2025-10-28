@@ -48,7 +48,7 @@ public class CoffinTileRenderer extends AzBlockEntityRenderer<CoffinTileEntity> 
 
         @Override
         public void registerControllers(AzAnimationControllerContainer<CoffinTileEntity> animationControllerContainer) {
-            animationControllerContainer.add(AzAnimationController.builder(this, CoffinTileEntity.BASE_CONTROLLER).setTransitionLength(30).build());
+            animationControllerContainer.add(AzAnimationController.builder(this, JCraft.BASE_CONTROLLER).setTransitionLength(30).build());
         }
 
         @Override

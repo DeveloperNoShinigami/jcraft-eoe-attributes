@@ -132,6 +132,10 @@ public final class JCraft {
     public static final GameRules.Key<IntegerValue> STAND_ARROW_BASE_DAMAGE = register("standArrowBaseDamage", Category.MISC, IntegerValue.create(2));
 
     public static final GameRules.Key<BooleanValue> FALLING_METEORS = register("doFallingMeteors", Category.SPAWNING, BooleanValue.create(true));
+    /**
+     * String ID of the base controller.
+     */
+    public static final String BASE_CONTROLLER = "base_controller";
 
     // Dimensional travel bullshit
     /**
