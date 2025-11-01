@@ -3,6 +3,8 @@ package net.arna.jcraft.common.entity.stand;
 import lombok.NonNull;
 import mod.azure.azurelib.animation.dispatch.command.AzCommand;
 import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
+import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.Attacks;
 import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
@@ -64,9 +66,9 @@ public class CinderellaEntity extends StandEntity<CinderellaEntity, CinderellaEn
     }
 
     public enum State implements StandAnimationState<CinderellaEntity> {
-        IDLE(AzCommand.create("base_controller", "animation.cinderella.idle", AzPlayBehaviors.LOOP)),
-        LIGHT(AzCommand.create("base_controller", "animation.cinderella.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(AzCommand.create("base_controller", "animation.cinderella.block", AzPlayBehaviors.LOOP)),
+        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cinderella.idle", AzPlayBehaviors.LOOP)),
+        LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cinderella.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cinderella.block", AzPlayBehaviors.LOOP)),
         ;
 
         private final AzCommand animator;

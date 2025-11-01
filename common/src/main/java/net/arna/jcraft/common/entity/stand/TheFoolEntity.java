@@ -5,6 +5,7 @@ import lombok.NonNull;
 import mod.azure.azurelib.animation.dispatch.command.AzCommand;
 import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.Attacks;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandInfo;
@@ -434,23 +435,23 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
     // Animation code
     public enum State implements StandAnimationState<TheFoolEntity> {
         // TODO reenable crouchblock
-        IDLE(AzCommand.create("base_controller", "animation.thefool.idle", AzPlayBehaviors.LOOP)),
-        SWIPE(AzCommand.create("base_controller", "animation.thefool.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(AzCommand.create("base_controller", "animation.thefool.block", AzPlayBehaviors.LOOP)),
-        COMBO(AzCommand.create("base_controller", "animation.thefool.combo", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        AIR_BARRAGE(AzCommand.create("base_controller", "animation.thefool.airbarrage", AzPlayBehaviors.LOOP)),
-        LAUNCH(AzCommand.create("base_controller", "animation.thefool.launch", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        POUND_UP(AzCommand.create("base_controller", "animation.thefool.poundup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        POUND_DOWN(AzCommand.create("base_controller", "animation.thefool.pounddown", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        CHARGE(AzCommand.create("base_controller", "animation.thefool.charge", AzPlayBehaviors.LOOP)),
-        CHARGE_HIT(AzCommand.create("base_controller", "animation.thefool.charge_hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        CREATE(AzCommand.create("base_controller", "animation.thefool.create", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        SAND_WAVE(AzCommand.create("base_controller", "animation.thefool.sandwave", AzPlayBehaviors.LOOP)),
-        SANDSTORM(AzCommand.create("base_controller", "animation.thefool.sandstorm", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        GLIDE(AzCommand.create("base_controller", "animation.thefool.glide", AzPlayBehaviors.LOOP)),
-        TORNADO(AzCommand.create("base_controller", "animation.thefool.tornado", AzPlayBehaviors.LOOP)),
-        DRILL(AzCommand.create("base_controller", "animation.thefool.drill", AzPlayBehaviors.LOOP)),
-        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.thefool.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
+        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.thefool.idle", AzPlayBehaviors.LOOP)),
+        SWIPE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.thefool.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.thefool.block", AzPlayBehaviors.LOOP)),
+        COMBO(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.thefool.combo", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        AIR_BARRAGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.thefool.airbarrage", AzPlayBehaviors.LOOP)),
+        LAUNCH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.thefool.launch", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        POUND_UP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.thefool.poundup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        POUND_DOWN(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.thefool.pounddown", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        CHARGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.thefool.charge", AzPlayBehaviors.LOOP)),
+        CHARGE_HIT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.thefool.charge_hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        CREATE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.thefool.create", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        SAND_WAVE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.thefool.sandwave", AzPlayBehaviors.LOOP)),
+        SANDSTORM(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.thefool.sandstorm", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GLIDE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.thefool.glide", AzPlayBehaviors.LOOP)),
+        TORNADO(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.thefool.tornado", AzPlayBehaviors.LOOP)),
+        DRILL(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.thefool.drill", AzPlayBehaviors.LOOP)),
+        LIGHT_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.thefool.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
 
         private final AzCommand animator;
 

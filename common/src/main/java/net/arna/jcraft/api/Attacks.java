@@ -44,8 +44,9 @@ import static mod.azure.azurelib.animation.dispatch.command.AzCommand.controller
 import static net.arna.jcraft.api.component.living.CommonHitPropertyComponent.HitAnimation;
 
 public interface Attacks {
+
     /**
-    Use instead of AzCommand.create() inside stand's State enums.
+     * Use instead of AzCommand.create() inside stand's State enums.
      */
     static AzCommand createAnimationCommand(
             String controllerName,
@@ -55,7 +56,7 @@ public interface Attacks {
         return createAnimationCommand(controllerName, animationName, playBehavior, 0f, 1f, 0f, 0f, false);
     }
 
-     static AzCommand createAnimationCommand(
+    static AzCommand createAnimationCommand(
             String controllerName,
             String animationName,
             AzPlayBehavior playBehavior,
@@ -81,7 +82,6 @@ public interface Attacks {
                 .setReverseAnimation(controllerName, isReversing)
                 .build();
     }
-
 
     /**
      * (LEGACY) Highest level damage method, handles combo counting, DEFAULTS unblockable TO FALSE

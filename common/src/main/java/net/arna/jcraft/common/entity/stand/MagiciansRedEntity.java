@@ -4,6 +4,7 @@ import lombok.NonNull;
 import mod.azure.azurelib.animation.dispatch.command.AzCommand;
 import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.Attacks;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandInfo;
@@ -43,7 +44,6 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.Collection;
-import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Magician%27s_Red">Magician's Red</a>.
@@ -305,19 +305,19 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
 
     // Animation code
     public enum State implements StandAnimationState<MagiciansRedEntity> {
-        IDLE(AzCommand.create("base_controller", "animation.mr.idle", AzPlayBehaviors.LOOP)),
-        LIGHT(AzCommand.create("base_controller", "animation.mr.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(AzCommand.create("base_controller", "animation.mr.block", AzPlayBehaviors.LOOP)),
-        HEAVY(AzCommand.create("base_controller", "animation.mr.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BARRAGE(AzCommand.create("base_controller", "animation.mr.barrage", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        CROSSFIRE(AzCommand.create("base_controller", "animation.mr.crossfire", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        CROSSFIRE_HURRICANE(AzCommand.create("base_controller", "animation.mr.crossfirehurricane", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        CROSSFIRE_VARIATION(AzCommand.create("base_controller", "animation.mr.crossfirevariation", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        REDIRECT(AzCommand.create("base_controller", "animation.mr.redirect", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        RED_BIND(AzCommand.create("base_controller", "animation.mr.redbind", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        DETECTOR(AzCommand.create("base_controller", "animation.mr.detector", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.mr.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        HAMMER(AzCommand.create("base_controller", "animation.mr.hammer", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
+        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.mr.idle", AzPlayBehaviors.LOOP)),
+        LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.mr.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.mr.block", AzPlayBehaviors.LOOP)),
+        HEAVY(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.mr.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BARRAGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.mr.barrage", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        CROSSFIRE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.mr.crossfire", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        CROSSFIRE_HURRICANE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.mr.crossfirehurricane", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        CROSSFIRE_VARIATION(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.mr.crossfirevariation", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        REDIRECT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.mr.redirect", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        RED_BIND(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.mr.redbind", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        DETECTOR(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.mr.detector", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.mr.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        HAMMER(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.mr.hammer", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
 
         private final AzCommand animator;
 

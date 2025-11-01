@@ -5,6 +5,7 @@ import lombok.NonNull;
 import mod.azure.azurelib.animation.dispatch.command.AzCommand;
 import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.Attacks;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandInfo;
@@ -478,29 +479,29 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
     // Animation code
     public enum State implements StandAnimationState<SilverChariotEntity> {
         // TODO reenable armorless and possessed idle
-        IDLE(AzCommand.create("base_controller", "animation.silverchariot.idle", AzPlayBehaviors.LOOP)),
-        STAB(AzCommand.create("base_controller", "animation.silverchariot.stab", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(AzCommand.create("base_controller", "animation.silverchariot.block", AzPlayBehaviors.LOOP)),
-        HEAVY(AzCommand.create("base_controller", "animation.silverchariot.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BARRAGE(AzCommand.create("base_controller", "animation.silverchariot.barrage", AzPlayBehaviors.LOOP)),
-        SPIN(AzCommand.create("base_controller", "animation.silverchariot.spin", AzPlayBehaviors.LOOP)),
-        SPIN_2(AzCommand.create("base_controller", "animation.silverchariot.spin_2", AzPlayBehaviors.LOOP)),
+        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.idle", AzPlayBehaviors.LOOP)),
+        STAB(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.stab", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.block", AzPlayBehaviors.LOOP)),
+        HEAVY(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BARRAGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.barrage", AzPlayBehaviors.LOOP)),
+        SPIN(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.spin", AzPlayBehaviors.LOOP)),
+        SPIN_2(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.spin_2", AzPlayBehaviors.LOOP)),
 
-        CHARGE_LOW(AzCommand.create("base_controller", "animation.silverchariot.charge_low", AzPlayBehaviors.LOOP)),
-        CHARGE_HIGH(AzCommand.create("base_controller", "animation.silverchariot.charge_high", AzPlayBehaviors.LOOP)),
+        CHARGE_LOW(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.charge_low", AzPlayBehaviors.LOOP)),
+        CHARGE_HIGH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.charge_high", AzPlayBehaviors.LOOP)),
 
-        P_CHARGE(AzCommand.create("base_controller", "animation.silverchariot.pcharge", AzPlayBehaviors.LOOP)),
-        P_CHARGE_HIT(AzCommand.create("base_controller", "animation.silverchariot.pchargehit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        COUNTER(AzCommand.create("base_controller", "animation.silverchariot.counter", AzPlayBehaviors.LOOP)),
-        BEAT_DOWN_START(AzCommand.create("base_controller", "animation.silverchariot.beatdownstart", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BEAT_DOWN(AzCommand.create("base_controller", "animation.silverchariot.beatdown", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        CLEAVE(AzCommand.create("base_controller", "animation.silverchariot.cleave", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        ARMOR_OFF(AzCommand.create("base_controller", "animation.silverchariot.armor_off", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        COUNTER_MISS(AzCommand.create("base_controller", "animation.silverchariot.counter_miss", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LAST_SHOT(AzCommand.create("base_controller", "animation.silverchariot.lastshot", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        CIRCLE_CHARGE(AzCommand.create("base_controller", "animation.silverchariot.circle_charge", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        CIRCLE_SLASH(AzCommand.create("base_controller", "animation.silverchariot.circle_slash", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.silverchariot.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
+        P_CHARGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.pcharge", AzPlayBehaviors.LOOP)),
+        P_CHARGE_HIT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.pchargehit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        COUNTER(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.counter", AzPlayBehaviors.LOOP)),
+        BEAT_DOWN_START(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.beatdownstart", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BEAT_DOWN(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.beatdown", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        CLEAVE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.cleave", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        ARMOR_OFF(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.armor_off", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        COUNTER_MISS(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.counter_miss", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LAST_SHOT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.lastshot", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        CIRCLE_CHARGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.circle_charge", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        CIRCLE_SLASH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.circle_slash", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
 
         private final AzCommand animator;
 

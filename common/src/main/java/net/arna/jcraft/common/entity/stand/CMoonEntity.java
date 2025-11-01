@@ -340,18 +340,18 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
 
     // Animation code
     public enum State implements StandAnimationState<CMoonEntity> {
-        IDLE(AzCommand.create("base_controller", "animation.cmoon.idle", AzPlayBehaviors.LOOP)),
-        LIGHT(AzCommand.create("base_controller", "animation.cmoon.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(AzCommand.create("base_controller", "animation.cmoon.block", AzPlayBehaviors.LOOP)),
-        DONUT(AzCommand.create("base_controller", "animation.cmoon.donut", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BARRAGE(AzCommand.create("base_controller", "animation.cmoon.barrage", AzPlayBehaviors.LOOP)),
-        GRAV_PUNCH(AzCommand.create("base_controller", "animation.cmoon.gravpunch", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        GROUND_SLAM(AzCommand.create("base_controller", "animation.cmoon.groundslam", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        GROUND_SHOOT(AzCommand.create("base_controller", "animation.cmoon.groundshoot", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        GRAV_SHIFT(AzCommand.create("base_controller", "animation.cmoon.gravshift", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        DIRECTIONAL_SHIFT(AzCommand.create("base_controller", "animation.cmoon.directionalshift", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        INVERSION_PUNCH(AzCommand.create("base_controller", "animation.cmoon.inversionpunch", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.cmoon.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
+        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cmoon.idle", AzPlayBehaviors.LOOP)),
+        LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cmoon.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cmoon.block", AzPlayBehaviors.LOOP)),
+        DONUT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cmoon.donut", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BARRAGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cmoon.barrage", AzPlayBehaviors.LOOP)),
+        GRAV_PUNCH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cmoon.gravpunch", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GROUND_SLAM(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cmoon.groundslam", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GROUND_SHOOT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cmoon.groundshoot", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GRAV_SHIFT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cmoon.gravshift", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        DIRECTIONAL_SHIFT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cmoon.directionalshift", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        INVERSION_PUNCH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cmoon.inversionpunch", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cmoon.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
 
         private final AzCommand animator;
 

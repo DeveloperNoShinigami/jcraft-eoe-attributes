@@ -4,6 +4,8 @@ import com.mojang.datafixers.util.Either;
 import lombok.NonNull;
 import mod.azure.azurelib.animation.dispatch.command.AzCommand;
 import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
+import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.Attacks;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandInfo;
@@ -220,21 +222,21 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
 
     // Animation code
     public enum State implements StandAnimationState<SPTWEntity> {
-        IDLE(AzCommand.create("base_controller", "animation.sptw.idle", AzPlayBehaviors.LOOP)),
-        PUNCH(AzCommand.create("base_controller", "animation.sptw.punch", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(AzCommand.create("base_controller", "animation.sptw.block", AzPlayBehaviors.LOOP)),
-        HEAVY(AzCommand.create("base_controller", "animation.sptw.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        GROUND_BREAKER(AzCommand.create("base_controller", "animation.sptw.ground_break", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BARRAGE(AzCommand.create("base_controller", "animation.sptw.barrage", AzPlayBehaviors.LOOP)),
-        TIME_STRIKE(AzCommand.create("base_controller", "animation.sptw.timestrike", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        TIME_STOP(AzCommand.create("base_controller", "animation.sptw.timestop", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BACKHAND(AzCommand.create("base_controller", "animation.sptw.backhand", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        GRAB(AzCommand.create("base_controller", "animation.sptw.grab", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        GRAB_HIT(AzCommand.create("base_controller", "animation.sptw.grabhit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        GRAB_HIT2(AzCommand.create("base_controller", "animation.sptw.grabhit2", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        TIME_SKIP(AzCommand.create("base_controller", "animation.sptw.idle", AzPlayBehaviors.LOOP)),
-        GROUND_SLAM(AzCommand.create("base_controller", "animation.sptw.ground_slam", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.sptw.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
+        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.sptw.idle", AzPlayBehaviors.LOOP)),
+        PUNCH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.sptw.punch", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.sptw.block", AzPlayBehaviors.LOOP)),
+        HEAVY(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.sptw.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GROUND_BREAKER(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.sptw.ground_break", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BARRAGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.sptw.barrage", AzPlayBehaviors.LOOP)),
+        TIME_STRIKE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.sptw.timestrike", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        TIME_STOP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.sptw.timestop", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BACKHAND(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.sptw.backhand", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GRAB(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.sptw.grab", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GRAB_HIT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.sptw.grabhit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GRAB_HIT2(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.sptw.grabhit2", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        TIME_SKIP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.sptw.idle", AzPlayBehaviors.LOOP)),
+        GROUND_SLAM(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.sptw.ground_slam", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.sptw.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
 
         private final AzCommand animator;
 

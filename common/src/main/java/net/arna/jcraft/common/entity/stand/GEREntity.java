@@ -4,6 +4,7 @@ import lombok.NonNull;
 import mod.azure.azurelib.animation.dispatch.command.AzCommand;
 import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.Attacks;
 import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
@@ -320,22 +321,22 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
 
     // Animation code
     public enum State implements StandAnimationState<GEREntity> {
-        IDLE(AzCommand.create("base_controller", "animation.ger.idle", AzPlayBehaviors.LOOP)),
-        LIGHT(AzCommand.create("base_controller", "animation.ger.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(AzCommand.create("base_controller", "animation.ger.block", AzPlayBehaviors.LOOP)),
-        HEAVY(AzCommand.create("base_controller", "animation.ger.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BARRAGE(AzCommand.create("base_controller", "animation.ger.barrage", AzPlayBehaviors.LOOP)),
-        HEAL_SELF(AzCommand.create("base_controller", "animation.ger.healself", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        HEAL(AzCommand.create("base_controller", "animation.ger.heal", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LASER(AzCommand.create("base_controller", "animation.ger.laser", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LASER_FIRE(AzCommand.create("base_controller", "animation.ger.laser_fire", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        COUNTER(AzCommand.create("base_controller", "animation.ger.counter", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        COUNTER_MISS(AzCommand.create("base_controller", "animation.ger.counter_miss", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        AIR_HEAVY(AzCommand.create("base_controller", "animation.ger.airheavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        AIR_LIGHT(AzCommand.create("base_controller", "animation.ger.airlight", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        AIR_BARRAGE(AzCommand.create("base_controller", "animation.ger.airbarrage", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        SETUP(AzCommand.create("base_controller", "animation.ger.setup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.ger.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
+        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ger.idle", AzPlayBehaviors.LOOP)),
+        LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ger.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ger.block", AzPlayBehaviors.LOOP)),
+        HEAVY(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ger.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BARRAGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ger.barrage", AzPlayBehaviors.LOOP)),
+        HEAL_SELF(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ger.healself", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        HEAL(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ger.heal", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LASER(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ger.laser", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LASER_FIRE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ger.laser_fire", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        COUNTER(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ger.counter", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        COUNTER_MISS(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ger.counter_miss", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        AIR_HEAVY(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ger.airheavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        AIR_LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ger.airlight", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        AIR_BARRAGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ger.airbarrage", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        SETUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ger.setup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ger.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
 
         private final AzCommand animator;
 

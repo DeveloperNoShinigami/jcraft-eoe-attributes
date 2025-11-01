@@ -4,6 +4,7 @@ import lombok.NonNull;
 import mod.azure.azurelib.animation.dispatch.command.AzCommand;
 import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.Attacks;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandInfo;
@@ -366,29 +367,29 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
     // Animation code
     public enum State implements StandAnimationState<WhiteSnakeEntity> {
         // TODO reenable remote idle
-        IDLE(AzCommand.create("base_controller", "animation.whitesnake.idle", AzPlayBehaviors.LOOP)),
-        LIGHT(AzCommand.create("base_controller", "animation.whitesnake.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(AzCommand.create("base_controller", "animation.whitesnake.block", AzPlayBehaviors.LOOP)),
-        MEDIUM(AzCommand.create("base_controller", "animation.whitesnake.medium", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BARRAGE(AzCommand.create("base_controller", "animation.whitesnake.barrage", AzPlayBehaviors.LOOP)),
-        LEG_CRUSHER(AzCommand.create("base_controller", "animation.whitesnake.legcrusher", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        ACID_SPEW(AzCommand.create("base_controller", "animation.whitesnake.acidspew", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        ACID_SPEW_CHARGED(AzCommand.create("base_controller", "animation.whitesnake.acidspew_charged", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        DISC_TAKE(AzCommand.create("base_controller", "animation.whitesnake.disc_take", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        DISC_GIVE(AzCommand.create("base_controller", "animation.whitesnake.disc_give", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        UPPERCUT(AzCommand.create("base_controller", "animation.whitesnake.uppercut", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.idle", AzPlayBehaviors.LOOP)),
+        LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.block", AzPlayBehaviors.LOOP)),
+        MEDIUM(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.medium", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BARRAGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.barrage", AzPlayBehaviors.LOOP)),
+        LEG_CRUSHER(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.legcrusher", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        ACID_SPEW(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.acidspew", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        ACID_SPEW_CHARGED(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.acidspew_charged", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        DISC_TAKE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.disc_take", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        DISC_GIVE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.disc_give", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        UPPERCUT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.uppercut", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
 
-        FORWARD(AzCommand.create("base_controller", "animation.whitesnake.forw", AzPlayBehaviors.LOOP)),
-        BACKWARD(AzCommand.create("base_controller", "animation.whitesnake.back", AzPlayBehaviors.LOOP)),
-        LEFT(AzCommand.create("base_controller", "animation.whitesnake.left", AzPlayBehaviors.LOOP)),
-        RIGHT(AzCommand.create("base_controller", "animation.whitesnake.right", AzPlayBehaviors.LOOP)),
-        FORWARD_DASH(AzCommand.create("base_controller", "animation.whitesnake.fdash", AzPlayBehaviors.LOOP)),
-        BACKWARD_DASH(AzCommand.create("base_controller", "animation.whitesnake.bdash", AzPlayBehaviors.LOOP)),
-        LEFT_DASH(AzCommand.create("base_controller", "animation.whitesnake.ldash", AzPlayBehaviors.LOOP)),
-        RIGHT_DASH(AzCommand.create("base_controller", "animation.whitesnake.rdash", AzPlayBehaviors.LOOP)),
+        FORWARD(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.forw", AzPlayBehaviors.LOOP)),
+        BACKWARD(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.back", AzPlayBehaviors.LOOP)),
+        LEFT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.left", AzPlayBehaviors.LOOP)),
+        RIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.right", AzPlayBehaviors.LOOP)),
+        FORWARD_DASH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.fdash", AzPlayBehaviors.LOOP)),
+        BACKWARD_DASH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.bdash", AzPlayBehaviors.LOOP)),
+        LEFT_DASH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.ldash", AzPlayBehaviors.LOOP)),
+        RIGHT_DASH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.rdash", AzPlayBehaviors.LOOP)),
 
-        MELT_YOUR_HEART(AzCommand.create("base_controller", "animation.whitesnake.meltyourheart", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.whitesnake.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
+        MELT_YOUR_HEART(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.meltyourheart", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
 
         private final AzCommand animator;
 

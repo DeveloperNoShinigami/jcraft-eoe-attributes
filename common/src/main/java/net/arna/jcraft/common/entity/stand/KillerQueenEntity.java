@@ -3,6 +3,8 @@ package net.arna.jcraft.common.entity.stand;
 import lombok.NonNull;
 import mod.azure.azurelib.animation.dispatch.command.AzCommand;
 import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
+import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.Attacks;
 import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
@@ -139,18 +141,18 @@ public final class KillerQueenEntity extends AbstractKillerQueenEntity<KillerQue
 
     // Animations
     public enum State implements StandAnimationState<KillerQueenEntity> {
-        IDLE(AzCommand.create("base_controller", "animation.killerqueen.idle", AzPlayBehaviors.LOOP)),
-        LIGHT(AzCommand.create("base_controller", "animation.killerqueen.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(AzCommand.create("base_controller", "animation.killerqueen.block", AzPlayBehaviors.LOOP)),
-        HEAVY(AzCommand.create("base_controller", "animation.killerqueen.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BARRAGE(AzCommand.create("base_controller", "animation.killerqueen.barrage", AzPlayBehaviors.LOOP)),
-        DETONATE(AzCommand.create("base_controller", "animation.killerqueen.detonate", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BOMB_PLANT(AzCommand.create("base_controller", "animation.killerqueen.bombplant", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        SHA(AzCommand.create("base_controller", "animation.killerqueen.sha", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.killerqueen.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LOW(AzCommand.create("base_controller", "animation.killerqueen.low", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        GRAB(AzCommand.create("base_controller", "animation.killerqueen.grab", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        GRAB_HIT(AzCommand.create("base_controller", "animation.killerqueen.grab_hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
+        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.killerqueen.idle", AzPlayBehaviors.LOOP)),
+        LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.killerqueen.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.killerqueen.block", AzPlayBehaviors.LOOP)),
+        HEAVY(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.killerqueen.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BARRAGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.killerqueen.barrage", AzPlayBehaviors.LOOP)),
+        DETONATE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.killerqueen.detonate", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BOMB_PLANT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.killerqueen.bombplant", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        SHA(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.killerqueen.sha", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.killerqueen.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LOW(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.killerqueen.low", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GRAB(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.killerqueen.grab", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GRAB_HIT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.killerqueen.grab_hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
 
         private final AzCommand animator;
 

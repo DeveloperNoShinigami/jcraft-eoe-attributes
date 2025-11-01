@@ -6,6 +6,7 @@ import lombok.Setter;
 import mod.azure.azurelib.animation.dispatch.command.AzCommand;
 import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.Attacks;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandInfo;
@@ -352,7 +353,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
     }
 
     @Override
-    protected AABB makeBoundingBox() {
+    protected @NonNull AABB makeBoundingBox() {
         return AABB.ofSize(getPosition(0f).add(0,0.5,0),0.5,1,0.5);
     }
 
@@ -505,22 +506,22 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
 
     // Animations
     public enum State implements StandAnimationState<MetallicaEntity> {
-        IDLE(AzCommand.create("base_controller", "animation.metallica.idle", AzPlayBehaviors.LOOP)),
-        NONE(AzCommand.create("base_controller", "animation.metallica.idle", AzPlayBehaviors.LOOP)),
-        BLOCK(AzCommand.create("base_controller", "animation.metallica.block", AzPlayBehaviors.LOOP)),
-        LIGHT(AzCommand.create("base_controller", "animation.metallica.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.metallica.light2", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LIGHT_FINAL(AzCommand.create("base_controller", "animation.metallica.light3", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        PRECISE_TOSS(AzCommand.create("base_controller", "animation.metallica.precise_toss", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        FAN_TOSS(AzCommand.create("base_controller", "animation.metallica.fan_toss", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        HARVEST(AzCommand.create("base_controller", "animation.metallica.harvest", AzPlayBehaviors.LOOP)),
-        BARRAGE(AzCommand.create("base_controller", "animation.metallica.barrage", AzPlayBehaviors.LOOP)),
-        SMASH(AzCommand.create("base_controller", "animation.metallica.smash", AzPlayBehaviors.LOOP)),
-        CLEAVE(AzCommand.create("base_controller", "animation.metallica.cleave", AzPlayBehaviors.LOOP)),
-        SWEEP(AzCommand.create("base_controller", "animation.metallica.sweep", AzPlayBehaviors.LOOP)),
-        GRAB_HIT(AzCommand.create("base_controller", "animation.metallica.grab_hit", AzPlayBehaviors.LOOP)),
-        BISECT(AzCommand.create("base_controller", "animation.metallica.bisect", AzPlayBehaviors.LOOP)),
-        GIVE_SCALPEL(AzCommand.create("base_controller", "animation.metallica.give_scalpel", AzPlayBehaviors.LOOP)),
+        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.metallica.idle", AzPlayBehaviors.LOOP)),
+        NONE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.metallica.idle", AzPlayBehaviors.LOOP)),
+        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.metallica.block", AzPlayBehaviors.LOOP)),
+        LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.metallica.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.metallica.light2", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FINAL(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.metallica.light3", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        PRECISE_TOSS(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.metallica.precise_toss", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        FAN_TOSS(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.metallica.fan_toss", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        HARVEST(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.metallica.harvest", AzPlayBehaviors.LOOP)),
+        BARRAGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.metallica.barrage", AzPlayBehaviors.LOOP)),
+        SMASH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.metallica.smash", AzPlayBehaviors.LOOP)),
+        CLEAVE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.metallica.cleave", AzPlayBehaviors.LOOP)),
+        SWEEP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.metallica.sweep", AzPlayBehaviors.LOOP)),
+        GRAB_HIT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.metallica.grab_hit", AzPlayBehaviors.LOOP)),
+        BISECT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.metallica.bisect", AzPlayBehaviors.LOOP)),
+        GIVE_SCALPEL(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.metallica.give_scalpel", AzPlayBehaviors.LOOP)),
         ;
 
         private final AzCommand animator;

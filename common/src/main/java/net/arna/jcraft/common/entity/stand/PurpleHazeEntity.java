@@ -5,6 +5,7 @@ import lombok.NonNull;
 import mod.azure.azurelib.animation.dispatch.command.AzCommand;
 import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.Attacks;
 import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.api.stand.*;
 import net.arna.jcraft.api.attack.enums.MoveClass;
@@ -55,7 +56,6 @@ import java.util.Objects;
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Purple_Haze">Purple Haze</a>.
  * @see JStandTypeRegistry#PURPLE_HAZE
- * @see net.arna.jcraft.client.model.entity.stand.PurpleHazeModel PurpleHazeModel
  * @see net.arna.jcraft.client.renderer.entity.stands.PurpleHazeRenderer PurpleHazeRenderer
  */
 public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeEntity, PurpleHazeEntity.State> {
@@ -412,39 +412,39 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
 
     // Animation code
     public enum State implements StandAnimationState<PurpleHazeEntity> {
-        IDLE(AzCommand.create("base_controller", "animation.purple_haze.idle", AzPlayBehaviors.LOOP)),
-        PUNCH(AzCommand.create("base_controller", "animation.purple_haze.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(AzCommand.create("base_controller", "animation.purple_haze.block", AzPlayBehaviors.LOOP)),
-        HEAVY(AzCommand.create("base_controller", "animation.purple_haze.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.idle", AzPlayBehaviors.LOOP)),
+        PUNCH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.block", AzPlayBehaviors.LOOP)),
+        HEAVY(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
 
-        FULL_RELEASE(AzCommand.create("base_controller", "animation.purple_haze.full_release", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        GROUND_SLAM(AzCommand.create("base_controller", "animation.purple_haze.ground_slam", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        FULL_RELEASE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.full_release", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GROUND_SLAM(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.ground_slam", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
 
-        BARRAGE(AzCommand.create("base_controller", "animation.purple_haze.barrage", AzPlayBehaviors.LOOP)),
-        LAUNCH(AzCommand.create("base_controller", "animation.purple_haze.launch", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LAUNCH2(AzCommand.create("base_controller", "animation.purple_haze.launch2", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BARRAGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.barrage", AzPlayBehaviors.LOOP)),
+        LAUNCH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.launch", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LAUNCH2(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.launch2", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
 
-        REKKA1(AzCommand.create("base_controller", "animation.purple_haze.rekka1", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        REKKA2(AzCommand.create("base_controller", "animation.purple_haze.rekka2", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        REKKA3(AzCommand.create("base_controller", "animation.purple_haze.rekka3", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        REKKA1(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.rekka1", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        REKKA2(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.rekka2", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        REKKA3(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.rekka3", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
 
-        GRAB(AzCommand.create("base_controller", "animation.purple_haze.grab", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        GRAB_HIT(AzCommand.create("base_controller", "animation.purple_haze.grab_hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GRAB(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.grab", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GRAB_HIT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.grab_hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
 
-        BACKHAND(AzCommand.create("base_controller", "animation.purple_haze.backhand", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BACKHAND_FOLLOWUP(AzCommand.create("base_controller", "animation.purple_haze.backhand_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.purple_haze.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        HURT(AzCommand.create("base_controller", "animation.purple_haze.hurt", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        PLAY(AzCommand.create("base_controller", "animation.purple_haze.play", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BACKHAND(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.backhand", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BACKHAND_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.backhand_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        HURT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.hurt", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        PLAY(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.play", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
 
-        FORWARD(AzCommand.create("base_controller", "animation.purple_haze.forw", AzPlayBehaviors.LOOP)),
-        BACKWARD(AzCommand.create("base_controller", "animation.purple_haze.back", AzPlayBehaviors.LOOP)),
-        LEFT(AzCommand.create("base_controller", "animation.purple_haze.left", AzPlayBehaviors.LOOP)),
-        RIGHT(AzCommand.create("base_controller", "animation.purple_haze.right", AzPlayBehaviors.LOOP)),
-        FORWARD_DASH(AzCommand.create("base_controller", "animation.purple_haze.fdash", AzPlayBehaviors.LOOP)),
-        BACKWARD_DASH(AzCommand.create("base_controller", "animation.purple_haze.bdash", AzPlayBehaviors.LOOP)),
-        LEFT_DASH(AzCommand.create("base_controller", "animation.purple_haze.ldash", AzPlayBehaviors.LOOP)),
-        RIGHT_DASH(AzCommand.create("base_controller", "animation.purple_haze.rdash", AzPlayBehaviors.LOOP)),
+        FORWARD(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.forw", AzPlayBehaviors.LOOP)),
+        BACKWARD(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.back", AzPlayBehaviors.LOOP)),
+        LEFT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.left", AzPlayBehaviors.LOOP)),
+        RIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.right", AzPlayBehaviors.LOOP)),
+        FORWARD_DASH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.fdash", AzPlayBehaviors.LOOP)),
+        BACKWARD_DASH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.bdash", AzPlayBehaviors.LOOP)),
+        LEFT_DASH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.ldash", AzPlayBehaviors.LOOP)),
+        RIGHT_DASH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.rdash", AzPlayBehaviors.LOOP)),
         ;
 
         private final AzCommand animator;

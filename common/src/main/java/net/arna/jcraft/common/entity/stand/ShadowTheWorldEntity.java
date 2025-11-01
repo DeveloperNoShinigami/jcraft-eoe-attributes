@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import mod.azure.azurelib.animation.dispatch.command.AzCommand;
 import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
+import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.Attacks;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandInfo;
@@ -275,19 +277,19 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
 
     // Animation code
     public enum State implements StandAnimationState<ShadowTheWorldEntity> {
-        IDLE(AzCommand.create("base_controller", "animation.shadow_the_world.idle", AzPlayBehaviors.LOOP)),
-        LIGHT(AzCommand.create("base_controller", "animation.shadow_the_world.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(AzCommand.create("base_controller", "animation.shadow_the_world.block", AzPlayBehaviors.LOOP)),
-        LUNGE(AzCommand.create("base_controller", "animation.shadow_the_world.lunge", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        GUARD_CANCEL(AzCommand.create("base_controller", "animation.shadow_the_world.guard_cancel", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        THREE_HIT(AzCommand.create("base_controller", "animation.shadow_the_world.3hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        IMPALING_THRUST_CHARGE(AzCommand.create("base_controller", "animation.shadow_the_world.impaling_thrust_charge", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        IMPALING_THRUST_HIT(AzCommand.create("base_controller", "animation.shadow_the_world.impaling_thrust_hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        CHARGE(AzCommand.create("base_controller", "animation.shadow_the_world.charge", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        CHARGE_HIT(AzCommand.create("base_controller", "animation.shadow_the_world.charge_hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        UPPERCUT(AzCommand.create("base_controller", "animation.shadow_the_world.uppercut", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        COUNTER(AzCommand.create("base_controller", "animation.shadow_the_world.counter", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        TIME_STOP(AzCommand.create("base_controller", "animation.shadow_the_world.timestop", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.shadow_the_world.idle", AzPlayBehaviors.LOOP)),
+        LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.shadow_the_world.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.shadow_the_world.block", AzPlayBehaviors.LOOP)),
+        LUNGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.shadow_the_world.lunge", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GUARD_CANCEL(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.shadow_the_world.guard_cancel", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        THREE_HIT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.shadow_the_world.3hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        IMPALING_THRUST_CHARGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.shadow_the_world.impaling_thrust_charge", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        IMPALING_THRUST_HIT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.shadow_the_world.impaling_thrust_hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        CHARGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.shadow_the_world.charge", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        CHARGE_HIT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.shadow_the_world.charge_hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        UPPERCUT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.shadow_the_world.uppercut", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        COUNTER(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.shadow_the_world.counter", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        TIME_STOP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.shadow_the_world.timestop", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         ;
         
         private final AzCommand animator;

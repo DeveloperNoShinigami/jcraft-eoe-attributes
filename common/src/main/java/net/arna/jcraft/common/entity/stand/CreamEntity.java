@@ -7,6 +7,7 @@ import lombok.Setter;
 import mod.azure.azurelib.animation.dispatch.command.AzCommand;
 import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.Attacks;
 import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
@@ -682,26 +683,26 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
     // Animation code
     public enum State implements StandAnimationState<CreamEntity> {
         // ("animation.cream." + (cream.getVoidTime() > 0 ? "void" : cream.isHalfBall() ? "ball" : "") + "idle")
-        IDLE(AzCommand.create("base_controller", "animation.cream.idle", AzPlayBehaviors.LOOP)),
-        LIGHT(AzCommand.create("base_controller", "animation.cream.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.cream.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BALL_LIGHT(AzCommand.create("base_controller", "animation.cream.balllight", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(AzCommand.create("base_controller", "animation.cream.block", AzPlayBehaviors.LOOP)),
-        BALL_BLOCK(AzCommand.create("base_controller", "animation.cream.ballblock", AzPlayBehaviors.LOOP)),
-        HEAVY(AzCommand.create("base_controller", "animation.cream.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BALL_HEAVY(AzCommand.create("base_controller", "animation.cream.ballheavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        COMBO(AzCommand.create("base_controller", "animation.cream.combo", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BALL_COMBO(AzCommand.create("base_controller", "animation.cream.ballcombo", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        CONSUME(AzCommand.create("base_controller", "animation.cream.consume", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BALL_CONSUME(AzCommand.create("base_controller", "animation.cream.ballconsume", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        SURPRISE(AzCommand.create("base_controller", "animation.cream.surprise", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        CHARGE(AzCommand.create("base_controller", "animation.cream.charge", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        GRAB(AzCommand.create("base_controller", "animation.cream.grab", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        GRAB_HIT(AzCommand.create("base_controller", "animation.cream.grab_hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        ENTER(AzCommand.create("base_controller", "animation.cream.enter", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        EXIT(AzCommand.create("base_controller", "animation.cream.exit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        DESTROY(AzCommand.create("base_controller", "animation.cream.destroy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BITE(AzCommand.create("base_controller", "animation.cream.bite", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
+        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.idle", AzPlayBehaviors.LOOP)),
+        LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BALL_LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.balllight", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.block", AzPlayBehaviors.LOOP)),
+        BALL_BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.ballblock", AzPlayBehaviors.LOOP)),
+        HEAVY(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BALL_HEAVY(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.ballheavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        COMBO(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.combo", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BALL_COMBO(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.ballcombo", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        CONSUME(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.consume", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BALL_CONSUME(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.ballconsume", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        SURPRISE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.surprise", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        CHARGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.charge", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GRAB(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.grab", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GRAB_HIT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.grab_hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        ENTER(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.enter", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        EXIT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.exit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        DESTROY(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.destroy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BITE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.bite", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
 
         private final AzCommand animator;
 

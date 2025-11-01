@@ -4,6 +4,8 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
 import mod.azure.azurelib.animation.dispatch.command.AzCommand;
 import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
+import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.Attacks;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandInfo;
@@ -63,7 +65,6 @@ import java.util.Objects;
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Sun">The Sun</a>.
  * @see JStandTypeRegistry#THE_SUN
- * @see net.arna.jcraft.client.model.entity.stand.TheSunModel TheSunModel
  * @see TheSunRenderer SunRenderer
  */
 public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.State> {
@@ -555,7 +556,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
 
     // Animation code
     public enum State implements StandAnimationState<TheSunEntity> {
-        IDLE(AzCommand.create("base_controller", "animation.sun.idle", AzPlayBehaviors.LOOP)),
+        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.sun.idle", AzPlayBehaviors.LOOP)),
         ;
 
         private final AzCommand animator;

@@ -5,6 +5,8 @@ import lombok.NonNull;
 import mod.azure.azurelib.animation.dispatch.command.AzCommand;
 import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import mod.azure.azurelib.util.client.RenderUtils;
+import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.Attacks;
 import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
@@ -192,21 +194,21 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
 
     // Animations
     public enum State implements StandAnimationState<KQBTDEntity> {
-        IDLE(AzCommand.create("base_controller", "animation.kqbtd.idle", AzPlayBehaviors.LOOP)),
-        LIGHT(AzCommand.create("base_controller", "animation.kqbtd.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(AzCommand.create("base_controller", "animation.kqbtd.block", AzPlayBehaviors.LOOP)),
-        HEAVY(AzCommand.create("base_controller", "animation.kqbtd.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BARRAGE(AzCommand.create("base_controller", "animation.kqbtd.barrage", AzPlayBehaviors.LOOP)),
-        DETONATE(AzCommand.create("base_controller", "animation.kqbtd.detonate", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BOMB_PLANT(AzCommand.create("base_controller", "animation.kqbtd.bombplant", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BUBBLE(AzCommand.create("base_controller", "animation.kqbtd.bubble", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.kqbtd.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LOW(AzCommand.create("base_controller", "animation.kqbtd.low", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BUBBLE_COUNTER(AzCommand.create("base_controller", "animation.kqbtd.bubblecounter", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        COUNTER_MISS(AzCommand.create("base_controller", "animation.kqbtd.counter_miss", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BTD_PLANT(AzCommand.create("base_controller", "animation.kqbtd.btdplant", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        GRAB(AzCommand.create("base_controller", "animation.kqbtd.grab", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        GRAB_HIT(AzCommand.create("base_controller", "animation.kqbtd.grab_hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
+        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.kqbtd.idle", AzPlayBehaviors.LOOP)),
+        LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.kqbtd.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.kqbtd.block", AzPlayBehaviors.LOOP)),
+        HEAVY(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.kqbtd.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BARRAGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.kqbtd.barrage", AzPlayBehaviors.LOOP)),
+        DETONATE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.kqbtd.detonate", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BOMB_PLANT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.kqbtd.bombplant", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BUBBLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.kqbtd.bubble", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.kqbtd.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LOW(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.kqbtd.low", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BUBBLE_COUNTER(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.kqbtd.bubblecounter", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        COUNTER_MISS(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.kqbtd.counter_miss", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BTD_PLANT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.kqbtd.btdplant", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GRAB(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.kqbtd.grab", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GRAB_HIT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.kqbtd.grab_hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
 
         private final AzCommand animator;
 

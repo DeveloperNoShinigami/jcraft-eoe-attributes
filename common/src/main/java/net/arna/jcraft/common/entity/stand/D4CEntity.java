@@ -5,6 +5,7 @@ import lombok.NonNull;
 import mod.azure.azurelib.animation.dispatch.command.AzCommand;
 import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.Attacks;
 import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
@@ -257,20 +258,20 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
 
     // Animation code
     public enum State implements StandAnimationState<D4CEntity> {
-        IDLE(AzCommand.create("base_controller", "animation.d4c.idle", AzPlayBehaviors.LOOP)),
-        LIGHT(AzCommand.create("base_controller", "animation.d4c.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(AzCommand.create("base_controller", "animation.d4c.block", AzPlayBehaviors.LOOP)),
-        HEAVY(AzCommand.create("base_controller", "animation.d4c.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BARRAGE(AzCommand.create("base_controller", "animation.d4c.barrage", AzPlayBehaviors.LOOP)),
-        DIM_HOP(AzCommand.create("base_controller", "animation.d4c.dimhop", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        THROW(AzCommand.create("base_controller", "animation.d4c.throw", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        THROW_HIT(AzCommand.create("base_controller", "animation.d4c.throwhit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        COUNTER(AzCommand.create("base_controller", "animation.d4c.counter", AzPlayBehaviors.LOOP)),
-        COUNTER_MISS(AzCommand.create("base_controller", "animation.d4c.counter_miss", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        GIVE_GUN(AzCommand.create("base_controller", "animation.d4c.givegun", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        FLAG(AzCommand.create("base_controller", "animation.d4c.flag", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        ITEM_PLACE(AzCommand.create("base_controller", "animation.d4c.itemplace", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.d4c.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
+        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.d4c.idle", AzPlayBehaviors.LOOP)),
+        LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.d4c.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.d4c.block", AzPlayBehaviors.LOOP)),
+        HEAVY(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.d4c.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BARRAGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.d4c.barrage", AzPlayBehaviors.LOOP)),
+        DIM_HOP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.d4c.dimhop", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        THROW(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.d4c.throw", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        THROW_HIT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.d4c.throwhit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        COUNTER(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.d4c.counter", AzPlayBehaviors.LOOP)),
+        COUNTER_MISS(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.d4c.counter_miss", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GIVE_GUN(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.d4c.givegun", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        FLAG(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.d4c.flag", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        ITEM_PLACE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.d4c.itemplace", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.d4c.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
 
         private final AzCommand animator;
 

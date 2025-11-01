@@ -3,6 +3,8 @@ package net.arna.jcraft.common.entity.stand;
 import lombok.NonNull;
 import mod.azure.azurelib.animation.dispatch.command.AzCommand;
 import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
+import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.Attacks;
 import net.arna.jcraft.api.MoveSelectionResult;
 import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;
@@ -306,20 +308,20 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
 
     // Animation code
     public enum State implements StandAnimationState<GoldExperienceEntity> {
-        IDLE(AzCommand.create("base_controller", "animation.ge.idle", AzPlayBehaviors.LOOP)),
-        LIGHT(AzCommand.create("base_controller", "animation.ge.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(AzCommand.create("base_controller", "animation.ge.block", AzPlayBehaviors.LOOP)),
-        HEAVY(AzCommand.create("base_controller", "animation.ge.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BARRAGE(AzCommand.create("base_controller", "animation.ge.barrage", AzPlayBehaviors.LOOP)),
-        HEAL_SELF(AzCommand.create("base_controller", "animation.ge.healself", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        HEAL(AzCommand.create("base_controller", "animation.ge.heal", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        TREE(AzCommand.create("base_controller", "animation.ge.tree", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LIFE_GIVER(AzCommand.create("base_controller", "animation.ge.lifegiver", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        REKKA1(AzCommand.create("base_controller", "animation.ge.rekka1", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        REKKA2(AzCommand.create("base_controller", "animation.ge.rekka2", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        REKKA3(AzCommand.create("base_controller", "animation.ge.rekka3", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        OVERCLOCK(AzCommand.create("base_controller", "animation.ge.overclock", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.ge.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
+        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ge.idle", AzPlayBehaviors.LOOP)),
+        LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ge.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ge.block", AzPlayBehaviors.LOOP)),
+        HEAVY(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ge.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BARRAGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ge.barrage", AzPlayBehaviors.LOOP)),
+        HEAL_SELF(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ge.healself", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        HEAL(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ge.heal", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        TREE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ge.tree", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIFE_GIVER(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ge.lifegiver", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        REKKA1(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ge.rekka1", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        REKKA2(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ge.rekka2", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        REKKA3(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ge.rekka3", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        OVERCLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ge.overclock", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.ge.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
 
         private final AzCommand animator;
 

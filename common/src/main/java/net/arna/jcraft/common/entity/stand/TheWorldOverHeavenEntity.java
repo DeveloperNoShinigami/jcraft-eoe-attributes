@@ -6,6 +6,7 @@ import mod.azure.azurelib.animation.dispatch.command.AzCommand;
 import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import mod.azure.azurelib.core.object.Color;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.Attacks;
 import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
@@ -339,23 +340,23 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
 
     // Animation code
     public enum State implements StandAnimationState<TheWorldOverHeavenEntity> {
-        IDLE(AzCommand.create("base_controller", "animation.twoh.idle", AzPlayBehaviors.LOOP)),
-        LIGHT(AzCommand.create("base_controller", "animation.twoh.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(AzCommand.create("base_controller", "animation.twoh.block", AzPlayBehaviors.LOOP)),
-        HEAVY(AzCommand.create("base_controller", "animation.twoh.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BARRAGE(AzCommand.create("base_controller", "animation.twoh.barrage", AzPlayBehaviors.LOOP)),
-        SMITE(AzCommand.create("base_controller", "animation.twoh.smite", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        TIME_STOP(AzCommand.create("base_controller", "animation.twoh.timestop", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        CHARGE_OVERWRITE(AzCommand.create("base_controller", "animation.twoh.chargeoverwrite", AzPlayBehaviors.LOOP)),
-        OVERWRITE(AzCommand.create("base_controller", "animation.twoh.overwrite", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        THROW(AzCommand.create("base_controller", "animation.twoh.throw", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        AIR_KNIVES(AzCommand.create("base_controller", "animation.twoh.airknives", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        TIME_SKIP(AzCommand.create("base_controller", "animation.twoh.idle", AzPlayBehaviors.LOOP)),
-        LUNGE(AzCommand.create("base_controller", "animation.twoh.lunge", AzPlayBehaviors.LOOP)),
-        LOW_KICK(AzCommand.create("base_controller", "animation.twoh.low_kick", AzPlayBehaviors.LOOP)),
-        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.twoh.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        SINGULARITY(AzCommand.create("base_controller", "animation.twoh.singularity", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        AIR_HEAVY(AzCommand.create("base_controller", "animation.twoh.air_heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.twoh.idle", AzPlayBehaviors.LOOP)),
+        LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.twoh.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.twoh.block", AzPlayBehaviors.LOOP)),
+        HEAVY(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.twoh.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BARRAGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.twoh.barrage", AzPlayBehaviors.LOOP)),
+        SMITE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.twoh.smite", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        TIME_STOP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.twoh.timestop", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        CHARGE_OVERWRITE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.twoh.chargeoverwrite", AzPlayBehaviors.LOOP)),
+        OVERWRITE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.twoh.overwrite", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        THROW(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.twoh.throw", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        AIR_KNIVES(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.twoh.airknives", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        TIME_SKIP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.twoh.idle", AzPlayBehaviors.LOOP)),
+        LUNGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.twoh.lunge", AzPlayBehaviors.LOOP)),
+        LOW_KICK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.twoh.low_kick", AzPlayBehaviors.LOOP)),
+        LIGHT_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.twoh.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        SINGULARITY(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.twoh.singularity", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        AIR_HEAVY(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.twoh.air_heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         ;
 
         private final AzCommand animator;

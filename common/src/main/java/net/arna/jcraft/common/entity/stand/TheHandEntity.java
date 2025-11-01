@@ -5,6 +5,7 @@ import lombok.NonNull;
 import mod.azure.azurelib.animation.dispatch.command.AzCommand;
 import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.Attacks;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandInfo;
@@ -289,23 +290,23 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
     }
 
     public enum State implements StandAnimationState<TheHandEntity> {
-        IDLE(AzCommand.create("base_controller", "animation.the_hand.idle", AzPlayBehaviors.LOOP)),
-        LIGHT(AzCommand.create("base_controller", "animation.the_hand.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.the_hand.light2", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        CROUCHING_LIGHT(AzCommand.create("base_controller", "animation.the_hand.crouching_light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        CROUCHING_LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.the_hand.crouching_light2", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(AzCommand.create("base_controller", "animation.the_hand.block", AzPlayBehaviors.LOOP)),
-        KICK(AzCommand.create("base_controller", "animation.the_hand.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BARRAGE(AzCommand.create("base_controller", "animation.the_hand.barrage", AzPlayBehaviors.LOOP)),
-        ERASE(AzCommand.create("base_controller", "animation.the_hand.erase", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        ERASE_GROUND(AzCommand.create("base_controller", "animation.the_hand.erase_ground", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        ERASE_SPACE(AzCommand.create("base_controller", "animation.the_hand.erase_space", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        SWEEP(AzCommand.create("base_controller", "animation.the_hand.sweep", AzPlayBehaviors.LOOP)),
-        GRAB(AzCommand.create("base_controller", "animation.the_hand.grab", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        GRAB_HIT(AzCommand.create("base_controller", "animation.the_hand.grab_hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        STOMP_BARRAGE(AzCommand.create("base_controller", "animation.the_hand.stomp_barrage", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        RAGE(AzCommand.create("base_controller", "animation.the_hand.rage", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        RAGE_FOLLOWUP(AzCommand.create("base_controller", "animation.the_hand.rage_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.the_hand.idle", AzPlayBehaviors.LOOP)),
+        LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.the_hand.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.the_hand.light2", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        CROUCHING_LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.the_hand.crouching_light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        CROUCHING_LIGHT_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.the_hand.crouching_light2", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.the_hand.block", AzPlayBehaviors.LOOP)),
+        KICK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.the_hand.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BARRAGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.the_hand.barrage", AzPlayBehaviors.LOOP)),
+        ERASE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.the_hand.erase", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        ERASE_GROUND(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.the_hand.erase_ground", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        ERASE_SPACE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.the_hand.erase_space", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        SWEEP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.the_hand.sweep", AzPlayBehaviors.LOOP)),
+        GRAB(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.the_hand.grab", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GRAB_HIT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.the_hand.grab_hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        STOMP_BARRAGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.the_hand.stomp_barrage", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        RAGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.the_hand.rage", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        RAGE_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.the_hand.rage_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         ;
 
         private final AzCommand animator;

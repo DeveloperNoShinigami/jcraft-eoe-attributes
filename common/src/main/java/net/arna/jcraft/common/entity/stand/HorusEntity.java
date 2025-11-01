@@ -3,6 +3,8 @@ package net.arna.jcraft.common.entity.stand;
 import lombok.NonNull;
 import mod.azure.azurelib.animation.dispatch.command.AzCommand;
 import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
+import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.Attacks;
 import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
@@ -323,24 +325,24 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
 
     // Animation code
     public enum State implements StandAnimationState<HorusEntity> {
-        IDLE(AzCommand.create("base_controller", "animation.horus.idle", AzPlayBehaviors.LOOP)),
-        BLOCK(AzCommand.create("base_controller", "animation.horus.block", AzPlayBehaviors.LOOP)),
-        LIGHT(AzCommand.create("base_controller", "animation.horus.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.horus.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LIGHT_LOW(AzCommand.create("base_controller", "animation.horus.light_low", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LIGHT_AIR(AzCommand.create("base_controller", "animation.horus.light_air", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        IMPALE(AzCommand.create("base_controller", "animation.horus.impale", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BARRAGE(AzCommand.create("base_controller", "animation.horus.barrage", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        STOMP(AzCommand.create("base_controller", "animation.horus.stomp", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        DETONATE(AzCommand.create("base_controller", "animation.horus.detonate", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        DIVEKICK(AzCommand.create("base_controller", "animation.horus.divekick", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        DIVEKICK_HIT(AzCommand.create("base_controller", "animation.horus.divekick_hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        SCATTER(AzCommand.create("base_controller", "animation.horus.scatter", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        CHARGE_ICICLE(AzCommand.create("base_controller", "animation.horus.charge_icicle", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        CHARGE_FIRE(AzCommand.create("base_controller", "animation.horus.charge_fire", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        PLACE(AzCommand.create("base_controller", "animation.horus.place", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        ULTIMATE(AzCommand.create("base_controller", "animation.horus.ultimate", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LANCE(AzCommand.create("base_controller", "animation.horus.lance", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.horus.idle", AzPlayBehaviors.LOOP)),
+        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.horus.block", AzPlayBehaviors.LOOP)),
+        LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.horus.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.horus.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_LOW(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.horus.light_low", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_AIR(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.horus.light_air", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        IMPALE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.horus.impale", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BARRAGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.horus.barrage", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        STOMP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.horus.stomp", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        DETONATE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.horus.detonate", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        DIVEKICK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.horus.divekick", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        DIVEKICK_HIT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.horus.divekick_hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        SCATTER(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.horus.scatter", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        CHARGE_ICICLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.horus.charge_icicle", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        CHARGE_FIRE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.horus.charge_fire", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        PLACE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.horus.place", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        ULTIMATE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.horus.ultimate", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LANCE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.horus.lance", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         ;
 
         private final AzCommand animator;

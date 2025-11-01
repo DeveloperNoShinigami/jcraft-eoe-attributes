@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Either;
 import lombok.NonNull;
 import mod.azure.azurelib.animation.dispatch.command.AzCommand;
 import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
+import net.arna.jcraft.api.Attacks;
 import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
@@ -269,22 +270,22 @@ public final class TheWorldEntity extends AbstractTheWorldEntity<TheWorldEntity,
 
     // Animation code
     public enum State implements StandAnimationState<TheWorldEntity> {
-        IDLE(AzCommand.create("base_controller", "animation.theworld.idle", AzPlayBehaviors.LOOP)),
-        LIGHT(AzCommand.create("base_controller", "animation.theworld.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(AzCommand.create("base_controller", "animation.theworld.block", AzPlayBehaviors.LOOP)),
-        DONUT(AzCommand.create("base_controller", "animation.theworld.donut", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BARRAGE(AzCommand.create("base_controller", "animation.theworld.barrage", AzPlayBehaviors.LOOP)),
-        TIME_STOP(AzCommand.create("base_controller", "animation.theworld.timestop", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        CHARGE(AzCommand.create("base_controller", "animation.theworld.charge", AzPlayBehaviors.LOOP)),
-        CHARGE_HIT(AzCommand.create("base_controller", "animation.theworld.charge_hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        ROUNDHOUSE(AzCommand.create("base_controller", "animation.theworld.roundhouse", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        SWEEP(AzCommand.create("base_controller", "animation.theworld.sweep", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        COUNTER_HIT(AzCommand.create("base_controller", "animation.theworld.counter_hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        COUNTER_MISS(AzCommand.create("base_controller", "animation.theworld.counter_miss", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LOW(AzCommand.create("base_controller", "animation.theworld.low", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        TIMESKIP(AzCommand.create("base_controller", "animation.theworld.idle", AzPlayBehaviors.LOOP)),
-        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.theworld.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LUNGE(AzCommand.create("base_controller", "animation.theworld.lunge", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
+        IDLE(Attacks.createAnimationCommand("base_controller", "animation.theworld.idle", AzPlayBehaviors.LOOP)),
+        LIGHT(Attacks.createAnimationCommand("base_controller", "animation.theworld.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(Attacks.createAnimationCommand("base_controller", "animation.theworld.block", AzPlayBehaviors.LOOP)),
+        DONUT(Attacks.createAnimationCommand("base_controller", "animation.theworld.donut", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BARRAGE(Attacks.createAnimationCommand("base_controller", "animation.theworld.barrage", AzPlayBehaviors.LOOP)),
+        TIME_STOP(Attacks.createAnimationCommand("base_controller", "animation.theworld.timestop", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        CHARGE(Attacks.createAnimationCommand("base_controller", "animation.theworld.charge", AzPlayBehaviors.LOOP)),
+        CHARGE_HIT(Attacks.createAnimationCommand("base_controller", "animation.theworld.charge_hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        ROUNDHOUSE(Attacks.createAnimationCommand("base_controller", "animation.theworld.roundhouse", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        SWEEP(Attacks.createAnimationCommand("base_controller", "animation.theworld.sweep", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        COUNTER_HIT(Attacks.createAnimationCommand("base_controller", "animation.theworld.counter_hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        COUNTER_MISS(Attacks.createAnimationCommand("base_controller", "animation.theworld.counter_miss", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LOW(Attacks.createAnimationCommand("base_controller", "animation.theworld.low", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        TIMESKIP(Attacks.createAnimationCommand("base_controller", "animation.theworld.idle", AzPlayBehaviors.LOOP)),
+        LIGHT_FOLLOWUP(Attacks.createAnimationCommand("base_controller", "animation.theworld.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LUNGE(Attacks.createAnimationCommand("base_controller", "animation.theworld.lunge", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
 
         private final AzCommand animator;
 
