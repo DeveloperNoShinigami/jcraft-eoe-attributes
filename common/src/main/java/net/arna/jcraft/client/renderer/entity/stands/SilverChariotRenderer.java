@@ -1,21 +1,13 @@
 package net.arna.jcraft.client.renderer.entity.stands;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
 import lombok.NonNull;
 import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.arna.jcraft.client.model.entity.stand.SilverChariotModel;
 import net.arna.jcraft.client.renderer.entity.layer.SCRapierLayer;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
-import net.arna.jcraft.common.util.JUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.phys.Vec3;
 
 /**
  * The {@link StandEntityRenderer} for {@link SilverChariotEntity}.
@@ -25,7 +17,7 @@ import net.minecraft.world.phys.Vec3;
 public class SilverChariotRenderer extends StandEntityRenderer<SilverChariotEntity> {
 
     public SilverChariotRenderer(final @NonNull EntityRendererProvider.Context context) {
-        super(context, b -> b.addRenderLayer(new SCRapierLayer()), JStandTypeRegistry.SILVER_CHARIOT.get());
+        super(context, b -> b.addRenderLayer(new SCRapierLayer()), JStandTypeRegistry.SILVER_CHARIOT.get(), false, false, 0f, 0f, 90f);
     }
 
     // Adds ability to change render alpha

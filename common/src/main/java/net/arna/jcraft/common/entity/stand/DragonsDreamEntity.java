@@ -16,7 +16,6 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Dragon%27s_Dream">Dragon's Dream</a>.
  * @see JStandTypeRegistry#DRAGONS_DREAM
- * @see net.arna.jcraft.client.model.entity.stand.DragonsDreamModel DragonsDreamModel
  * @see net.arna.jcraft.client.renderer.entity.stands.DragonsDreamRenderer DragonsDreamRenderer
  */
 public class DragonsDreamEntity extends StandEntity<DragonsDreamEntity, DragonsDreamEntity.State> {

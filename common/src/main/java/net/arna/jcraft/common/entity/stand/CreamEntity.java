@@ -62,7 +62,6 @@ import java.util.List;
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Cream">Cream</a>.
  * @see JStandTypeRegistry#CREAM
- * @see net.arna.jcraft.client.model.entity.stand.CreamModel CreamModel
  * @see net.arna.jcraft.client.renderer.entity.stands.CreamRenderer CreamRenderer
  * @see BallChargeAttack
  * @see BallModeExitMove

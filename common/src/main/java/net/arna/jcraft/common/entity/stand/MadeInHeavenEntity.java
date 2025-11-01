@@ -55,7 +55,6 @@ import java.util.Set;
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Made_in_Heaven">Made In Heaven</a>.
  * @see JStandTypeRegistry#MADE_IN_HEAVEN
- * @see net.arna.jcraft.client.model.entity.stand.MadeInHeavenModel MadeInHeavenModel
  * @see net.arna.jcraft.client.renderer.entity.stands.MadeInHeavenRenderer MadeInHeavenRenderer
  * @see CircleAttack
  * @see FuryChopAttack

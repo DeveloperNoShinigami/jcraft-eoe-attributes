@@ -1,29 +1,16 @@
 package net.arna.jcraft.client.renderer.entity.stands;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.arna.jcraft.api.registry.JStandTypeRegistry;
-import net.arna.jcraft.client.model.entity.stand.MagiciansRedModel;
 import net.arna.jcraft.client.renderer.entity.layer.MRGlowLayer;
 import net.arna.jcraft.common.entity.stand.MagiciansRedEntity;
-import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
-import net.arna.jcraft.common.gravity.util.RotationUtil;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.phys.Vec3;
-import org.joml.Vector3d;
 
 /**
  * The {@link StandEntityRenderer} for {@link MagiciansRedEntity}.
- * @see MagiciansRedModel
  */
 public class MagiciansRedRenderer extends StandEntityRenderer<MagiciansRedEntity> {
     public MagiciansRedRenderer(final EntityRendererProvider.Context context) {
-        super(context, b -> b.addRenderLayer(new MRGlowLayer()), JStandTypeRegistry.MAGICIANS_RED.get());
+        super(context, b -> b.addRenderLayer(new MRGlowLayer()), JStandTypeRegistry.MAGICIANS_RED.get(), -0.10f, -0.05f);
     }
 
     /*@Override

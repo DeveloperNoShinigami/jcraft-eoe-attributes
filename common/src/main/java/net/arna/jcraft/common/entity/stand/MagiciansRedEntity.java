@@ -48,7 +48,6 @@ import java.util.Collection;
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Magician%27s_Red">Magician's Red</a>.
  * @see JStandTypeRegistry#MAGICIANS_RED
- * @see net.arna.jcraft.client.model.entity.stand.MagiciansRedModel MagiciansRedModel
  * @see net.arna.jcraft.client.renderer.entity.stands.MagiciansRedRenderer MagiciansRedRenderer
  * @see CrossfireAttack
  * @see CrossfireHurricaneAttack

@@ -1,29 +1,19 @@
 package net.arna.jcraft.client.renderer.entity.stands;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import lombok.NonNull;
 import net.arna.jcraft.api.registry.JStandTypeRegistry;
-import net.arna.jcraft.client.model.entity.stand.ShadowTheWorldModel;
 import net.arna.jcraft.client.renderer.entity.layer.STWGlowLayer;
 import net.arna.jcraft.common.entity.stand.ShadowTheWorldEntity;
-import net.arna.jcraft.common.util.JUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * The {@link StandEntityRenderer} for {@link ShadowTheWorldEntity}.
- * @see ShadowTheWorldModel
  */
 
 public class ShadowTheWorldRenderer extends StandEntityRenderer<ShadowTheWorldEntity> {
 
     public ShadowTheWorldRenderer(final @NonNull EntityRendererProvider.Context context) {
-        super(context, b -> b.addRenderLayer(new STWGlowLayer()), JStandTypeRegistry.SHADOW_THE_WORLD.get());
+        super(context, b -> b.addRenderLayer(new STWGlowLayer()), JStandTypeRegistry.SHADOW_THE_WORLD.get(), -0.1745329251f, -0.1745329251f);
     }
 
     /*

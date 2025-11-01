@@ -33,7 +33,6 @@ import org.joml.Vector3f;
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/The_Hand">The Hand</a>.
  * @see JStandTypeRegistry#THE_HAND
- * @see net.arna.jcraft.client.model.entity.stand.TheHandModel TheHandModel
  * @see net.arna.jcraft.client.renderer.entity.stands.TheHandRenderer TheHandRenderer
  */
 public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.State> {

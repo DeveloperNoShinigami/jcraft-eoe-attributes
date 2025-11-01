@@ -40,7 +40,6 @@ import java.util.function.Supplier;
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/The_World">The World Over Heaven</a>.
  * @see JStandTypeRegistry#THE_WORLD
- * @see net.arna.jcraft.client.model.entity.stand.TheWorldOverHeavenModel TheWorldOverHeavenModel
  * @see net.arna.jcraft.client.renderer.entity.stands.TheWorldOverHeavenRenderer TheWorldOverHeavenRenderer
  * @see AerialDivineFinisherAttack
  * @see DivineFinisherAttack

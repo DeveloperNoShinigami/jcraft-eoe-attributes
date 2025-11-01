@@ -39,7 +39,6 @@ import org.joml.Vector3f;
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/The_World">Shadow The World</a>.
  * @see JStandTypeRegistry#SHADOW_THE_WORLD
- * @see net.arna.jcraft.client.model.entity.stand.ShadowTheWorldModel ShadowTheWorldModel
  * @see net.arna.jcraft.client.renderer.entity.stands.ShadowTheWorldRenderer ShadowTheWorldRenderer
  * @see STWCounterAttack
  */

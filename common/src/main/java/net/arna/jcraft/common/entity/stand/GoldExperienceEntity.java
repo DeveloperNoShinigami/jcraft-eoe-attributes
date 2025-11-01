@@ -39,7 +39,6 @@ import org.joml.Vector3f;
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Gold_Experience">Gold Experience</a>.
  * @see JStandTypeRegistry#GOLD_EXPERIENCE
- * @see net.arna.jcraft.client.model.entity.stand.GoldenExperienceModel GoldenExperienceModel
  * @see net.arna.jcraft.client.renderer.entity.stands.GoldExperienceRenderer GoldExperienceRenderer
  * @see BerryBushAttack
  * @see LifeGiverAttack

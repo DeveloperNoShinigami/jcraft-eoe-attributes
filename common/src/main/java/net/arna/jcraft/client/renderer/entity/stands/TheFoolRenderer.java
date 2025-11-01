@@ -19,7 +19,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 public class TheFoolRenderer extends StandEntityRenderer<TheFoolEntity> {
 
     public TheFoolRenderer(final @NonNull EntityRendererProvider.Context context) {
-        super(context, JStandTypeRegistry.THE_FOOL.get());
+        super(context, JStandTypeRegistry.THE_FOOL.get(), 0.7854f, -0.349f, 30f);
     }
 
 }

@@ -1,20 +1,14 @@
 package net.arna.jcraft.client.renderer.entity.stands;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import lombok.NonNull;
-import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.arna.jcraft.client.renderer.entity.layer.SunGlowLayer;
 import net.arna.jcraft.common.entity.stand.TheSunEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * The {@link StandEntityRenderer} for {@link TheSunEntity}.
@@ -27,7 +21,7 @@ public class TheSunRenderer extends StandEntityRenderer<TheSunEntity> {
                 .addRenderLayer(new SunGlowLayer())
                 //TODO: translucent layer that isn't layered over and has no shading
                 .setRenderType(renderType(RenderType::dragonExplosionAlpha)),
-                JStandTypeRegistry.THE_SUN.get());
+                JStandTypeRegistry.THE_SUN.get(), false, false, 0f, 0f, 90f);
     }
 
     @Override

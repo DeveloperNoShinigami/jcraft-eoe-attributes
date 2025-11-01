@@ -39,7 +39,6 @@ import java.util.function.Supplier;
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/The_World">The World</a>.
  * @see JStandTypeRegistry#THE_WORLD
- * @see net.arna.jcraft.client.model.entity.stand.TheWorldModel TheWorldModel
  * @see net.arna.jcraft.client.renderer.entity.stands.TheWorldRenderer TheWorldRenderer
  * @see FeignBarrageCounterAttack
  * @see TWDonutAttack

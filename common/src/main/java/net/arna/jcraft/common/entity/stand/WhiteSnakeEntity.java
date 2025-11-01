@@ -42,7 +42,6 @@ import org.joml.Vector3f;
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Whitesnake">Whitesnake</a>.
  * @see JStandTypeRegistry#WHITE_SNAKE
- * @see net.arna.jcraft.client.model.entity.stand.WhiteSnakeModel WhiteSnakeModel
  * @see net.arna.jcraft.client.renderer.entity.stands.WhiteSnakeRenderer WhiteSnakeRenderer
  * @see ChargedSpewAttack
  * @see GiveStandAttack

@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import lombok.NonNull;
 import net.arna.jcraft.api.registry.JStandTypeRegistry;
-import net.arna.jcraft.client.model.entity.stand.MadeInHeavenModel;
 import net.arna.jcraft.common.entity.stand.MadeInHeavenEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -22,7 +21,7 @@ import net.minecraft.world.phys.Vec3;
 public class MadeInHeavenRenderer extends StandEntityRenderer<MadeInHeavenEntity> {
 
     public MadeInHeavenRenderer(final @NonNull EntityRendererProvider.Context context) {
-        super(context, JStandTypeRegistry.MADE_IN_HEAVEN.get());
+        super(context, JStandTypeRegistry.MADE_IN_HEAVEN.get(), -0.1745329251f, -0.1745329251f);
     }
 
     /*

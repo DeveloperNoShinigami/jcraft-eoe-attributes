@@ -40,7 +40,6 @@ import java.util.List;
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Hierophant_Green">Hierophant Green</a>.
  * @see JStandTypeRegistry#HIEROPHANT_GREEN
- * @see net.arna.jcraft.client.model.entity.stand.HGModel HGModel
  * @see net.arna.jcraft.client.renderer.entity.stands.HGRenderer HGRenderer
  * @see EmeraldSplashAttack
  * @see NetSetMove

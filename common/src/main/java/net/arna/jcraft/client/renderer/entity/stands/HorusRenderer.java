@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 public class HorusRenderer extends StandEntityRenderer<HorusEntity> {
 
     public HorusRenderer(final @NonNull EntityRendererProvider.Context context) {
-        super(context, b -> b.addRenderLayer(new HorusEyesLayer()), JStandTypeRegistry.HORUS.get());
+        super(context, b -> b.addRenderLayer(new HorusEyesLayer()), JStandTypeRegistry.HORUS.get(), false, false, 0f, 0f, 90f);
     }
 
 }

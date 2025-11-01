@@ -15,19 +15,16 @@ import net.minecraft.world.entity.Pose;
 import java.util.UUID;
 
 public class StandEntityModelRenderer<T extends StandEntity<?, ?>> extends AzEntityModelRenderer<T> {
-    public StandEntityModelRenderer(final AzEntityRendererPipeline<T> entityRendererPipeline, final AzLayerRenderer<UUID, T> layerRenderer) {
-        super(entityRendererPipeline, layerRenderer);
-    }
 
     public StandEntityModelRenderer(final AzRendererPipeline<UUID,T> entityRendererPipeline, final AzLayerRenderer<UUID, T> layerRenderer) {
         super((AzEntityRendererPipeline<T>)entityRendererPipeline, layerRenderer);
     }
 
     @Override
-    public void render(final AzRendererPipelineContext<UUID, T> context, final boolean isReRender) {
-        final var animatable = context.animatable();
-        final var partialTick = context.partialTick();
-        final var poseStack = context.poseStack();
+    public void render(final AzRendererPipelineContext<UUID, T> pc, final boolean isReRender) {
+        final var animatable = pc.animatable();
+        final var partialTick = pc.partialTick();
+        final var poseStack = pc.poseStack();
 
         poseStack.pushPose();
         final float lerpBodyRot = getStandLerpRot(animatable, partialTick);
@@ -56,21 +53,21 @@ public class StandEntityModelRenderer<T extends StandEntity<?, ?>> extends AzEnt
             final var animator = entityRendererPipeline.getRenderer().getAnimator();
 
             if (animator != null) {
-                handleAnimation(animator, animatable, context.partialTick());
+                handleAnimation(animator, animatable, pc.partialTick());
             }
         }
 
         entityRendererPipeline.modelRenderTranslations.set(poseStack.last().pose());
 
-        if (context.vertexConsumer() != null) { // actually render
-            ((AzRendererPipelineInvoker)context.rendererPipeline()).updateAnimatedTextureFrame(animatable);
+        if (pc.vertexConsumer() != null) { // actually render
+            ((AzRendererPipelineInvoker)pc.rendererPipeline()).updateAnimatedTextureFrame(animatable);
 
-            for (var bone : context.bakedModel().getTopLevelBones()) {
-                renderRecursively(context, bone, isReRender);
+            for (var bone : pc.bakedModel().getTopLevelBones()) {
+                renderRecursively(pc, bone, isReRender);
             }
 
-            var config = context.rendererPipeline().config();
-            config.renderEntry(context);
+            var config = pc.rendererPipeline().config();
+            config.renderEntry(pc);
         }
 
         poseStack.popPose();

@@ -38,7 +38,6 @@ import java.util.function.Supplier;
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Bites_the_Dust">Killer Queen Bites The Dust</a>.
  * @see JStandTypeRegistry#KILLER_QUEEN_BITES_THE_DUST
- * @see net.arna.jcraft.client.model.entity.stand.KQBTDModel KQBTDModel
  * @see net.arna.jcraft.client.renderer.entity.stands.KQBTDRenderer KQBTDRenderer
  * @see BTDDetonateAttack
  * @see BTDGrabHitAttack

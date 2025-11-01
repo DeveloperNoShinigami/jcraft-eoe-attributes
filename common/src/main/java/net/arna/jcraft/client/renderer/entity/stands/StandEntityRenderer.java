@@ -3,11 +3,13 @@ package net.arna.jcraft.client.renderer.entity.stands;
 import lombok.NonNull;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
 import mod.azure.azurelib.render.entity.AzEntityRendererConfig;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.client.JClientConfig;
 import net.arna.jcraft.client.renderer.entity.AbstractEntityRenderer;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.client.renderer.entity.StandEntityModelRenderer;
+import net.arna.jcraft.client.util.JClientUtils;
 import net.arna.jcraft.common.util.JUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -36,12 +38,8 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
     protected static final String LEFT_HAND = "bipedHandLeft";
     protected static final String RIGHT_HAND = "bipedHandRight";
 
-    public StandEntityRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull StandType type) {
-        this(context, UnaryOperator.identity(), type);
-    }
-
-    protected StandEntityRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull Function<AzEntityRendererConfig.Builder<T>, AzEntityRendererConfig.Builder<T>> additionalConfigs, final @NonNull StandType type) {
-        super(context, () -> new EntityAnimator<>(type.getId().getPath()),
+    protected StandEntityRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull Function<AzEntityRendererConfig.Builder<T>, AzEntityRendererConfig.Builder<T>> additionalConfigs, final @NonNull StandType type, final boolean flipBody, final boolean flipHead, final float torsoPitchOffset, final float headPitchOffset, final float velInfluence) {
+        super(context, () -> new StandAnimator<>(type.getId().getPath(), flipBody, flipHead, torsoPitchOffset, headPitchOffset, velInfluence),
                 additionalConfigs.compose(
                         b -> b
                                 .setModelRenderer(StandEntityModelRenderer::new)
@@ -49,6 +47,26 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
                                 .setPrerenderEntry(preRenderEntry())),
                 type.getId().withPath(MODEL_STR_TEMPLATE.formatted(type.getId().getPath())),
                 getTextureLocation(type));
+    }
+
+    protected StandEntityRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull Function<AzEntityRendererConfig.Builder<T>, AzEntityRendererConfig.Builder<T>> additionalConfigs, final @NonNull StandType type, final float torsoPitchOffset, final float headPitchOffset, final float velInfluence) {
+        this(context, additionalConfigs, type, false, false, torsoPitchOffset, headPitchOffset, velInfluence);
+    }
+
+    public StandEntityRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull Function<AzEntityRendererConfig.Builder<T>, AzEntityRendererConfig.Builder<T>> additionalConfigs, final @NonNull StandType type, final float torsoPitchOffset, final float headPitchOffset) {
+        this(context, additionalConfigs, type, false, false, torsoPitchOffset, headPitchOffset, 90f);
+    }
+
+    protected StandEntityRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull StandType type, final float torsoPitchOffset, final float headPitchOffset, final float velInfluence) {
+        this(context, UnaryOperator.identity(), type, false, false, torsoPitchOffset, headPitchOffset, velInfluence);
+    }
+
+    public StandEntityRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull StandType type, final float torsoPitchOffset, final float headPitchOffset) {
+        this(context, UnaryOperator.identity(), type, false, false, torsoPitchOffset, headPitchOffset, 90f);
+    }
+
+    public StandEntityRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull StandType type) {
+        this(context, UnaryOperator.identity(), type, 0f, 0f);
     }
 
     protected static @NonNull <T extends StandEntity<?,?>> Function<T, RenderType> renderType() {
@@ -289,4 +307,32 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
     protected float getBlue(final T stand, final float blue, final float alpha) {
         return blue;
     }
+
+    public static class StandAnimator<T extends StandEntity<?,?>> extends EntityAnimator<T> {
+
+        protected boolean flipBody;
+        protected boolean flipHead;
+        protected float torsoPitchOffset;
+        protected float headPitchOffset;
+        protected float velInfluence;
+
+        public StandAnimator(final @NonNull ResourceLocation animation, final boolean flipBody, final boolean flipHead, final float torsoPitchOffset, final float headPitchOffset, final float velInfluence) {
+            super(animation);
+            this.flipBody = flipBody;
+            this.flipHead = flipHead;
+            this.torsoPitchOffset = torsoPitchOffset;
+            this.headPitchOffset = headPitchOffset;
+            this.velInfluence = velInfluence;
+        }
+
+        public StandAnimator(final @NonNull String id, final boolean flipBody, final boolean flipHead, final float torsoPitchOffset, final float headPitchOffset, final float velInfluence) {
+            this(JCraft.id(ANIMATION_STR_TEMPLATE.formatted(id)), flipBody, flipHead, torsoPitchOffset, headPitchOffset, velInfluence);
+        }
+
+        @Override
+        public void setCustomAnimations(final T animatable, final float partialTicks) {
+            JClientUtils.animateGenericHumanoid(context(), animatable, flipBody, flipHead, torsoPitchOffset, headPitchOffset, velInfluence);
+        }
+    }
+
 }

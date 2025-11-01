@@ -1,25 +1,14 @@
 package net.arna.jcraft.client.renderer.entity.stands;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import lombok.NonNull;
-import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.registry.JStandTypeRegistry;
-import net.arna.jcraft.api.stand.StandEntity;
-import net.arna.jcraft.api.stand.StandType;
-import net.arna.jcraft.client.model.entity.stand.CreamModel;
 import net.arna.jcraft.client.renderer.entity.layer.CreamVoidLayer;
 import net.arna.jcraft.common.entity.stand.CreamEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Function;
 
 /**
  * The {@link StandEntityRenderer} for {@link CreamEntity}.
@@ -30,7 +19,7 @@ public class CreamRenderer extends StandEntityRenderer<CreamEntity> {
         super(context, b -> b
                 .setRenderType(CreamRenderer::renderType)
                 .addRenderLayer(new CreamVoidLayer()),
-                JStandTypeRegistry.CREAM.get());
+                JStandTypeRegistry.CREAM.get(), -0.1745329251f, -0.1f);
     }
 
     protected static @NotNull RenderType renderType(final @NonNull CreamEntity cream) {
