@@ -263,6 +263,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
      */
     public void setState(S state) {
         setRawState(state.ordinal());
+        state.playAnimation(getThis()); // whats MISSING . . .
     }
 
     public void setRawState(int state) {

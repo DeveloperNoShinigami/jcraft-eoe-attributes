@@ -7,6 +7,7 @@ import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.client.JClientConfig;
 import net.arna.jcraft.client.renderer.entity.AbstractEntityRenderer;
 import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.client.renderer.entity.StandEntityModelRenderer;
 import net.arna.jcraft.common.util.JUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -43,6 +44,7 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
         super(context, () -> new EntityAnimator<>(type.getId().getPath()),
                 additionalConfigs.compose(
                         b -> b
+                                .setModelRenderer(StandEntityModelRenderer::new)
                                 .setRenderType(renderType())
                                 .setPrerenderEntry(preRenderEntry())),
                 type.getId().withPath(MODEL_STR_TEMPLATE.formatted(type.getId().getPath())),
