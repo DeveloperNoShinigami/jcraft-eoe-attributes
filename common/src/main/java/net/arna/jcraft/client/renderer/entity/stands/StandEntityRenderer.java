@@ -99,8 +99,7 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
         };
     }
 
-    public static boolean standIsFirstPersonViewers(final StandEntity<?, ?> stand)
-    {
+    public static boolean standIsFirstPersonViewers(final StandEntity<?, ?> stand) {
         final Minecraft mcClient = Minecraft.getInstance();
         return mcClient.options.getCameraType().isFirstPerson() && mcClient.player != null && JUtils.getStand(mcClient.player) == stand;
     }
@@ -330,7 +329,7 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
         }
 
         @Override
-        public void setCustomAnimations(final T animatable, final float partialTicks) {
+        public void setCustomAnimations(final @NonNull T animatable, final float partialTicks) {
             JClientUtils.animateGenericHumanoid(context(), animatable, flipBody, flipHead, torsoPitchOffset, headPitchOffset, velInfluence);
         }
     }

@@ -1,5 +1,6 @@
 package net.arna.jcraft.client.renderer.entity;
 
+import lombok.NonNull;
 import mod.azure.azurelib.render.AzLayerRenderer;
 import mod.azure.azurelib.render.AzRendererPipeline;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
@@ -7,6 +8,8 @@ import mod.azure.azurelib.render.entity.AzEntityModelRenderer;
 import mod.azure.azurelib.render.entity.AzEntityRendererPipeline;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.mixin.client.azurelib.AzRendererPipelineInvoker;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,14 +17,15 @@ import net.minecraft.world.entity.Pose;
 
 import java.util.UUID;
 
+@Environment(EnvType.CLIENT)
 public class StandEntityModelRenderer<T extends StandEntity<?, ?>> extends AzEntityModelRenderer<T> {
 
-    public StandEntityModelRenderer(final AzRendererPipeline<UUID,T> entityRendererPipeline, final AzLayerRenderer<UUID, T> layerRenderer) {
+    public StandEntityModelRenderer(final @NonNull AzRendererPipeline<UUID,T> entityRendererPipeline, final @NonNull AzLayerRenderer<UUID, T> layerRenderer) {
         super((AzEntityRendererPipeline<T>)entityRendererPipeline, layerRenderer);
     }
 
     @Override
-    public void render(final AzRendererPipelineContext<UUID, T> pc, final boolean isReRender) {
+    public void render(final @NonNull AzRendererPipelineContext<UUID, T> pc, final boolean isReRender) {
         final var animatable = pc.animatable();
         final var partialTick = pc.partialTick();
         final var poseStack = pc.poseStack();
@@ -73,7 +77,7 @@ public class StandEntityModelRenderer<T extends StandEntity<?, ?>> extends AzEnt
         poseStack.popPose();
     }
 
-    private static <T extends StandEntity<?, ?>> float getStandLerpRot(final T animatable, final float partialTick) {
+    private static <T extends StandEntity<?, ?>> float getStandLerpRot(final @NonNull T animatable, final float partialTick) {
         final LivingEntity user = animatable.getUser();
         final boolean hasUser = user != null;
         if (hasUser) {

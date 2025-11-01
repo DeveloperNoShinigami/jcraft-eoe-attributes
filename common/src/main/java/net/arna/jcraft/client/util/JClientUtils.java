@@ -102,7 +102,7 @@ public class JClientUtils {
             if (torso != null) {
                 //model.prevTorsoPitch = torso.getRotX();
                 float pitch = (180f + overVel * velInfluence) * 3.1415f / 180f;
-                if (flipBody) {
+                if (!flipBody) {
                     pitch += 3.1415f;
                     pitch = -pitch;
                 }
@@ -116,7 +116,9 @@ public class JClientUtils {
             if (head != null) {
                 //model.prevHeadPitch = head.getRotX();
                 float headPitch = (user.getXRot() - overVel * velInfluence) * 3.1415f / 180f;
-                if (flipHead) headPitch = -headPitch;
+                if (!flipHead) {
+                    headPitch = -headPitch;
+                }
                 head.setRotX(headPitch + hPO);
             }
         } else if (entity.getMoveStun() > 0) { // if doing something
