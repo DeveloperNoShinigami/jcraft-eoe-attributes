@@ -6,7 +6,7 @@ import mod.azure.azurelib.render.AzRendererPipelineContext;
 import mod.azure.azurelib.render.entity.AzEntityModelRenderer;
 import mod.azure.azurelib.render.entity.AzEntityRendererPipeline;
 import net.arna.jcraft.api.stand.StandEntity;
-import net.arna.jcraft.mixin.client.azurelib.AzEntityRendererPipelineAccessor;
+import net.arna.jcraft.mixin.client.azurelib.AzRendererPipelineInvoker;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -60,10 +60,17 @@ public class StandEntityModelRenderer<T extends StandEntity<?, ?>> extends AzEnt
             }
         }
 
-        ((AzEntityRendererPipelineAccessor)entityRendererPipeline).getModelRenderTranslations().set(poseStack.last().pose());
+        entityRendererPipeline.modelRenderTranslations.set(poseStack.last().pose());
 
         if (context.vertexConsumer() != null) {
-            super.render(context, isReRender);
+            ((AzRendererPipelineInvoker)context.rendererPipeline()).updateAnimatedTextureFrame(animatable);
+
+            for (var bone : context.bakedModel().getTopLevelBones()) {
+                renderRecursively(context, bone, isReRender);
+            }
+
+            var config = context.rendererPipeline().config();
+            config.renderEntry(context);
         }
 
         poseStack.popPose();
@@ -72,14 +79,13 @@ public class StandEntityModelRenderer<T extends StandEntity<?, ?>> extends AzEnt
     private static <T extends StandEntity<?, ?>> float getStandLerpRot(final T animatable, final float partialTick) {
         final LivingEntity user = animatable.getUser();
         final boolean hasUser = user != null;
-
         if (hasUser) {
-            // this was left as a test to see if there is an underlying rotation that we do not control here
-            // there is, and we dont want it
-            // TODO: remove underlying rotation
-            return 0.0f;
+            return Mth.rotLerp(
+                    partialTick,
+                    user.yHeadRotO,
+                    user.yHeadRot
+            );
         }
-
         return Mth.rotLerp(
                 partialTick,
                 animatable.yBodyRotO,
