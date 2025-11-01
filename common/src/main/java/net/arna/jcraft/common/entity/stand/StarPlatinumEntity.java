@@ -274,23 +274,23 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
     // Animation code
     public enum State implements StandAnimationState<StarPlatinumEntity> {
         // TODO reenable inhaleidle
-        IDLE(AzCommand.create("base_controller", "idle", AzPlayBehaviors.LOOP)),
-        PUNCH(AzCommand.create("base_controller", "animation.starplatinum.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(AzCommand.create("base_controller", "animation.starplatinum.block", AzPlayBehaviors.LOOP)),
-        HEAVY(AzCommand.create("base_controller", "animation.starplatinum.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        GROUND_BREAKER(AzCommand.create("base_controller", "animation.starplatinum.ground_slam", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BARRAGE(AzCommand.create("base_controller", "animation.starplatinum.barrage", AzPlayBehaviors.LOOP)),
-        STAR_FINGER(AzCommand.create("base_controller", "animation.starplatinum.star_finger", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        INHALE(AzCommand.create("base_controller", "animation.starplatinum.inhale", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        KNEE(AzCommand.create("base_controller", "animation.starplatinum.knee", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        KNEE_UP(AzCommand.create("base_controller", "animation.starplatinum.knee_up", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        JUMP(AzCommand.create("base_controller", "animation.starplatinum.jump", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        GRAB(AzCommand.create("base_controller", "animation.starplatinum.grab", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        GRAB_HIT(AzCommand.create("base_controller", "animation.starplatinum.grabhit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        UPPERCUT(AzCommand.create("base_controller", "animation.starplatinum.uppercut", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.starplatinum.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        ITEM_TOSS_CHARGE(AzCommand.create("base_controller", "animation.starplatinum.itemthrow_charge", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        ITEM_TOSS(AzCommand.create("base_controller", "animation.starplatinum.itemthrow", AzPlayBehaviors.PLAY_ONCE));
+        IDLE(AzCommand.create(JCraft.BASE_CONTROLLER, "idle", AzPlayBehaviors.LOOP)),
+        PUNCH(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.star_platinum.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.star_platinum.block", AzPlayBehaviors.LOOP)),
+        HEAVY(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.star_platinum.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GROUND_BREAKER(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.star_platinum.ground_slam", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BARRAGE(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.star_platinum.barrage", AzPlayBehaviors.LOOP)),
+        STAR_FINGER(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.star_platinum.star_finger", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        INHALE(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.star_platinum.inhale", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        KNEE(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.star_platinum.knee", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        KNEE_UP(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.star_platinum.knee_up", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        JUMP(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.star_platinum.jump", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GRAB(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.star_platinum.grab", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GRAB_HIT(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.star_platinum.grabhit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        UPPERCUT(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.star_platinum.uppercut", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FOLLOWUP(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.star_platinum.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        ITEM_TOSS_CHARGE(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.star_platinum.itemthrow_charge", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        ITEM_TOSS(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.star_platinum.itemthrow", AzPlayBehaviors.PLAY_ONCE));
 
         private final AzCommand animator;
 

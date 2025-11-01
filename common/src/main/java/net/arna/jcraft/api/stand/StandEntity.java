@@ -4,6 +4,7 @@ import com.google.common.base.MoreObjects;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.AttackData;
 import net.arna.jcraft.api.MoveUsage;
@@ -155,6 +156,8 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     @Setter
     private boolean playSummonSound = true, playDesummonSound = true;
 
+    protected AzCommand summonAnimationCmd;
+
     // Data
     @Getter
     private final StandType standType;
@@ -172,6 +175,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         noPhysics = true;
         standType = type;
         this.noCulling = true;
+        summonAnimationCmd = AzCommand.create(JCraft.BASE_CONTROLLER, "animation." + type.getId().getPath() + ".summon");
 
         assert getThis() == this;
     }
@@ -896,6 +900,9 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         final boolean client = level().isClientSide;
         if (tickCount == 1) {
             playSummonSound();
+            if (!client) {
+                summonAnimationCmd.sendForEntity(this);
+            }
             if (!client && getUser() instanceof Player player) {
                 player.awardStat(JStatRegistry.STAND_SUMMONED.get());
             }
@@ -1627,11 +1634,6 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         superState.configureController(getThis(), controller);
 
         return PlayState.CONTINUE;
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return cache;
     }
      */
 
