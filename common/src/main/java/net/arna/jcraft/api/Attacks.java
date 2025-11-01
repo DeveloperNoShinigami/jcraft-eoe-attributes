@@ -2,6 +2,8 @@ package net.arna.jcraft.api;
 
 import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import mod.azure.azurelib.animation.play_behavior.AzPlayBehavior;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.attack.moves.AbstractCounterAttack;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
@@ -38,9 +40,48 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import static mod.azure.azurelib.animation.dispatch.command.AzCommand.controllerBuilder;
 import static net.arna.jcraft.api.component.living.CommonHitPropertyComponent.HitAnimation;
 
 public interface Attacks {
+    /**
+    Use instead of AzCommand.create() inside stand's State enums.
+     */
+    static AzCommand createAnimationCommand(
+            String controllerName,
+            String animationName,
+            AzPlayBehavior playBehavior
+    ) {
+        return createAnimationCommand(controllerName, animationName, playBehavior, 0f, 1f, 0f, 0f, false);
+    }
+
+     static AzCommand createAnimationCommand(
+            String controllerName,
+            String animationName,
+            AzPlayBehavior playBehavior,
+            float startTickOffset,
+            float animationSpeed,
+            float freezeTickOffset,
+            float repeatXTimes,
+            boolean isReversing
+    ) {
+        return controllerBuilder()
+                .cancel(controllerName)
+                .playSequence(
+                        controllerName,
+                        sequenceBuilder -> sequenceBuilder.queue(
+                                animationName,
+                                props -> props.withPlayBehavior(playBehavior)
+                        )
+                )
+                .setFreezeTickOffset(controllerName, freezeTickOffset)
+                .setStartTickOffset(controllerName, startTickOffset)
+                .setSpeed(controllerName, animationSpeed)
+                .setRepeatAmount(controllerName, repeatXTimes)
+                .setReverseAnimation(controllerName, isReversing)
+                .build();
+    }
+
 
     /**
      * (LEGACY) Highest level damage method, handles combo counting, DEFAULTS unblockable TO FALSE

@@ -62,7 +62,7 @@ public class StandEntityModelRenderer<T extends StandEntity<?, ?>> extends AzEnt
 
         entityRendererPipeline.modelRenderTranslations.set(poseStack.last().pose());
 
-        if (context.vertexConsumer() != null) {
+        if (context.vertexConsumer() != null) { // actually render
             ((AzRendererPipelineInvoker)context.rendererPipeline()).updateAnimatedTextureFrame(animatable);
 
             for (var bone : context.bakedModel().getTopLevelBones()) {

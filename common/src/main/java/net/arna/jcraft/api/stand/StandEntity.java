@@ -175,7 +175,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         noPhysics = true;
         standType = type;
         this.noCulling = true;
-        summonAnimationCmd = AzCommand.create(JCraft.BASE_CONTROLLER, "animation." + type.getId().getPath() + ".summon");
+        summonAnimationCmd = AzCommand.create(JCraft.BASE_CONTROLLER, getSummonAnimation());
 
         assert getThis() == this;
     }
@@ -256,6 +256,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             return;
         }
         setRawStateNoReset(state.ordinal());
+        state.playAnimation(getThis());
     }
 
     public void setRawStateNoReset(int state) {
@@ -267,9 +268,14 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
      */
     public void setState(S state) {
         setRawState(state.ordinal());
-        state.playAnimation(getThis()); // whats MISSING . . .
+        state.playAnimation(getThis());
     }
 
+
+    /**
+     * *Actually* sets the stands state using the ordinal ID. Does not handle setting the animation.
+     * @param state id
+     */
     public void setRawState(int state) {
         int oldState = getRawState();
         boolean sameState = oldState == state || oldState <= 1;
@@ -1058,6 +1064,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
                 if (getRawState() != 0 || isReset()) {
                     setRawState(0);
+                    boxState(0).playAnimation(getThis());
                     setReset(false);
 
                     setDistanceOffset(getStandData().getIdleDistance());
