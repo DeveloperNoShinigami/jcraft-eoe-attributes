@@ -3,6 +3,7 @@ package net.arna.jcraft.client.renderer.entity.projectiles;
 import lombok.NonNull;
 import mod.azure.azurelib.animation.AzAnimator;
 import mod.azure.azurelib.render.entity.AzEntityRendererConfig;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.renderer.entity.AbstractEntityRenderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -16,29 +17,30 @@ import java.util.function.UnaryOperator;
 
 @Environment(EnvType.CLIENT)
 public class ProjectileRenderer<T extends Entity> extends AbstractEntityRenderer<T> {
+    protected static final String TEXTURE_STR_TEMPLATE = "textures/entity/projectiles/%s.png";
 
     public ProjectileRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull String id) {
         this(context, () -> new EntityAnimator<>(id), id);
     }
 
     public ProjectileRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull Supplier<AzAnimator<UUID, T>> azAnimatorSupplier, final @NonNull UnaryOperator<AzEntityRendererConfig.Builder<T>> additionalConfigs, final @NonNull String id) {
-        super(context, azAnimatorSupplier, additionalConfigs, id);
+        super(context, azAnimatorSupplier, additionalConfigs, JCraft.id(MODEL_STR_TEMPLATE.formatted(id)), JCraft.id(TEXTURE_STR_TEMPLATE.formatted(id)));
     }
 
-    public ProjectileRenderer(final @NonNull AzEntityRendererConfig<T> config, final @NonNull EntityRendererProvider.Context context, final @NonNull ResourceLocation model, final @NonNull ResourceLocation texture, final @NonNull ResourceLocation animation) {
+    public ProjectileRenderer(final @NonNull AzEntityRendererConfig<T> config, final @NonNull EntityRendererProvider.Context context, final @NonNull ResourceLocation model, final @NonNull ResourceLocation texture) {
         super(config, context, model, texture);
     }
 
     public ProjectileRenderer(final @NonNull AzEntityRendererConfig<T> config, final @NonNull EntityRendererProvider.Context context, final @NonNull String id) {
-        super(config, context, id);
+        this(config, context, JCraft.id(MODEL_STR_TEMPLATE.formatted(id)), JCraft.id(TEXTURE_STR_TEMPLATE.formatted(id)));
     }
 
-    public ProjectileRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull Supplier<AzAnimator<UUID, T>> azAnimatorSupplier, final @NonNull ResourceLocation model, final @NonNull ResourceLocation texture, final @NonNull ResourceLocation animation) {
+    public ProjectileRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull Supplier<AzAnimator<UUID, T>> azAnimatorSupplier, final @NonNull ResourceLocation model, final @NonNull ResourceLocation texture) {
         super(context, azAnimatorSupplier, model, texture);
     }
 
     public ProjectileRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull Supplier<AzAnimator<UUID, T>> azAnimatorSupplier, final @NonNull String id) {
-        super(context, azAnimatorSupplier, id);
+        this(context, azAnimatorSupplier, JCraft.id(MODEL_STR_TEMPLATE.formatted(id)), JCraft.id(TEXTURE_STR_TEMPLATE.formatted(id)));
     }
 
     @Override
