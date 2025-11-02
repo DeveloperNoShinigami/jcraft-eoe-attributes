@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 public class MandomRenderer extends StandEntityRenderer<MandomEntity> {
 
     public MandomRenderer(final @NonNull EntityRendererProvider.Context context) {
-        super(context, b -> b.setRenderType(renderType(RenderType::entityTranslucentCull)), JStandTypeRegistry.MANDOM.get(), false, false, 0f, 0f, 90f);
+        super(context, b -> b.setRenderType(renderType(RenderType::entityTranslucentCull)), JStandTypeRegistry.MANDOM.get(), 0f, 0f);
     }
 
 }
