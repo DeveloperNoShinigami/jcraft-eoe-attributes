@@ -7,7 +7,6 @@ import mod.azure.azurelib.render.AzRendererPipelineContext;
 import mod.azure.azurelib.render.entity.AzEntityModelRenderer;
 import mod.azure.azurelib.render.entity.AzEntityRendererPipeline;
 import net.arna.jcraft.api.stand.StandEntity;
-import net.arna.jcraft.mixin.client.azurelib.AzRendererPipelineInvoker;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.Direction;
@@ -64,7 +63,7 @@ public class StandEntityModelRenderer<T extends StandEntity<?, ?>> extends AzEnt
         entityRendererPipeline.modelRenderTranslations.set(poseStack.last().pose());
 
         if (pc.vertexConsumer() != null) { // actually render
-            ((AzRendererPipelineInvoker)pc.rendererPipeline()).updateAnimatedTextureFrame(animatable);
+            pc.rendererPipeline().updateAnimatedTextureFrame(animatable);
 
             for (var bone : pc.bakedModel().getTopLevelBones()) {
                 renderRecursively(pc, bone, isReRender);
