@@ -7,7 +7,6 @@ import net.arna.jcraft.common.entity.stand.TheHandEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
@@ -23,12 +22,7 @@ public class HandErasureLayer extends AbstractRenderLayer<TheHandEntity> {
 
     @Override
     public void render(final @NonNull AzRendererPipelineContext<UUID, TheHandEntity> pc) {
-        pc.setPackedLight(15728640);
-        pc.setPackedLight(OverlayTexture.NO_OVERLAY);
-        pc.setRed(1f);
-        pc.setGreen(1f);
-        pc.setBlue(1f);
-        pc.setAlpha(1f);
+        setDefaultGlow(pc);
         final int skin = pc.animatable().getSkin();
         RenderType cameo = RenderType.dragonExplosionAlpha(SKINS.get(skin));
         pc.setRenderType(cameo);
