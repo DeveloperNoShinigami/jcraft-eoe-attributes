@@ -28,7 +28,6 @@ import java.util.function.Supplier;
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Killer_Queen">Killer Queen</a>.
  * @see JStandTypeRegistry#KILLER_QUEEN
- * @see net.arna.jcraft.client.renderer.entity.stands.KillerQueenRenderer KillerQueenRenderer
  * @see net.arna.jcraft.common.attack.moves.killerqueen.BombPlantAttack BombPlantAttack
  * @see CoinTossMove
  * @see KQDetonateAttack DetonateAttack

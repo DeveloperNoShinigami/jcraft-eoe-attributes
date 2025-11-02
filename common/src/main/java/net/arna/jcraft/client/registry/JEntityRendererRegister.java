@@ -37,7 +37,7 @@ public interface JEntityRendererRegister {
             new RendererData<>(JEntityTypeRegistry.D4C, D4CRenderer::new),
 
             new RendererData<>(JEntityTypeRegistry.CREAM, CreamRenderer::new),
-            new RendererData<>(JEntityTypeRegistry.KILLER_QUEEN, KillerQueenRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.KILLER_QUEEN, context -> new StandEntityRenderer<>(context, JStandTypeRegistry.KILLER_QUEEN.get(), -0.1745329251f, -0.36f)),
             new RendererData<>(JEntityTypeRegistry.KILLER_QUEEN_BITES_THE_DUST, KQBTDRenderer::new),
             new RendererData<>(JEntityTypeRegistry.SHEER_HEART_ATTACK, SheerHeartAttackRenderer::new),
 
@@ -46,7 +46,7 @@ public interface JEntityRendererRegister {
             new RendererData<>(JEntityTypeRegistry.MADE_IN_HEAVEN, MadeInHeavenRenderer::new),
 
             new RendererData<>(JEntityTypeRegistry.SHADOW_THE_WORLD, ShadowTheWorldRenderer::new),
-            new RendererData<>(JEntityTypeRegistry.THE_WORLD, TheWorldRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.THE_WORLD, context -> new StandEntityRenderer<>(context, JStandTypeRegistry.THE_WORLD.get(), -0.1745329251f, -0.1745329251f)),
             new RendererData<>(JEntityTypeRegistry.THE_WORLD_OVER_HEAVEN, TheWorldOverHeavenRenderer::new),
 
             new RendererData<>(JEntityTypeRegistry.SILVER_CHARIOT, SilverChariotRenderer::new),
@@ -61,7 +61,7 @@ public interface JEntityRendererRegister {
             new RendererData<>(JEntityTypeRegistry.GE_SNAKE, GESnakeRenderer::new),
             new RendererData<>(JEntityTypeRegistry.GE_BUTTERFLY, GEButterflyRenderer::new),
 
-            new RendererData<>(JEntityTypeRegistry.HIEROPHANT_GREEN, HGRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.HIEROPHANT_GREEN, context -> new StandEntityRenderer<>(context, JStandTypeRegistry.HIEROPHANT_GREEN.get(), 0f, -0.2f)),
             new RendererData<>(JEntityTypeRegistry.EMERALD, context -> new ProjectileRenderer<>(context, "emerald")),
             new RendererData<>(JEntityTypeRegistry.BISECT, context -> new ProjectileRenderer<>(context, "bisect")),
             new RendererData<>(JEntityTypeRegistry.HG_NET, HGNetRenderer::new),
@@ -84,7 +84,7 @@ public interface JEntityRendererRegister {
             new RendererData<>(JEntityTypeRegistry.ATUM, context -> new StandEntityRenderer<>(context, JStandTypeRegistry.ATUM.get())),
             new RendererData<>(JEntityTypeRegistry.DIVER_DOWN, context -> new StandEntityRenderer<>(context, JStandTypeRegistry.DIVER_DOWN.get())),
             new RendererData<>(JEntityTypeRegistry.CHARIOT_REQUIEM, ChariotRequiemRenderer::new),
-            new RendererData<>(JEntityTypeRegistry.DRAGONS_DREAM, DragonsDreamRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.DRAGONS_DREAM, context -> new StandEntityRenderer<>(context, JStandTypeRegistry.DRAGONS_DREAM.get(), 0.0f, 1.5707f)),
             new RendererData<>(JEntityTypeRegistry.FOO_FIGHTERS, context -> new StandEntityRenderer<>(context, JStandTypeRegistry.FOO_FIGHTERS.get())),
             new RendererData<>(JEntityTypeRegistry.GOO_GOO_DOLLS, context -> new StandEntityRenderer<>(context, JStandTypeRegistry.GOO_GOO_DOLLS.get())),
 

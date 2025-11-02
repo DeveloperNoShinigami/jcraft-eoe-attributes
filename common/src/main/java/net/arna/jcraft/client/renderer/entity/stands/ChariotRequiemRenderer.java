@@ -14,6 +14,6 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 @Environment(EnvType.CLIENT)
 public class ChariotRequiemRenderer extends StandEntityRenderer<ChariotRequiemEntity> {
     public ChariotRequiemRenderer(final @NonNull EntityRendererProvider.Context context) {
-        super(context, b -> b.addRenderLayer(new SCROutlineLayer()), JStandTypeRegistry.CHARIOT_REQUIEM.get(), false, false, 0f, 0f, 90f);
+        super(context, b -> b.addRenderLayer(new SCROutlineLayer()), JStandTypeRegistry.CHARIOT_REQUIEM.get(), 0f, 0f);
     }
 }

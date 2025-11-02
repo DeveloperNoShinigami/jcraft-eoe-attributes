@@ -57,7 +57,7 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
         this(context, additionalConfigs, type, false, false, torsoPitchOffset, headPitchOffset, 90f);
     }
 
-    protected StandEntityRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull StandType type, final float torsoPitchOffset, final float headPitchOffset, final float velInfluence) {
+    public StandEntityRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull StandType type, final float torsoPitchOffset, final float headPitchOffset, final float velInfluence) {
         this(context, UnaryOperator.identity(), type, false, false, torsoPitchOffset, headPitchOffset, velInfluence);
     }
 
