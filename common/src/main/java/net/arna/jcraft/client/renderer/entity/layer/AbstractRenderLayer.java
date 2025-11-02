@@ -18,17 +18,17 @@ public abstract class AbstractRenderLayer<T extends Entity> implements AzRenderL
     }
 
     @Override
-    public void preRender(final @NonNull AzRendererPipelineContext<UUID, T> context) {
+    public void preRender(final @NonNull AzRendererPipelineContext<UUID, T> pc) {
         /* Left empty on purpose */
     }
 
     @Override
-    public void render(final @NonNull AzRendererPipelineContext<UUID, T> context) {
+    public void render(final @NonNull AzRendererPipelineContext<UUID, T> pc) {
         /* Left empty on purpose */
     }
 
     @Override
-    public void renderForBone(final @NonNull AzRendererPipelineContext<UUID, T> context, final @NonNull AzBone bone) {
+    public void renderForBone(final @NonNull AzRendererPipelineContext<UUID, T> pc, final @NonNull AzBone bone) {
         /* Left empty on purpose */
     }
 }
