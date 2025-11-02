@@ -131,7 +131,7 @@ public abstract class AbstractEntityRenderer<T extends Entity> extends AzEntityR
 
         @Override
         public void registerControllers(final @NonNull AzAnimationControllerContainer<T> animationControllerContainer) {
-            animationControllerContainer.add(AzAnimationController.builder(this, JCraft.BASE_CONTROLLER).build());
+            animationControllerContainer.add(AzAnimationController.builder(this, JCraft.BASE_CONTROLLER).setTransitionLength(0).build());
         }
 
         @Override

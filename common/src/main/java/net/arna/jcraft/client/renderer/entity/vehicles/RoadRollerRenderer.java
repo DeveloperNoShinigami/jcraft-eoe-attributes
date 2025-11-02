@@ -38,11 +38,11 @@ public class RoadRollerRenderer extends AbstractEntityRenderer<RoadRollerEntity>
 
         @Override
         public void registerControllers(final @NonNull AzAnimationControllerContainer<RoadRollerEntity> animationControllerContainer) {
-            animationControllerContainer.add(AzAnimationController.builder(this, AbstractGroundVehicleEntity.DEATH_CONTROLLER).build());
-            animationControllerContainer.add(AzAnimationController.builder(this, AbstractGroundVehicleEntity.SHAKE_CONTROLLER).build());
+            animationControllerContainer.add(AzAnimationController.builder(this, AbstractGroundVehicleEntity.DEATH_CONTROLLER).setTransitionLength(0).build());
+            animationControllerContainer.add(AzAnimationController.builder(this, AbstractGroundVehicleEntity.SHAKE_CONTROLLER).setTransitionLength(0).build());
             animationControllerContainer.add(AzAnimationController.builder(this, AbstractGroundVehicleEntity.MOVEMENT_CONTROLLER).setTransitionLength(5).build());
             animationControllerContainer.add(AzAnimationController.builder(this, AbstractGroundVehicleEntity.STEERING_CONTROLLER).setTransitionLength(5).build());
-            animationControllerContainer.add(AzAnimationController.builder(this, AbstractGroundVehicleEntity.HIT_CONTROLLER).build());
+            animationControllerContainer.add(AzAnimationController.builder(this, AbstractGroundVehicleEntity.HIT_CONTROLLER).setTransitionLength(0).build());
         }
 
         @Override
