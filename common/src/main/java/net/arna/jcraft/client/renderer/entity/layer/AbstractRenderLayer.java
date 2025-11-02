@@ -4,7 +4,6 @@ import lombok.NonNull;
 import mod.azure.azurelib.model.AzBone;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
 import mod.azure.azurelib.render.layer.AzRenderLayer;
-import net.arna.jcraft.api.stand.StandEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -34,7 +33,7 @@ public abstract class AbstractRenderLayer<T extends Entity> implements AzRenderL
         /* Left empty on purpose */
     }
 
-    public static <T extends StandEntity<?,?>> void setDefaultGlow(final @NonNull AzRendererPipelineContext<UUID, T> pc) {
+    public static <T extends Entity> void setDefaultGlow(final @NonNull AzRendererPipelineContext<UUID, T> pc) {
         pc.setPackedLight(15728640);
         pc.setPackedLight(OverlayTexture.NO_OVERLAY);
         pc.setRed(1f);
