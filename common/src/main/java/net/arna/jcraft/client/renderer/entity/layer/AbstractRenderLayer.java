@@ -1,5 +1,6 @@
 package net.arna.jcraft.client.renderer.entity.layer;
 
+import lombok.NonNull;
 import mod.azure.azurelib.model.AzBone;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
 import mod.azure.azurelib.render.layer.AzRenderLayer;
@@ -17,17 +18,17 @@ public abstract class AbstractRenderLayer<T extends Entity> implements AzRenderL
     }
 
     @Override
-    public void preRender(AzRendererPipelineContext<UUID, T> context) {
+    public void preRender(final @NonNull AzRendererPipelineContext<UUID, T> context) {
         /* Left empty on purpose */
     }
 
     @Override
-    public void render(AzRendererPipelineContext<UUID, T> context) {
+    public void render(final @NonNull AzRendererPipelineContext<UUID, T> context) {
         /* Left empty on purpose */
     }
 
     @Override
-    public void renderForBone(AzRendererPipelineContext<UUID, T> context, AzBone bone) {
+    public void renderForBone(final @NonNull AzRendererPipelineContext<UUID, T> context, final @NonNull AzBone bone) {
         /* Left empty on purpose */
     }
 }
