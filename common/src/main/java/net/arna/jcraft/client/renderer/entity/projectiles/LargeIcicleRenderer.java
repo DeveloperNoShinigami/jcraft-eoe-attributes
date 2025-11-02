@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import lombok.NonNull;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
+import mod.azure.azurelib.util.client.RenderUtils;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.renderer.entity.AbstractEntityRenderer;
 import net.arna.jcraft.common.entity.projectile.LargeIcicleProjectile;
@@ -27,7 +28,7 @@ public class LargeIcicleRenderer extends ProjectileRenderer<LargeIcicleProjectil
     public LargeIcicleRenderer(final @NonNull EntityRendererProvider.Context pc) {
         super(pc, () -> new EntityAnimator<>(ID), b -> b
                 .setRenderType(RenderType.entityTranslucent(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID))))
-                .setPrerenderEntry(preRenderEntry()),
+                .setRenderEntry(preRenderEntry()),
                 ID);
     }
 
@@ -35,8 +36,9 @@ public class LargeIcicleRenderer extends ProjectileRenderer<LargeIcicleProjectil
         return pc -> {
             final LargeIcicleProjectile animatable = pc.animatable();
             final PoseStack poseStack = pc.poseStack();
-            poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(pc.partialTick(), animatable.yRotO, animatable.getYRot()) + 90));
-            poseStack.mulPose(Axis.ZN.rotationDegrees(Mth.lerp(pc.partialTick(), animatable.xRotO, animatable.getXRot())));
+            //poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(pc.partialTick(), animatable.yRotO, animatable.getYRot()) + 90));
+            //poseStack.mulPose(Axis.ZN.rotationDegrees(Mth.lerp(pc.partialTick(), animatable.xRotO, animatable.getXRot())));
+            RenderUtils.faceRotation(poseStack, animatable, pc.partialTick());
             final float scale = animatable.getScale();
             poseStack.scale(scale, scale, scale);
             return pc;
