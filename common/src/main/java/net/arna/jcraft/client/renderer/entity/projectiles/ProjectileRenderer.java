@@ -6,9 +6,10 @@ import lombok.NonNull;
 import mod.azure.azurelib.animation.AzAnimator;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
 import mod.azure.azurelib.render.entity.AzEntityRendererConfig;
-import mod.azure.azurelib.util.client.RenderUtils;
+import mod.azure.azurelib.render.entity.AzEntityRendererPipeline;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.renderer.entity.AbstractEntityRenderer;
+import net.arna.jcraft.client.renderer.entity.ProjectileModelRenderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -27,7 +28,10 @@ public class ProjectileRenderer<T extends Entity> extends AbstractEntityRenderer
 
     public ProjectileRenderer(final EntityRendererProvider.Context context, final @NonNull Supplier<AzAnimator<UUID,T>> azAnimatorSupplier, final @NonNull UnaryOperator<AzEntityRendererConfig.Builder<T>> additionalConfigs, final ResourceLocation model, final ResourceLocation texture) {
         super(context, azAnimatorSupplier, additionalConfigs.compose(b -> b
-                .setRenderEntry(preRenderEntry())),
+                .setModelRenderer(
+                        (pc, layer) -> new ProjectileModelRenderer<>((AzEntityRendererPipeline<T>) pc, layer)
+                )),
+                // .setRenderEntry(preRenderEntry())),
                 model, texture);
     }
 
@@ -59,9 +63,11 @@ public class ProjectileRenderer<T extends Entity> extends AbstractEntityRenderer
         return pc -> {
             final T animatable = pc.animatable();
             final PoseStack poseStack = pc.poseStack();
-            RenderUtils.faceRotation(poseStack, animatable, pc.partialTick());
-            //poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(pc.partialTick(), animatable.yRotO, animatable.getYRot()) + 90));
-            //poseStack.mulPose(Axis.ZN.rotationDegrees(Mth.lerp(pc.partialTick(), animatable.xRotO, animatable.getXRot())));
+            poseStack.pushPose();
+            //RenderUtils.faceRotation(poseStack, animatable, pc.partialTick());
+            poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(pc.partialTick(), animatable.yRotO, animatable.getYRot()) + 90));
+            poseStack.mulPose(Axis.ZN.rotationDegrees(Mth.lerp(pc.partialTick(), animatable.xRotO, animatable.getXRot())));
+            poseStack.popPose();
             return pc;
         };
     }
