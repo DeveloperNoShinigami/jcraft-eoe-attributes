@@ -1,5 +1,6 @@
-package net.arna.jcraft.client.renderer.entity;
+package net.arna.jcraft.client.renderer.entity.projectiles;
 
+import lombok.NonNull;
 import mod.azure.azurelib.render.AzLayerRenderer;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
 import mod.azure.azurelib.render.entity.AzEntityModelRenderer;
@@ -13,12 +14,13 @@ import java.util.UUID;
 
 @Environment(EnvType.CLIENT)
 public class ProjectileModelRenderer<T extends Entity> extends AzEntityModelRenderer<T> {
-    public ProjectileModelRenderer(AzEntityRendererPipeline<T> entityRendererPipeline, AzLayerRenderer<UUID, T> layerRenderer) {
-        super(entityRendererPipeline, layerRenderer);
+
+    public ProjectileModelRenderer(final @NonNull AzEntityRendererPipeline<T> pipeline, final @NonNull AzLayerRenderer<UUID, T> layerRenderer) {
+        super(pipeline, layerRenderer);
     }
 
     @Override
-    public void render(final AzRendererPipelineContext<UUID, T> pc, final boolean isReRender) {
+    public void render(final @NonNull AzRendererPipelineContext<UUID, T> pc, final boolean isReRender) {
         var animatable = pc.animatable();
         var partialTick = pc.partialTick();
         var poseStack = pc.poseStack();
@@ -27,8 +29,7 @@ public class ProjectileModelRenderer<T extends Entity> extends AzEntityModelRend
 
         RenderUtils.faceRotation(poseStack, animatable, partialTick);
 
-        // poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(pc.partialTick(), animatable.yRotO, animatable.getYRot()) + 90));
-        // poseStack.mulPose(Axis.ZN.rotationDegrees(Mth.lerp(pc.partialTick(), animatable.xRotO, animatable.getXRot())));
+        midRender(pc);
 
         if (!isReRender) {
             var animator = entityRendererPipeline.getRenderer().getAnimator();
@@ -54,5 +55,12 @@ public class ProjectileModelRenderer<T extends Entity> extends AzEntityModelRend
         }
 
         poseStack.popPose();
+    }
+
+    /**
+     * A hook to allow easy manipulation inside the render method.
+     */
+    protected void midRender(final @NonNull AzRendererPipelineContext<UUID,T> pc) {
+        // Left empty on purpose
     }
 }
