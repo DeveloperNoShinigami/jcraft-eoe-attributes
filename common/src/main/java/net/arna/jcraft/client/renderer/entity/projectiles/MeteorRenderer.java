@@ -1,15 +1,13 @@
 package net.arna.jcraft.client.renderer.entity.projectiles;
 
 import lombok.NonNull;
-import net.arna.jcraft.client.model.entity.MeteorModel;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.MeteorProjectile;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 
 /**
  * The {@link ProjectileRenderer} for {@link MeteorProjectile}.
@@ -17,9 +15,13 @@ import net.minecraft.resources.ResourceLocation;
 @Environment(EnvType.CLIENT)
 public class MeteorRenderer extends ProjectileRenderer<MeteorProjectile> {
 
+    public static final String ID = "meteor";
+
     // TODO fix skins
     public MeteorRenderer(final @NonNull EntityRendererProvider.Context context) {
-        super(context, "meteor");
+        super(context, () -> new EntityAnimator<>(ID), b -> b
+                .setRenderType(RenderType.eyes(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID)))),
+                ID);
     }
 
     @Override
@@ -27,9 +29,4 @@ public class MeteorRenderer extends ProjectileRenderer<MeteorProjectile> {
         return 15;
     }
 
-    /*
-    @Override
-    public RenderType getRenderType(final MeteorProjectile animatable, final ResourceLocation texture, final MultiBufferSource bufferSource, final float partialTick) {
-        return RenderType.eyes(texture);
-    }*/
 }
