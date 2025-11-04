@@ -63,7 +63,7 @@ public interface JEntityRendererRegister {
 
             new RendererData<>(JEntityTypeRegistry.HIEROPHANT_GREEN, context -> new StandEntityRenderer<>(context, JStandTypeRegistry.HIEROPHANT_GREEN.get(), 0f, -0.2f)),
             new RendererData<>(JEntityTypeRegistry.EMERALD, context -> new ProjectileRenderer<>(context, "emerald")),
-            new RendererData<>(JEntityTypeRegistry.BISECT, context -> new ProjectileRenderer<>(context, "bisect")),
+            new RendererData<>(JEntityTypeRegistry.BISECT, BisectRenderer::new),
             new RendererData<>(JEntityTypeRegistry.HG_NET, HGNetRenderer::new),
 
             new RendererData<>(JEntityTypeRegistry.THE_SUN, TheSunRenderer::new),
