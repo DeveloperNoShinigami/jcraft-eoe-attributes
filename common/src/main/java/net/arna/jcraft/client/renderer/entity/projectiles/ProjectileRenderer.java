@@ -20,7 +20,7 @@ import java.util.function.UnaryOperator;
 public class ProjectileRenderer<T extends Entity> extends AbstractEntityRenderer<T> {
     protected static final String TEXTURE_STR_TEMPLATE = "textures/entity/projectiles/%s.png";
 
-    public ProjectileRenderer(final EntityRendererProvider.Context context, final @NonNull Supplier<AzAnimator<UUID,T>> azAnimatorSupplier, final @NonNull UnaryOperator<AzEntityRendererConfig.Builder<T>> additionalConfigs, final ResourceLocation model, final ResourceLocation texture) {
+    public ProjectileRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull Supplier<AzAnimator<UUID,T>> azAnimatorSupplier, final @NonNull UnaryOperator<AzEntityRendererConfig.Builder<T>> additionalConfigs, final ResourceLocation model, final ResourceLocation texture) {
         super(context, azAnimatorSupplier, additionalConfigs.compose(b -> b
                 .setModelRenderer((pipeline, layer) -> new ProjectileModelRenderer<>((AzEntityRendererPipeline<T>) pipeline, layer))),
                 model, texture);
