@@ -1,7 +1,6 @@
 package net.arna.jcraft.client.renderer.entity;
 
 import lombok.NonNull;
-import mod.azure.azurelib.render.entity.AzEntityRenderer;
 import mod.azure.azurelib.render.entity.AzEntityRendererConfig;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.renderer.entity.layer.HGNetGlowLayer;
@@ -18,7 +17,7 @@ import java.util.stream.IntStream;
  * The {@link AbstractEntityRenderer} for {@link HGNetEntity}.
  */
 @Environment(EnvType.CLIENT)
-public class HGNetRenderer extends AzEntityRenderer<HGNetEntity> {
+public class HGNetRenderer extends AbstractEntityRenderer<HGNetEntity> {
     protected static final List<ResourceLocation> SKINS = IntStream.range(0, 4).mapToObj(
             i -> JCraft.id("textures/entity/hg_nets/" + i + ".png")).toList();
 
@@ -28,11 +27,11 @@ public class HGNetRenderer extends AzEntityRenderer<HGNetEntity> {
         super(AzEntityRendererConfig.<HGNetEntity>builder(
                 entity -> JCraft.id(AbstractEntityRenderer.MODEL_STR_TEMPLATE.formatted(ID)),
                 entity -> SKINS.get(entity.getSkin()))
-                .setAnimatorProvider(() -> new AbstractEntityRenderer.EntityAnimator<>(ID))
+                .setAnimatorProvider(() -> new EntityAnimator<>(ID))
                 .addRenderLayer(new HGNetGlowLayer())
                 .setShadowRadius(1.25f)
                 .build(),
-                context);
+                context, ID);
     }
 
     @Override
