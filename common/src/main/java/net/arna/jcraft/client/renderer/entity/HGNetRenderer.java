@@ -19,7 +19,7 @@ import java.util.stream.IntStream;
  */
 @Environment(EnvType.CLIENT)
 public class HGNetRenderer extends AzEntityRenderer<HGNetEntity> {
-    private static final List<ResourceLocation> SKINS = IntStream.range(0, 4).mapToObj(
+    protected static final List<ResourceLocation> SKINS = IntStream.range(0, 4).mapToObj(
             i -> JCraft.id("textures/entity/hg_nets/" + i + ".png")).toList();
 
     public static final String ID = "hg_nets";
