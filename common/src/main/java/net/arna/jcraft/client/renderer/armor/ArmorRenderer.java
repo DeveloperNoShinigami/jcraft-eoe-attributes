@@ -7,6 +7,8 @@ import mod.azure.azurelib.animation.controller.AzAnimationControllerContainer;
 import mod.azure.azurelib.animation.impl.AzItemAnimator;
 import mod.azure.azurelib.render.armor.AzArmorRenderer;
 import mod.azure.azurelib.render.armor.AzArmorRendererConfig;
+import mod.azure.azurelib.render.armor.AzArmorRendererPipelineContext;
+import mod.azure.azurelib.render.armor.bone.AzArmorBoneContext;
 import net.arna.jcraft.JCraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -15,12 +17,15 @@ import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 public class ArmorRenderer extends AzArmorRenderer {
 
     protected static final String MODEL_STR_TEMPLATE = "geo/%s.geo.json";
     protected static final String TEXTURE_STR_TEMPLATE = "textures/armor/%s.png";
     protected static final String ANIMATION_STR_TEMPLATE = "animations/%s.animation.json";
+
+    protected static final ArmorBoneProvider BONE_PROVIDER = new ArmorBoneProvider();
 
     /**
      * Path to the model to be used for this armor.
@@ -56,7 +61,7 @@ public class ArmorRenderer extends AzArmorRenderer {
      * Constructs a renderer with a simple config based on the {@link AzAnimator} {@link Supplier} and the given model/texture paths.
      */
     protected ArmorRenderer(final @NonNull Supplier<AzAnimator<UUID, ItemStack>> animatorSupplier, final @NonNull ResourceLocation model, final @NonNull ResourceLocation texture) {
-        this(AzArmorRendererConfig.builder(model, texture).setAnimatorProvider(animatorSupplier).build(), model, texture);
+        this(animatorSupplier, UnaryOperator.identity(), model, texture);
     }
 
     /**
@@ -72,10 +77,61 @@ public class ArmorRenderer extends AzArmorRenderer {
     }
 
     /**
+     * Constructs a renderer with a config based on the {@link AzAnimator} {@link Supplier}, the given bone context and the {@link mod.azure.azurelib.render.entity.AzEntityRendererConfig.Builder} {@link Function}, and the given model/texture paths based on the specified ID.
+     *
+     * <ul>
+     * <li>Resulting model path will be equivalent to <code>JCraft.id("geo/" + id + ".geo.json")</code></li>
+     * <li>Resulting texture path will be equivalent to <code>JCraft.id("textures/armor/" + id + ".png")</code></li>
+     * </ul>
+     */
+    protected ArmorRenderer(final @NonNull Supplier<AzAnimator<UUID, ItemStack>> animatorSupplier, final @NonNull AzArmorBoneContext boneContext, final @NonNull Function<AzArmorRendererConfig.Builder, AzArmorRendererConfig.Builder> additionalConfigs, final @NonNull String id) {
+        this(animatorSupplier, boneContext, additionalConfigs, JCraft.id(MODEL_STR_TEMPLATE.formatted(id)), JCraft.id(TEXTURE_STR_TEMPLATE.formatted(id)));
+    }
+
+    /**
+     * Constructs a renderer with a config based on the {@link AzAnimator} {@link Supplier} and the given bone context, and the given model/texture paths based on the specified ID.
+     *
+     * <ul>
+     * <li>Resulting model path will be equivalent to <code>JCraft.id("geo/" + id + ".geo.json")</code></li>
+     * <li>Resulting texture path will be equivalent to <code>JCraft.id("textures/armor/" + id + ".png")</code></li>
+     * </ul>
+     */
+    protected ArmorRenderer(final @NonNull Supplier<AzAnimator<UUID, ItemStack>> animatorSupplier, final @NonNull AzArmorBoneContext boneContext, final @NonNull String id) {
+        this(animatorSupplier, boneContext, UnaryOperator.identity(), JCraft.id(MODEL_STR_TEMPLATE.formatted(id)), JCraft.id(TEXTURE_STR_TEMPLATE.formatted(id)));
+    }
+
+    /**
+     * Constructs a renderer with a config based on the {@link AzAnimator} {@link Supplier} and the given bone context, and the given model/texture paths.
+     */
+    protected ArmorRenderer(final @NonNull Supplier<AzAnimator<UUID, ItemStack>> animatorSupplier, final @NonNull AzArmorBoneContext boneContext, final @NonNull ResourceLocation model, final @NonNull ResourceLocation texture) {
+        this(animatorSupplier, boneContext, UnaryOperator.identity(), model, texture);
+    }
+
+    /**
      * Constructs a renderer with a config based on the {@link AzAnimator} {@link Supplier} and the {@link mod.azure.azurelib.render.entity.AzEntityRendererConfig.Builder} {@link Function}, and the given model/texture paths.
      */
     protected ArmorRenderer(final @NonNull Supplier<AzAnimator<UUID, ItemStack>> animatorSupplier, final @NonNull Function<AzArmorRendererConfig.Builder, AzArmorRendererConfig.Builder> additionalConfigs, final @NonNull ResourceLocation model, final @NonNull ResourceLocation texture) {
-        this(additionalConfigs.apply(AzArmorRendererConfig.builder(model, texture).setAnimatorProvider(animatorSupplier)).build(), model, texture);
+        this(animatorSupplier, new AzArmorBoneContext(), additionalConfigs, model, texture);
+    }
+
+    /**
+     * Constructs a renderer with a config based on the {@link AzAnimator} {@link Supplier}, given bone context and the {@link mod.azure.azurelib.render.entity.AzEntityRendererConfig.Builder} {@link Function}, and the given model/texture paths.
+     */
+    protected ArmorRenderer(final @NonNull Supplier<AzAnimator<UUID, ItemStack>> animatorSupplier, final @NonNull AzArmorBoneContext boneContext, final @NonNull Function<AzArmorRendererConfig.Builder, AzArmorRendererConfig.Builder> additionalConfigs, final @NonNull ResourceLocation model, final @NonNull ResourceLocation texture) {
+        this(additionalConfigs.apply(
+                AzArmorRendererConfig.builder(model, texture)
+                        .setAnimatorProvider(animatorSupplier)
+                        .setBoneProvider(BONE_PROVIDER)
+                        .setPipelineContext(pipeline -> new AzArmorRendererPipelineContext(pipeline) {
+                            private final AzArmorBoneContext ourContext = boneContext;
+
+                            @Override
+                            public AzArmorBoneContext boneContext() {
+                                return ourContext;
+                            }
+                        })
+                )
+                .build(), model, texture);
     }
 
     /**
