@@ -2,6 +2,7 @@ package net.arna.jcraft.client.renderer.entity.projectiles;
 
 import lombok.NonNull;
 import mod.azure.azurelib.render.entity.AzEntityRendererConfig;
+import mod.azure.azurelib.render.entity.AzEntityRendererPipeline;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.RazorProjectile;
 import net.fabricmc.api.EnvType;
@@ -31,6 +32,8 @@ public class RazorRenderer extends ProjectileRenderer<RazorProjectile> {
                 entity -> SKINS.get(entity.getId() % 3)
                 )
                 .setRenderType(RenderType.entityTranslucent(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID))))
+                .setModelRenderer((pipeline, layer) ->
+                        new ProjectileModelRenderer<>((AzEntityRendererPipeline<RazorProjectile>) pipeline, layer))
                 .build(),
                 context, ID);
     }

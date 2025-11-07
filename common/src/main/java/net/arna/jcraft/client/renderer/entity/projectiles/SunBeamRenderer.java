@@ -2,6 +2,7 @@ package net.arna.jcraft.client.renderer.entity.projectiles;
 
 import lombok.NonNull;
 import mod.azure.azurelib.render.entity.AzEntityRendererConfig;
+import mod.azure.azurelib.render.entity.AzEntityRendererPipeline;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.SunBeamProjectile;
 import net.fabricmc.api.EnvType;
@@ -31,6 +32,8 @@ public class SunBeamRenderer extends ProjectileRenderer<SunBeamProjectile> {
                 )
                 .setRenderType(entity -> RenderType.eyes(SKINS.get(entity.getSkin())))
                 .setAnimatorProvider(() -> new EntityAnimator<>(ID))
+                .setModelRenderer((pipeline, layer) ->
+                        new ProjectileModelRenderer<>((AzEntityRendererPipeline<SunBeamProjectile>) pipeline, layer))
                 .build(),
                 context, ID);
     }
