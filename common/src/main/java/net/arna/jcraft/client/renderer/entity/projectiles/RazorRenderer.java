@@ -27,15 +27,19 @@ public class RazorRenderer extends ProjectileRenderer<RazorProjectile> {
     public static final String ID = "razor";
 
     public RazorRenderer(final @NonNull EntityRendererProvider.Context context) {
-        super(AzEntityRendererConfig.<RazorProjectile>builder(
+        super(AzEntityRendererConfig.builder(
                 entity -> JCraft.id(MODEL_STR_TEMPLATE.formatted(ID)),
-                entity -> SKINS.get(entity.getId() % 3)
+                RazorRenderer::getTexture
                 )
-                .setRenderType(RenderType.entityTranslucent(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID))))
+                .setRenderType(entity -> RenderType.entityTranslucent(getTexture(entity)))
                 .setModelRenderer((pipeline, layer) ->
                         new ProjectileModelRenderer<>((AzEntityRendererPipeline<RazorProjectile>) pipeline, layer))
                 .build(),
                 context, ID);
+    }
+
+    protected static ResourceLocation getTexture(final @NonNull RazorProjectile razor) {
+        return SKINS.get(razor.getId() % 3);
     }
 
 }
