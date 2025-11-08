@@ -53,8 +53,6 @@ import java.util.List;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/The_Fool">The Fool</a>.
- * @see net.arna.jcraft.client.model.entity.stand.TheFoolModel TheFoolModel
- * @see net.arna.jcraft.client.renderer.entity.stands.TheFoolRenderer TheFoolRenderer
  * @see AirBarrageAttack
  * @see GlideMove
  * @see PoundAttack

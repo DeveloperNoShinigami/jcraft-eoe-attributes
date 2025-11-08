@@ -4,12 +4,14 @@ import lombok.NonNull;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
 import mod.azure.azurelib.render.entity.AzEntityRendererConfig;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.client.JClientConfig;
 import net.arna.jcraft.client.renderer.entity.AbstractEntityRenderer;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.client.renderer.entity.StandEntityModelRenderer;
 import net.arna.jcraft.client.util.JClientUtils;
+import net.arna.jcraft.common.entity.stand.TheFoolEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -32,6 +34,7 @@ import java.util.function.UnaryOperator;
 public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEntityRenderer<T> {
 
     protected static final String TEXTURE_STR_TEMPLATE = "textures/entity/stands/%s/%s.png";
+    protected static final ResourceLocation SAND_TEXTURE = JCraft.id("textures/entity/stands/the_fool/sand.png");
 
     protected ItemStack mainHandItem, offHandItem;
 
@@ -80,6 +83,9 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
     protected static @NonNull ResourceLocation getTextureLocation(final @NonNull StandEntity<?,?> stand) {
         final int skin = stand.getSkin();
         final ResourceLocation id = stand.getStandType().getId();
+        if (stand.getStandType() == JStandTypeRegistry.THE_FOOL && ((TheFoolEntity)stand).isSand()) {
+            return SAND_TEXTURE;
+        }
         return id.withPath(TEXTURE_STR_TEMPLATE.formatted(id.getPath(), skin == 0 ? "default" : "skin" + skin));
     }
 
