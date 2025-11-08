@@ -30,6 +30,15 @@ public class SilverChariotRenderer extends StandEntityRenderer<SilverChariotEnti
                 JStandTypeRegistry.SILVER_CHARIOT.get(), false, false, 0f, 0f, 90f);
     }
 
+    @Override
+    public @NonNull ResourceLocation getTextureLocation(final @NonNull SilverChariotEntity entity) {
+        return switch(entity.getMode()) {
+            case ARMORLESS ->  NO_ARMOR_TEXTURE;
+            case POSSESSED -> POSSESSED_TEXTURE;
+            default -> StandEntityRenderer.getTextureLocation(entity);
+        };
+    }
+
     // Adds ability to change render alpha
 
     /*
