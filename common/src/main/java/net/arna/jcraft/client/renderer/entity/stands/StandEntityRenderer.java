@@ -11,7 +11,6 @@ import net.arna.jcraft.client.renderer.entity.AbstractEntityRenderer;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.client.renderer.entity.StandEntityModelRenderer;
 import net.arna.jcraft.client.util.JClientUtils;
-import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.fabricmc.api.EnvType;
@@ -36,23 +35,29 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
 
     protected static final String TEXTURE_STR_TEMPLATE = "textures/entity/stands/%s/%s.png";
     protected static final ResourceLocation SAND_TEXTURE = JCraft.id("textures/entity/stands/the_fool/sand.png");
-    protected static final ResourceLocation NO_ARMOR_TEXTURE = JCraft.id("textures/entity/stands/silver_chariot/no_armor.png");
-    protected static final ResourceLocation POSSESSED_TEXTURE = JCraft.id("textures/entity/stands/silver_chariot/possessed.png");
 
     protected ItemStack mainHandItem, offHandItem;
 
     protected static final String LEFT_HAND = "bipedHandLeft";
     protected static final String RIGHT_HAND = "bipedHandRight";
 
+    protected StandEntityRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull Function<AzEntityRendererConfig.Builder<T>, AzEntityRendererConfig.Builder<T>> additionalConfigs,
+                                  final @NonNull Function<T, ResourceLocation> model, final @NonNull Function<T, ResourceLocation> texture,
+                                  final @NonNull StandType type, final boolean flipBody, final boolean flipHead, final float torsoPitchOffset, final float headPitchOffset, final float velInfluence) {
+        super(additionalConfigs.apply(
+                AzEntityRendererConfig.builder(model, texture)
+                        .setAnimatorProvider(() -> new StandAnimator<>(type.getId().getPath(), flipBody, flipHead, torsoPitchOffset, headPitchOffset, velInfluence))
+                        .setModelRenderer(StandEntityModelRenderer::new)
+                        .setRenderType(renderType())
+                        .setPrerenderEntry(preRenderEntry())
+        ).build(), context, type.getId().getPath());
+    }
+
     protected StandEntityRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull Function<AzEntityRendererConfig.Builder<T>, AzEntityRendererConfig.Builder<T>> additionalConfigs, final @NonNull StandType type, final boolean flipBody, final boolean flipHead, final float torsoPitchOffset, final float headPitchOffset, final float velInfluence) {
-        super(context, () -> new StandAnimator<>(type.getId().getPath(), flipBody, flipHead, torsoPitchOffset, headPitchOffset, velInfluence),
-                additionalConfigs.compose(
-                        b -> b
-                                .setModelRenderer(StandEntityModelRenderer::new)
-                                .setRenderType(renderType())
-                                .setPrerenderEntry(preRenderEntry())),
-                type.getId().withPath(MODEL_STR_TEMPLATE.formatted(type.getId().getPath())),
-                getTextureLocation(type));
+        this(context, additionalConfigs,
+                entity -> type.getId().withPath(MODEL_STR_TEMPLATE.formatted(type.getId().getPath())),
+                entity -> getTextureLocation(type),
+                type, flipBody, flipHead, torsoPitchOffset, headPitchOffset, velInfluence);
     }
 
     protected StandEntityRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull Function<AzEntityRendererConfig.Builder<T>, AzEntityRendererConfig.Builder<T>> additionalConfigs, final @NonNull StandType type, final float torsoPitchOffset, final float headPitchOffset, final float velInfluence) {
@@ -88,15 +93,6 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
         final ResourceLocation id = stand.getStandType().getId();
         if (stand.getStandType() == JStandTypeRegistry.THE_FOOL && ((TheFoolEntity)stand).isSand()) {
             return SAND_TEXTURE;
-        }
-        if (stand.getStandType() == JStandTypeRegistry.SILVER_CHARIOT) {
-            final SilverChariotEntity sc = ((SilverChariotEntity)stand);
-            if (sc.getMode() == SilverChariotEntity.Mode.ARMORLESS) {
-                return NO_ARMOR_TEXTURE;
-            }
-            else if (sc.getMode() == SilverChariotEntity.Mode.POSSESSED) {
-                return POSSESSED_TEXTURE;
-            }
         }
         return id.withPath(TEXTURE_STR_TEMPLATE.formatted(id.getPath(), skin == 0 ? "default" : "skin" + skin));
     }

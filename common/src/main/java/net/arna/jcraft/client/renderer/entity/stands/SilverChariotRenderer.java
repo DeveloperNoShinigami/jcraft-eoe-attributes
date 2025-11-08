@@ -1,12 +1,14 @@
 package net.arna.jcraft.client.renderer.entity.stands;
 
 import lombok.NonNull;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.arna.jcraft.client.renderer.entity.layer.SCRapierLayer;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * The {@link StandEntityRenderer} for {@link SilverChariotEntity}.
@@ -14,8 +16,18 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 @Environment(EnvType.CLIENT)
 public class SilverChariotRenderer extends StandEntityRenderer<SilverChariotEntity> {
 
+    protected static final ResourceLocation NO_ARMOR_TEXTURE = JCraft.id("textures/entity/stands/silver_chariot/no_armor.png");
+    protected static final ResourceLocation POSSESSED_TEXTURE = JCraft.id("textures/entity/stands/silver_chariot/possessed.png");
+
     public SilverChariotRenderer(final @NonNull EntityRendererProvider.Context context) {
-        super(context, b -> b.addRenderLayer(new SCRapierLayer()), JStandTypeRegistry.SILVER_CHARIOT.get(), false, false, 0f, 0f, 90f);
+        super(context, b -> b.addRenderLayer(new SCRapierLayer()),
+                entity -> JCraft.id(MODEL_STR_TEMPLATE.formatted(JStandTypeRegistry.SILVER_CHARIOT.get().getId().getPath())),
+                entity -> switch(entity.getMode()) {
+                    case ARMORLESS -> NO_ARMOR_TEXTURE;
+                    case POSSESSED -> POSSESSED_TEXTURE;
+                    default -> StandEntityRenderer.getTextureLocation(entity);
+                },
+                JStandTypeRegistry.SILVER_CHARIOT.get(), false, false, 0f, 0f, 90f);
     }
 
     // Adds ability to change render alpha
