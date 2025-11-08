@@ -45,7 +45,6 @@ import org.joml.Vector3f;
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Silver_Chariot">Silver Chariot</a>.
  * @see JStandTypeRegistry#SILVER_CHARIOT
- * @see net.arna.jcraft.client.model.entity.stand.SilverChariotModel SilverChariotModel
  * @see net.arna.jcraft.client.renderer.entity.stands.SilverChariotRenderer SilverChariotRenderer
  * @see ArmorOffAttack
  * @see CircleSlashAttack

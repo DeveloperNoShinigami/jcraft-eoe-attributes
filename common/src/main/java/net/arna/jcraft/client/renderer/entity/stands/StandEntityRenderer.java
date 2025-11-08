@@ -11,6 +11,7 @@ import net.arna.jcraft.client.renderer.entity.AbstractEntityRenderer;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.client.renderer.entity.StandEntityModelRenderer;
 import net.arna.jcraft.client.util.JClientUtils;
+import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.fabricmc.api.EnvType;
@@ -35,6 +36,8 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
 
     protected static final String TEXTURE_STR_TEMPLATE = "textures/entity/stands/%s/%s.png";
     protected static final ResourceLocation SAND_TEXTURE = JCraft.id("textures/entity/stands/the_fool/sand.png");
+    protected static final ResourceLocation NO_ARMOR_TEXTURE = JCraft.id("textures/entity/stands/silver_chariot/no_armor.png");
+    protected static final ResourceLocation POSSESSED_TEXTURE = JCraft.id("textures/entity/stands/silver_chariot/possessed.png");
 
     protected ItemStack mainHandItem, offHandItem;
 
@@ -85,6 +88,15 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
         final ResourceLocation id = stand.getStandType().getId();
         if (stand.getStandType() == JStandTypeRegistry.THE_FOOL && ((TheFoolEntity)stand).isSand()) {
             return SAND_TEXTURE;
+        }
+        if (stand.getStandType() == JStandTypeRegistry.SILVER_CHARIOT) {
+            final SilverChariotEntity sc = ((SilverChariotEntity)stand);
+            if (sc.getMode() == SilverChariotEntity.Mode.ARMORLESS) {
+                return NO_ARMOR_TEXTURE;
+            }
+            else if (sc.getMode() == SilverChariotEntity.Mode.POSSESSED) {
+                return POSSESSED_TEXTURE;
+            }
         }
         return id.withPath(TEXTURE_STR_TEMPLATE.formatted(id.getPath(), skin == 0 ? "default" : "skin" + skin));
     }
