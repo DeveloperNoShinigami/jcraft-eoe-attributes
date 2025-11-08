@@ -2,7 +2,6 @@ package net.arna.jcraft.client.renderer.entity.stands;
 
 import lombok.NonNull;
 import net.arna.jcraft.api.registry.JStandTypeRegistry;
-import net.arna.jcraft.client.model.entity.stand.StarPlatinumModel;
 import net.arna.jcraft.client.renderer.entity.layer.SPHairLayer;
 import net.arna.jcraft.common.entity.stand.AbstractStarPlatinumEntity;
 import net.fabricmc.api.EnvType;
@@ -11,7 +10,6 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
 /**
  * The {@link StandEntityRenderer} for {@link net.arna.jcraft.common.entity.stand.StarPlatinumEntity StarPlatinumEntity}.
- * @see StarPlatinumModel
  */
 @Environment(EnvType.CLIENT)
 public class StarPlatinumRenderer extends StandEntityRenderer<AbstractStarPlatinumEntity<?, ?>> {
