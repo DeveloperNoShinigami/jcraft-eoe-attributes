@@ -681,7 +681,6 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
 
     // Animation code
     public enum State implements StandAnimationState<CreamEntity> {
-        // ("animation.cream." + (cream.getVoidTime() > 0 ? "void" : cream.isHalfBall() ? "ball" : "") + "idle")
         IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.idle", AzPlayBehaviors.LOOP)),
         LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         LIGHT_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
@@ -701,7 +700,12 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
         ENTER(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.enter", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         EXIT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.exit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         DESTROY(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.destroy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BITE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.bite", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
+        BITE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.bite", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+
+        VOID_IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.voididle", AzPlayBehaviors.LOOP)),
+        HALF_BALL_IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.ballidle", AzPlayBehaviors.LOOP)),
+
+        ;
 
         private final AzCommand animator;
 
@@ -711,6 +715,16 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
 
         @Override
         public void playAnimation(CreamEntity attacker) {
+            if (animator == IDLE.animator) {
+                if (attacker.getVoidTime() > 0) {
+                    VOID_IDLE.animator.sendForEntity(attacker);
+                    return;
+                } else if (attacker.isHalfBall()) {
+                    HALF_BALL_IDLE.animator.sendForEntity(attacker);
+                    return;
+                }
+            }
+
             animator.sendForEntity(attacker);
         }
     }
