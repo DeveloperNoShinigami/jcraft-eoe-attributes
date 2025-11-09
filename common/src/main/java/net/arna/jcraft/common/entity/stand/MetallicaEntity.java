@@ -255,7 +255,8 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
                             Must be pointed at a block.
                             Summons an attractive ferromagnetic field which lasts for 1 minute.""")
             )
-            .withInitAction(UserAnimationAction.play("mtl.sfk"));
+            .withInitAction(UserAnimationAction.play("mtl.sfk"))
+            .withCondition(MetallicaIronCondition.atLeast(CreateMagneticFieldMove.IRON_COST));
     /* public static final InternalAttack INTERNAL_ATTACK = new InternalAttack(200, 10, 15)
             .withCrouchingVariant(CREATE_MAGNETIC_FIELD)
             .withInfo(
