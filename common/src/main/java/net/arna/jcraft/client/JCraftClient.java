@@ -15,30 +15,7 @@ import mod.azure.azurelib.render.armor.AzArmorRendererRegistry;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.pose.PoseModifiers;
 import net.arna.jcraft.api.registry.JItemRegistry;
-import net.arna.jcraft.client.renderer.armor.ArmorRenderer;
-import net.arna.jcraft.client.renderer.armor.DIOCapeRenderer;
-import net.arna.jcraft.client.renderer.armor.DIOJacketRenderer;
-import net.arna.jcraft.client.renderer.armor.DIOtardRenderer;
-import net.arna.jcraft.client.renderer.armor.DiavoloArmorRenderer;
-import net.arna.jcraft.client.renderer.armor.FinalKiraArmorRenderer;
-import net.arna.jcraft.client.renderer.armor.GiornoArmorRenderer;
-import net.arna.jcraft.client.renderer.armor.GiornoJacketRenderer;
-import net.arna.jcraft.client.renderer.armor.GyroBottomRenderer;
-import net.arna.jcraft.client.renderer.armor.JotaroArmorP4Renderer;
-import net.arna.jcraft.client.renderer.armor.JotaroArmorP6Renderer;
-import net.arna.jcraft.client.renderer.armor.JotaroArmorRenderer;
-import net.arna.jcraft.client.renderer.armor.JotaroCoatP4Renderer;
-import net.arna.jcraft.client.renderer.armor.JotaroCoatP6Renderer;
-import net.arna.jcraft.client.renderer.armor.JotaroCoatRenderer;
-import net.arna.jcraft.client.renderer.armor.KakyoinCoatRenderer;
-import net.arna.jcraft.client.renderer.armor.KiraArmorRenderer;
-import net.arna.jcraft.client.renderer.armor.KosakuArmorRenderer;
-import net.arna.jcraft.client.renderer.armor.PucciRobeRenderer;
-import net.arna.jcraft.client.renderer.armor.RingoOutfitRenderer;
-import net.arna.jcraft.client.renderer.armor.RisottoBottomRenderer;
-import net.arna.jcraft.client.renderer.armor.RisottoCapRenderer;
-import net.arna.jcraft.client.renderer.armor.ValentineBottomRenderer;
-import net.arna.jcraft.client.renderer.armor.ValentineTopRenderer;
+import net.arna.jcraft.client.renderer.armor.*;
 import net.arna.jcraft.client.rendering.DamageIndicatorManager;
 import net.arna.jcraft.client.particle.DamageNumberParticle;
 import net.arna.jcraft.client.rendering.StandUserPoseLoader;
@@ -165,7 +142,7 @@ public class JCraftClient {
                 JItemRegistry.FINAL_KIRA_WIG.get(),
                 JItemRegistry.FINAL_KIRA_PANTS.get(),
                 JItemRegistry.FINAL_KIRA_BOOTS.get());
-        AzArmorRendererRegistry.register(ArmorRenderer.simple("finalkirajacket"), JItemRegistry.FINAL_KIRA_JACKET.get());
+        AzArmorRendererRegistry.register(FinalKiraJacketRenderer::new, JItemRegistry.FINAL_KIRA_JACKET.get());
         AzArmorRendererRegistry.register(
                 GiornoArmorRenderer::new,
                 JItemRegistry.GIORNO_WIG.get(),
@@ -223,7 +200,7 @@ public class JCraftClient {
                 JItemRegistry.KIRA_WIG.get(),
                 JItemRegistry.KIRA_PANTS.get(),
                 JItemRegistry.KIRA_BOOTS.get());
-        AzArmorRendererRegistry.register(ArmorRenderer.simple("kosakujacket"), JItemRegistry.KOSAKU_JACKET.get());
+        AzArmorRendererRegistry.register(KosakuJacketRenderer::new, JItemRegistry.KOSAKU_JACKET.get());
         AzArmorRendererRegistry.register(
                 KosakuArmorRenderer::new,
                 JItemRegistry.KOSAKU_WIG.get(),
