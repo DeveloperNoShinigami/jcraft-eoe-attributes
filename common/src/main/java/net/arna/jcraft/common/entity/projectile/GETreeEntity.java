@@ -1,7 +1,8 @@
 package net.arna.jcraft.common.entity.projectile;
 
 import lombok.NonNull;
-import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.arna.jcraft.common.util.JUtils;
@@ -89,25 +90,9 @@ public class GETreeEntity extends AbstractArrow {
         return false;
     }
 
-    // Animations
-    /*
-    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
-
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
-    }
-
-    private static final RawAnimation ANIMATION = RawAnimation.begin()
-            .thenPlay("animation.getree.spawn")
-            .thenPlay("animation.getree.idle")
-            .thenPlay("animation.getree.return");
-    private PlayState predicate(AnimationState<GeoAnimatable> state) {
-        return state.setAndContinue(ANIMATION);
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return cache;
-    }*/
+    public static final AzCommand ANIMATION = AzCommand.compose(
+            AzCommand.create(JCraft.BASE_CONTROLLER, "animation.getree.spawn"),
+            AzCommand.create(JCraft.BASE_CONTROLLER, "animation.getree.idle"),
+            AzCommand.create(JCraft.BASE_CONTROLLER, "animation.getree.return")
+    );
 }

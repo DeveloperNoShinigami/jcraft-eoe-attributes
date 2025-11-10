@@ -1,6 +1,7 @@
 package net.arna.jcraft.common.entity;
 
-import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.IOwnable;
@@ -51,6 +52,7 @@ public class GERScorpionEntity extends Mob implements IOwnable {
     public void setInitialVel(Vec3 initV) {
         this.setDeltaMovement(initV);
         initialVel = initV;
+        ROCK_IDLE.sendForEntity(this);
     }
 
     public Optional<UUID> getOwnerUUID() {
@@ -137,6 +139,7 @@ public class GERScorpionEntity extends Mob implements IOwnable {
         hurtMarked = true;
         setDiscardFriction(false);
         setRock(false);
+        TRANSFORM.sendForEntity(this);
     }
 
     @Override
@@ -219,7 +222,9 @@ public class GERScorpionEntity extends Mob implements IOwnable {
                         } else {
                             push(0, 0.65, 0);
                         }
+
                         hurtMarked = true;
+                        ATTACK.sendForEntity(this);
                     }
 
                     if (landedTimer == 20) { // Sting followup, 5t gap
@@ -263,27 +268,7 @@ public class GERScorpionEntity extends Mob implements IOwnable {
         }
     }
 
-    // Animations
-    /*
-    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
-
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
-    }
-
-    private PlayState predicate(AnimationState<GERScorpionEntity> state) {
-        if (this.isRock()) {
-            state.setAnimation(RawAnimation.begin().thenLoop("animation.gerscorpion.rock"));
-        } else {
-            state.setAnimation(RawAnimation.begin().thenPlay("animation.gerscorpion.transform").thenPlayAndHold("animation.gerscorpion.attack"));
-        }
-        return PlayState.CONTINUE;
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return cache;
-    }
-    */
+    private static final AzCommand ROCK_IDLE = AzCommand.create(JCraft.BASE_CONTROLLER, "animation.gerscorpion.rock", AzPlayBehaviors.LOOP);
+    private static final AzCommand TRANSFORM = AzCommand.create(JCraft.BASE_CONTROLLER, "animation.gerscorpion.transform");
+    private static final AzCommand ATTACK = AzCommand.create(JCraft.BASE_CONTROLLER, "animation.gerscorpion.attack", AzPlayBehaviors.HOLD_ON_LAST_FRAME);
 }

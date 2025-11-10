@@ -1,7 +1,8 @@
 package net.arna.jcraft.common.entity.projectile;
 
 import lombok.NonNull;
-import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.api.registry.JEntityTypeRegistry;
@@ -80,6 +81,10 @@ public class LargeIcicleProjectile extends AbstractArrow {
     public void setInstant(boolean instant) {
         this.instant = instant;
         entityData.set(IS_INSTANT, instant);
+    }
+
+    public boolean isInstant() {
+        return entityData.get(IS_INSTANT);
     }
 
     public void markProjectile() {
@@ -305,6 +310,9 @@ public class LargeIcicleProjectile extends AbstractArrow {
         super.readAdditionalSaveData(tag);
         this.ticksInAir = tag.getShort("life");
     }
+
+    public static final AzCommand FIRE = AzCommand.create(JCraft.BASE_CONTROLLER, "animation.large_icicle.spawn", AzPlayBehaviors.HOLD_ON_LAST_FRAME);
+    public static final AzCommand FIRE_INSTANT = AzCommand.create(JCraft.BASE_CONTROLLER, "animation.large_icicle.spawn_instant", AzPlayBehaviors.HOLD_ON_LAST_FRAME);
 
     // Animations
     /*

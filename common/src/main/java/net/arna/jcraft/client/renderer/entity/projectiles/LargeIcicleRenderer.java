@@ -27,16 +27,29 @@ public class LargeIcicleRenderer extends ProjectileRenderer<LargeIcicleProjectil
     public LargeIcicleRenderer(final @NonNull EntityRendererProvider.Context context) {
         super(context, () -> new EntityAnimator<>(ID), b -> b
                 .setRenderType(RenderType.entityTranslucent(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID))))
+                .setRenderEntry(contextPipeline -> {
+                    final var animatable = contextPipeline.animatable();
+
+                    if (animatable.isInstant()) {
+                        LargeIcicleProjectile.FIRE_INSTANT.sendForEntity(animatable);
+                    } else {
+                        LargeIcicleProjectile.FIRE.sendForEntity(animatable);
+                    }
+
+                    return contextPipeline;
+                })
                 .setModelRenderer((pc, layer) -> new BaseModelRenderer<>((AzEntityRendererPipeline<LargeIcicleProjectile>) pc, layer) {
-                    // weird edge case
                     @Override
                     protected void midRender(@NonNull AzRendererPipelineContext<UUID, LargeIcicleProjectile> pc) {
                         var poseStack = pc.poseStack();
                         var animatable = pc.animatable();
                         var partialTick = pc.partialTick();
 
-                        poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTick, animatable.yRotO, animatable.getYRot()) + 90.0f));
-                        poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot())));
+                        poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTick, animatable.yRotO, animatable.getYRot()) - 90.0f));
+                        poseStack.mulPose(Axis.ZN.rotationDegrees(Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot())));
+
+                        final float scale = animatable.getScale();
+                        poseStack.scale(scale, scale, scale);
                     }
                 }),
                 ID);
