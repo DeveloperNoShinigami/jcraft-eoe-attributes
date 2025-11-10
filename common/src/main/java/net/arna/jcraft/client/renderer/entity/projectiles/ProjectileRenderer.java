@@ -10,14 +10,14 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 
 import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 @Environment(EnvType.CLIENT)
-public class ProjectileRenderer<T extends Entity> extends AbstractEntityRenderer<T> {
+public class ProjectileRenderer<T extends AbstractArrow> extends AbstractEntityRenderer<T> {
     protected static final String TEXTURE_STR_TEMPLATE = "textures/entity/projectiles/%s.png";
 
     public ProjectileRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull Supplier<AzAnimator<UUID,T>> azAnimatorSupplier, final @NonNull UnaryOperator<AzEntityRendererConfig.Builder<T>> additionalConfigs, final ResourceLocation model, final ResourceLocation texture) {

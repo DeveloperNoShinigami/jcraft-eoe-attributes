@@ -1,6 +1,8 @@
 package net.arna.jcraft.common.entity.projectile;
 
 import lombok.NonNull;
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.arna.jcraft.common.util.IOwnable;
@@ -27,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Set;
 
-import static net.arna.jcraft.api.Attacks.*;
+import static net.arna.jcraft.api.Attacks.damageLogic;
 
 public class LifeDetectorEntity extends JAttackEntity {
     private static final EntityDataAccessor<Boolean> EXPLODED;
@@ -87,6 +89,8 @@ public class LifeDetectorEntity extends JAttackEntity {
         entityData.set(EXPLODED, true);
 
         playSound(SoundEvents.FIRECHARGE_USE, 1f, 1f);
+
+        EXPLODE.sendForEntity(this);
 
         kill();
     }
@@ -156,6 +160,8 @@ public class LifeDetectorEntity extends JAttackEntity {
         }
     }
 
+    public static final AzCommand EXPLODE = AzCommand.create(JCraft.BASE_CONTROLLER, "animation.detector.explode");
+
     @Override
     public boolean fireImmune() {
         return true;
@@ -210,25 +216,4 @@ public class LifeDetectorEntity extends JAttackEntity {
         super.readAdditionalSaveData(tag);
         readMasterNbt(tag);
     }
-
-    // Animations
-    /*
-    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
-
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
-    }
-
-    private static final RawAnimation EXPLODE = RawAnimation.begin().thenLoop("animation.detector.explode");
-    private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("animation.detector.idle");
-    private PlayState predicate(AnimationState<GeoAnimatable> state) {
-        return state.setAndContinue(hasExploded() ? EXPLODE : IDLE);
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return cache;
-    }
-    */
 }

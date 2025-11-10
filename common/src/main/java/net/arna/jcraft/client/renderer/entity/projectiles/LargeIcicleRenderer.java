@@ -1,15 +1,18 @@
 package net.arna.jcraft.client.renderer.entity.projectiles;
 
+import com.mojang.math.Axis;
 import lombok.NonNull;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
 import mod.azure.azurelib.render.entity.AzEntityRendererPipeline;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.client.renderer.BaseModelRenderer;
 import net.arna.jcraft.client.renderer.entity.AbstractEntityRenderer;
 import net.arna.jcraft.common.entity.projectile.LargeIcicleProjectile;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.util.Mth;
 
 import java.util.UUID;
 
@@ -21,17 +24,21 @@ public class LargeIcicleRenderer extends ProjectileRenderer<LargeIcicleProjectil
 
     public static final String ID = "large_icicle";
 
-    public LargeIcicleRenderer(final @NonNull EntityRendererProvider.Context pc) {
-        super(pc, () -> new EntityAnimator<>(ID), b -> b
+    public LargeIcicleRenderer(final @NonNull EntityRendererProvider.Context context) {
+        super(context, () -> new EntityAnimator<>(ID), b -> b
                 .setRenderType(RenderType.entityTranslucent(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID))))
-                .setModelRenderer((pipeline, layer) -> new ProjectileModelRenderer<>((AzEntityRendererPipeline<LargeIcicleProjectile>)pipeline, layer) {
+                .setModelRenderer((pc, layer) -> new BaseModelRenderer<>((AzEntityRendererPipeline<LargeIcicleProjectile>) pc, layer) {
+                    // weird edge case
                     @Override
-                    protected void midRender(final @NonNull AzRendererPipelineContext<UUID, LargeIcicleProjectile> pc) {
-                        final float scale = pc.animatable().getScale();
-                        pc.poseStack().scale(scale, scale, scale);
+                    protected void midRender(@NonNull AzRendererPipelineContext<UUID, LargeIcicleProjectile> pc) {
+                        var poseStack = pc.poseStack();
+                        var animatable = pc.animatable();
+                        var partialTick = pc.partialTick();
+
+                        poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTick, animatable.yRotO, animatable.getYRot()) + 90.0f));
+                        poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot())));
                     }
                 }),
                 ID);
     }
-
 }
