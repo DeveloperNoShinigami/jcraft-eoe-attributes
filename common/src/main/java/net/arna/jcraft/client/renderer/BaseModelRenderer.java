@@ -9,6 +9,7 @@ import net.minecraft.world.entity.Entity;
 
 import java.util.UUID;
 
+// renderer class with no rotation pre-processing
 public class BaseModelRenderer<T extends Entity> extends AzEntityModelRenderer<T> {
 
     public BaseModelRenderer(final @NonNull AzEntityRendererPipeline<T> pipeline, final @NonNull AzLayerRenderer<UUID, T> layerRenderer) {
