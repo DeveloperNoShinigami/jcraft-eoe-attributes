@@ -1,7 +1,8 @@
 package net.arna.jcraft.common.entity.projectile;
 
 import lombok.NonNull;
-import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.api.registry.JEntityTypeRegistry;
@@ -234,6 +235,8 @@ public class IceBranchProjectile extends AbstractArrow {
     protected @NonNull ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }
+
+    public static final AzCommand SPAWN = AzCommand.create(JCraft.BASE_CONTROLLER, "animation.ice_branch.spawn", AzPlayBehaviors.HOLD_ON_LAST_FRAME);
 
     // Animations
     /*

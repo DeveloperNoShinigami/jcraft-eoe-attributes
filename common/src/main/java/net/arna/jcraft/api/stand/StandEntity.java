@@ -152,16 +152,16 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     @Setter
     private boolean remoteJumpInput = false, remoteSneakInput = false;
 
+    @Getter
     private boolean playSummonAnim = true;
     @Setter
     private boolean playSummonSound = true, playDesummonSound = true;
 
-    protected AzCommand summonAnimationCmd;
+    public static final AzCommand SUMMON_ANIMATION = AzCommand.create(JCraft.BASE_CONTROLLER, "summon");
 
     // Data
     @Getter
     private final StandType standType;
-    //private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
     protected Vector3f[] auraColors = {new Vector3f(), new Vector3f(1f, 0f, 0f), new Vector3f(0f, 1f, 0f), new Vector3f(0f, 0f, 1f)};
 
     protected StandEntity(StandType type, Level world) {
@@ -175,7 +175,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         noPhysics = true;
         standType = type;
         this.noCulling = true;
-        summonAnimationCmd = AzCommand.create(JCraft.BASE_CONTROLLER, getSummonAnimation());
+        // summonAnimationCmd = AzCommand.create(JCraft.BASE_CONTROLLER, getSummonAnimation());
 
         assert getThis() == this;
     }
@@ -906,9 +906,6 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         final boolean client = level().isClientSide;
         if (tickCount == 1) {
             playSummonSound();
-            if (!client) {
-                summonAnimationCmd.sendForEntity(this);
-            }
             if (!client && getUser() instanceof Player player) {
                 player.awardStat(JStatRegistry.STAND_SUMMONED.get());
             }
@@ -1063,9 +1060,11 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                 setStandGauge(Mth.clamp(this.getStandGauge() + 0.5f, 0, maxStandGauge));
 
                 if (getRawState() != 0 || isReset()) {
-                    setRawState(0);
-                    boxState(0).playAnimation(getThis());
-                    setReset(false);
+                    if (!playSummonAnim) {
+                        setRawState(0);
+                        boxState(0).playAnimation(getThis());
+                        setReset(false);
+                    }
 
                     setDistanceOffset(getStandData().getIdleDistance());
                     setRotationOffset(getStandData().getIdleRotation());

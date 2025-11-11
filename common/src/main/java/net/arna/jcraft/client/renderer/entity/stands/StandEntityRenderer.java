@@ -50,6 +50,7 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
                         .setModelRenderer(StandEntityModelRenderer::new)
                         .setRenderType(renderType())
                         .setPrerenderEntry(preRenderEntry())
+                        .setRenderEntry(renderEntry())
         ).build(), context, type.getId().getPath());
     }
 
@@ -104,11 +105,26 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
 
     protected static @NonNull <T extends StandEntity<?,?>> Function<AzRendererPipelineContext<UUID, T>, AzRendererPipelineContext<UUID, T>> preRenderEntry() {
         return pc -> {
-            float a = getAlpha(pc.animatable(), pc.partialTick());
+            final var animatable = pc.animatable();
+            float a = getAlpha(animatable, pc.partialTick());
             a *= pc.alpha();
+
             if (a > 0.01f) {
                 pc.setAlpha(a);
             }
+
+            return pc;
+        };
+    }
+
+    private static @NonNull <T extends StandEntity<?,?>> Function<AzRendererPipelineContext<UUID, T>, AzRendererPipelineContext<UUID, T>> renderEntry() {
+        return pc -> {
+            final var animatable = pc.animatable();
+
+            if (animatable.isPlaySummonAnim()) {
+                StandEntity.SUMMON_ANIMATION.sendForEntity(animatable);
+            }
+
             return pc;
         };
     }
@@ -120,7 +136,7 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
 
     /*
     Cutout - no alpha
-    CutoutNoCull - identical (copium)
+    CutoutNoCull - identical (hopium)
     Alpha - no lighting
     Translucent - with alpha, nothing renders through
     Decal - invisible
@@ -132,151 +148,6 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
     public static RenderType renderTypeOf(final StandEntity<?, ?> stand, final ResourceLocation textureLocation) {
         return standIsFirstPersonViewers(stand) ? RenderType.entityNoOutline(textureLocation) : RenderType.entityTranslucent(textureLocation);
     }
-
-    /*
-    @Override
-    public RenderType getRenderType(final T animatable, final ResourceLocation texture, final @Nullable MultiBufferSource bufferSource, final float partialTick) {
-        return renderTypeOf(animatable, texture);
-    }
-
-    // Better than a mixin, makes stands look towards the users HEAD rotation as opposed to body
-    @Override
-    public void actuallyRender(final PoseStack poseStack, final T animatable, final BakedGeoModel model, RenderType renderType, final MultiBufferSource bufferSource,
-                               VertexConsumer buffer, final boolean isReRender, final float partialTick, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha) {
-        if (animatable == null) return;
-        poseStack.pushPose();
-
-        final boolean shouldSit = animatable.isPassenger() && (animatable.getVehicle() != null);
-        float lerpBodyRot = Mth.rotLerp(partialTick, animatable.yBodyRotO, animatable.yBodyRot);
-        float lerpHeadRot = Mth.rotLerp(partialTick, animatable.yHeadRotO, animatable.yHeadRot);
-        float netHeadYaw = lerpHeadRot - lerpBodyRot;
-
-        if (shouldSit && !animatable.isFree() && animatable.getVehicle() instanceof LivingEntity livingentity) {
-            lerpBodyRot = Mth.rotLerp(partialTick, livingentity.yHeadRotO, livingentity.yHeadRot);
-            netHeadYaw = lerpHeadRot - lerpBodyRot;
-            float clampedHeadYaw = Mth.clamp(Mth.wrapDegrees(netHeadYaw), -85, 85);
-            lerpBodyRot = lerpHeadRot - clampedHeadYaw;
-
-            if (clampedHeadYaw * clampedHeadYaw > 2500f)
-                lerpBodyRot += clampedHeadYaw * 0.2f;
-
-            netHeadYaw = lerpHeadRot - lerpBodyRot;
-        }
-
-        if (animatable.getPose() == Pose.SLEEPING) {
-            Direction bedDirection = animatable.getBedOrientation();
-
-            if (bedDirection != null) {
-                float eyePosOffset = animatable.getEyeHeight(Pose.STANDING) - 0.1F;
-
-                poseStack.translate(-bedDirection.getStepX() * eyePosOffset, 0, -bedDirection.getStepZ() * eyePosOffset);
-            }
-        }
-
-        final float ageInTicks = animatable.tickCount + partialTick;
-        float limbSwingAmount = 0;
-        float limbSwing = 0;
-
-        applyRotations(animatable, poseStack, ageInTicks, lerpBodyRot, partialTick);
-
-        if (!shouldSit && animatable.isAlive()) {
-            limbSwingAmount = animatable.walkAnimation.speed(partialTick); // FIRST NOTABLE DIFF FROM super.actuallyRender();
-            limbSwing = animatable.walkAnimation.position(partialTick);
-
-            if (animatable.isBaby())
-                limbSwing *= 3f;
-
-            if (limbSwingAmount > 1f)
-                limbSwingAmount = 1f;
-        }
-
-        if (!isReRender) {
-            final float headPitch = Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot());
-            final float motionThreshold = getMotionAnimThreshold(animatable);
-            final Vec3 velocity = animatable.getDeltaMovement();
-            final float avgVelocity = (float)(Math.abs(velocity.x) + Math.abs(velocity.z) / 2f);
-            final AnimationState<T> animationState = new AnimationState<>(animatable, limbSwing, limbSwingAmount,
-                    partialTick, avgVelocity >= motionThreshold && limbSwingAmount != 0);
-            final long instanceId = getInstanceId(animatable);
-
-            animationState.setData(DataTickets.TICK, animatable.getTick(animatable));
-            animationState.setData(DataTickets.ENTITY, animatable);
-            EntityModelData data = new EntityModelData(shouldSit, animatable.isBaby(), -netHeadYaw, -headPitch);
-            animationState.setData(DataTickets.ENTITY_MODEL_DATA, data);
-            this.model.addAdditionalStateData(animatable, instanceId, animationState::setData);
-            this.model.handleAnimations(animatable, instanceId, animationState);
-        }
-
-        poseStack.translate(0, 0.01f, 0);
-
-        this.modelRenderTranslations = new Matrix4f(poseStack.last().pose());
-
-        if (animatable.isInvisibleTo(Minecraft.getInstance().player)) {
-            if (Minecraft.getInstance().shouldEntityAppearGlowing(animatable)) {
-                buffer = bufferSource.getBuffer(renderType = RenderType.outline(getTextureLocation(animatable)));
-            }
-            else {
-                renderType = null;
-            }
-        }
-
-        if (renderType != null) {
-            updateAnimatedTextureFrame(animatable);
-
-            // Color renderColor = getRenderColor(animatable, partialTick, packedLight);
-
-            for (GeoBone group : model.topLevelBones()) {
-                renderRecursively(poseStack, animatable, group, renderType, bufferSource, buffer, isReRender, partialTick, packedLight,
-                        packedOverlay,
-                        red,
-                        green,
-                        blue,
-                        alpha
-                );
-            }
-        }
-
-        poseStack.popPose();
-
-        // Clear rotation modifications - SUPER hacky, please find a better way :)
-        // better way found - just zero out all the anims at the start (THANKS GECKO!(irony))
-        *//*
-        AnimationProcessor<?> animationProcessor = this.standEntityModel.getAnimationProcessor();
-        CoreGeoBone torso = animationProcessor.getBone("torso");
-        if (torso != null) torso.setRotX(standEntityModel.prevTorsoPitch);
-        CoreGeoBone head = animationProcessor.getBone("head");
-        if (head != null) head.setRotX(standEntityModel.prevHeadPitch);
-        CoreGeoBone base = animationProcessor.getBone("base");
-        if (base != null) base.setRotX(standEntityModel.prevBasePitch);
-         *//*
-    }
-
-    @Override
-    protected int getBlockLightLevel(final T stand, final BlockPos pos) {
-        if (!stand.hasUser()) {
-            return super.getBlockLightLevel(stand, pos);
-        }
-
-        if (stand.isOnFire() || stand.getUserOrThrow().isOnFire()) {
-            return 15;
-        }
-        return stand.level().getBrightness(LightLayer.BLOCK, stand.getUserOrThrow().blockPosition());
-    }
-
-    @Override
-    protected int getSkyLightLevel(final T stand, final BlockPos pos) {
-        return stand.hasUser() ? stand.level().getBrightness(LightLayer.SKY, stand.getUserOrThrow().blockPosition()) :
-                super.getSkyLightLevel(stand, pos);
-    }
-
-    @Override
-    public boolean firePreRenderEvent(final PoseStack poseStack, final BakedGeoModel model, final MultiBufferSource bufferSource, final float partialTick, final int packedLight) {
-        if (!JClientUtils.shouldRenderStands()) {
-            return false;
-        }
-
-        return super.firePreRenderEvent(poseStack, model, bufferSource, partialTick, packedLight);
-    }*/
 
     public static boolean shouldApplyAlpha(final StandEntity<?, ?> stand) {
         final Minecraft mcClient = Minecraft.getInstance();

@@ -34,6 +34,13 @@ public class IceBranchRenderer extends AbstractEntityRenderer<IceBranchProjectil
                 entity -> JCraft.id(AbstractEntityRenderer.MODEL_STR_TEMPLATE.formatted(ID)),
                 entity -> VARIANTS.get(entity.getId() % 3))
                 .setAnimatorProvider(() -> new EntityAnimator<>(ID))
+                .setRenderEntry(contextPipeline -> {
+                    final var animatable = contextPipeline.animatable();
+
+                    IceBranchProjectile.SPAWN.sendForEntity(animatable);
+
+                    return contextPipeline;
+                })
                 .setModelRenderer((pc, layer) -> new BaseModelRenderer<>((AzEntityRendererPipeline<IceBranchProjectile>) pc, layer) {
                     // weird edge case
                     @Override
