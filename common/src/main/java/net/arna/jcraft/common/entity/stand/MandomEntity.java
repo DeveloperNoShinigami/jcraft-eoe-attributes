@@ -27,7 +27,6 @@ import net.arna.jcraft.common.util.StandAnimationState;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import static net.arna.jcraft.JCraft.QUEUE_MOVESTUN_LIMIT;
@@ -198,9 +197,4 @@ public class MandomEntity extends StandEntity<MandomEntity, MandomEntity.State> 
         return State.IDLE;
     }
 
-    // just return the animation name
-    @Override
-    protected @Nullable String getSummonAnimation() {
-        return "summon";
-    }
 }

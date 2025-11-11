@@ -735,11 +735,6 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
     }
 
     @Override
-    protected String getSummonAnimation() {
-        return "animation.cream.summon";
-    }
-
-    @Override
     public State getIdleState() {
         return State.IDLE;
     }

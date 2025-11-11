@@ -170,11 +170,6 @@ public final class KillerQueenEntity extends AbstractKillerQueenEntity<KillerQue
     }
 
     @Override
-    protected @NonNull String getSummonAnimation() {
-        return "animation.killerqueen.summon";
-    }
-
-    @Override
     public State getBlockState() {
         return State.BLOCK;
     }

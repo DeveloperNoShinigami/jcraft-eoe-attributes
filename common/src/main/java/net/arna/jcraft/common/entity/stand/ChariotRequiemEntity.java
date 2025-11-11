@@ -11,7 +11,6 @@ import net.arna.jcraft.api.stand.StandInfo;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Chariot_Requiem">Chariot Requiem</a>.
@@ -50,11 +49,6 @@ public class ChariotRequiemEntity extends StandEntity<ChariotRequiemEntity, Char
     @Override
     protected State[] getStateValues() {
         return State.values();
-    }
-
-    @Override
-    protected @Nullable String getSummonAnimation() {
-        return "animation.chariotrequiem.summon";
     }
 
     @Override

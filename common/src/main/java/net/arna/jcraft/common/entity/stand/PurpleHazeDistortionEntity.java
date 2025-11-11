@@ -217,11 +217,6 @@ public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<P
     }
 
     @Override
-    protected @NonNull String getSummonAnimation() {
-        return "animation.purple_haze.summon";
-    }
-
-    @Override
     public State getBlockState() {
         return State.BLOCK;
     }

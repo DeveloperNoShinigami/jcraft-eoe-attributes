@@ -31,7 +31,6 @@ import net.arna.jcraft.common.util.StandAnimationState;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 import java.util.function.Supplier;
@@ -39,7 +38,6 @@ import java.util.function.Supplier;
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/The_World">The World</a>.
  * @see JStandTypeRegistry#THE_WORLD
- * @see net.arna.jcraft.client.renderer.entity.stands.TheWorldRenderer TheWorldRenderer
  * @see FeignBarrageCounterAttack
  * @see TWDonutAttack
  */
@@ -301,11 +299,6 @@ public final class TheWorldEntity extends AbstractTheWorldEntity<TheWorldEntity,
     @Override
     protected State[] getStateValues() {
         return State.values();
-    }
-
-    @Override
-    protected @NotNull String getSummonAnimation() {
-        return "animation.theworld.summon";
     }
 
     @Override

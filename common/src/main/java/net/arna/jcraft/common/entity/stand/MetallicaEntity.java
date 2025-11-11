@@ -543,11 +543,6 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
     }
 
     @Override
-    protected @Nullable String getSummonAnimation() {
-        return "animation.metallica.summon";
-    }
-
-    @Override
     public MetallicaEntity.State getBlockState() {
         return MetallicaEntity.State.BLOCK;
     }

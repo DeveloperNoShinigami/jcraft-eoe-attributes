@@ -11,7 +11,6 @@ import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Dragon%27s_Dream">Dragon's Dream</a>.
@@ -49,11 +48,6 @@ public class DragonsDreamEntity extends StandEntity<DragonsDreamEntity, DragonsD
     @Override
     protected State[] getStateValues() {
         return State.values();
-    }
-
-    @Override
-    protected @Nullable String getSummonAnimation() {
-        return "animation.dragons_dream.summon";
     }
 
     @Override

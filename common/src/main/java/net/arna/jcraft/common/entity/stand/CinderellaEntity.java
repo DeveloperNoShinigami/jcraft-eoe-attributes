@@ -19,7 +19,6 @@ import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Cinderella">Cinderella</a>.
@@ -93,8 +92,4 @@ public class CinderellaEntity extends StandEntity<CinderellaEntity, CinderellaEn
         return State.BLOCK;
     }
 
-    @Override
-    protected @Nullable String getSummonAnimation() {
-        return "animation.cinderella.summon";
-    }
 }

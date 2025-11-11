@@ -39,7 +39,6 @@ import java.util.function.Supplier;
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Star_Platinum">Star Platinum</a>.
  * @see JStandTypeRegistry#STAR_PLATINUM
- * @see net.arna.jcraft.client.model.entity.stand.StarPlatinumModel StarPlatinumModel
  * @see net.arna.jcraft.client.renderer.entity.stands.StarPlatinumRenderer StarPlatinumRenderer
  * @see net.arna.jcraft.common.attack.moves.starplatinum.BlockBreakingAttack BlockBreakingAttack
  * @see InhaleAttack
@@ -308,11 +307,6 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
     @Override
     protected State[] getStateValues() {
         return State.values();
-    }
-
-    @Override
-    protected @NonNull String getSummonAnimation() {
-        return "animation.starplatinum.summon";
     }
 
     @Override

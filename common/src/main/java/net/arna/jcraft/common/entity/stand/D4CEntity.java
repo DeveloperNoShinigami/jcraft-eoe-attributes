@@ -291,11 +291,6 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
     }
 
     @Override
-    protected String getSummonAnimation() {
-        return "animation.d4c.summon";
-    }
-
-    @Override
     public State getBlockState() {
         return State.BLOCK;
     }

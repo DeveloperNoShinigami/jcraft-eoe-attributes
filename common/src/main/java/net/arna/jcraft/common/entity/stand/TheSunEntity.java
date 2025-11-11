@@ -577,11 +577,6 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
     }
 
     @Override
-    protected @NonNull String getSummonAnimation() {
-        return "animation.sun.summon";
-    }
-
-    @Override
     public State getBlockState() {
         return null;
     }

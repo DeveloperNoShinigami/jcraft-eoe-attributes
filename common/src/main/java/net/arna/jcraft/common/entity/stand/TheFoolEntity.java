@@ -469,11 +469,6 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
     }
 
     @Override
-    protected @Nullable String getSummonAnimation() {
-        return "animation.thefool.summon";
-    }
-
-    @Override
     public State getBlockState() {
         return State.BLOCK;
     }

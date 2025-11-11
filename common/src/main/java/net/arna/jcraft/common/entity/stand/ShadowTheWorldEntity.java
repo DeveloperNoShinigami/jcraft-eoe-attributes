@@ -325,11 +325,6 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
     }
 
     @Override
-    protected @NonNull String getSummonAnimation() {
-        return "animation.shadow_the_world.summon";
-    }
-
-    @Override
     public ShadowTheWorldEntity.State getBlockState() {
         return ShadowTheWorldEntity.State.BLOCK;
     }

@@ -32,7 +32,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.lang.ref.WeakReference;
@@ -360,11 +359,6 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
     @Override
     protected HorusEntity.State[] getStateValues() {
         return State.values();
-    }
-
-    @Override
-    protected @Nullable String getSummonAnimation() {
-        return "animation.horus.summon";
     }
 
     @Override

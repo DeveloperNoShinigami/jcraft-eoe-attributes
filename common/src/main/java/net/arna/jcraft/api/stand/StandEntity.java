@@ -175,7 +175,6 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         noPhysics = true;
         standType = type;
         this.noCulling = true;
-        // summonAnimationCmd = AzCommand.create(JCraft.BASE_CONTROLLER, getSummonAnimation());
 
         assert getThis() == this;
     }
@@ -1620,29 +1619,6 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         return auraColors[getSkin()];
     }
 
-    // Animation code
-
-    /*
-    private PlayState predicate(AnimationState<E> state) {
-        AnimationController<E> controller = state.getController();
-
-        String summonAnimation = getSummonAnimation();
-        if (playSummonAnim && summonAnimation != null) {
-            return state.setAndContinue(RawAnimation.begin().thenPlay(summonAnimation));
-        }
-
-        if (isSameState()) {
-            controller.forceAnimationReset();
-        }
-
-        S superState = getState();
-        superState.playAnimation(getThis(), state);
-        superState.configureController(getThis(), controller);
-
-        return PlayState.CONTINUE;
-    }
-     */
-
     @Override
     public boolean isSilent() {
         // Make stands silent if their users are.
@@ -1739,9 +1715,6 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     public boolean isBlocking() {
         return getState() == getBlockState();
     }
-
-    @Nullable
-    protected abstract String getSummonAnimation();
 
     /**
      * Gets called after damage calculation if the damaged entity was slain.

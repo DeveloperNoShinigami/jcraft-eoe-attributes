@@ -227,11 +227,6 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
     }
 
     @Override
-    protected @NonNull String getSummonAnimation() {
-        return "animation.kqbtd.summon";
-    }
-
-    @Override
     public State getBlockState() {
         return State.BLOCK;
     }

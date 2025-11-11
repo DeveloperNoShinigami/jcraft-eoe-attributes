@@ -11,7 +11,6 @@ import net.arna.jcraft.api.stand.StandInfo;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Atum">Atum</a>.
@@ -54,11 +53,6 @@ public class AtumEntity extends StandEntity<AtumEntity, AtumEntity.State> {
     @Override
     public State getBlockState() {
         return State.BLOCK;
-    }
-
-    @Override
-    protected @Nullable String getSummonAnimation() {
-        return "animation.atum.summon";
     }
 
 }

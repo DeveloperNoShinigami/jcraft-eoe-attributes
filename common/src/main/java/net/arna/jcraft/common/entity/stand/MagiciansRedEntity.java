@@ -40,7 +40,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.Collection;
@@ -333,11 +332,6 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
     @Override
     protected State[] getStateValues() {
         return State.values();
-    }
-
-    @Override
-    protected @Nullable String getSummonAnimation() {
-        return "animation.mr.summon";
     }
 
     @Override

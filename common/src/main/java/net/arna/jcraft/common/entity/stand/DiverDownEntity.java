@@ -11,7 +11,6 @@ import net.arna.jcraft.api.stand.StandInfo;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Diver_Down">Diver Down</a>.
@@ -49,11 +48,6 @@ public class DiverDownEntity extends StandEntity<DiverDownEntity, DiverDownEntit
     @Override
     protected State[] getStateValues() {
         return State.values();
-    }
-
-    @Override
-    protected @Nullable String getSummonAnimation() {
-        return "animation.my.summon";
     }
 
     @Override

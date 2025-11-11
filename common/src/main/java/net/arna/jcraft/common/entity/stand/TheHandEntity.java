@@ -27,7 +27,6 @@ import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 /**
@@ -323,11 +322,6 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
     @Override
     protected State[] getStateValues() {
         return State.values();
-    }
-
-    @Override
-    protected @Nullable String getSummonAnimation() {
-        return "animation.the_hand.summon";
     }
 
     @Override

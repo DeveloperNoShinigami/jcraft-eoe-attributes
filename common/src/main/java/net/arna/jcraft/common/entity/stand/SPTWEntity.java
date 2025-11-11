@@ -34,7 +34,6 @@ import org.joml.Vector3f;
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Star_Platinum">Star Platinum The World</a>.
  * @see JStandTypeRegistry#STAR_PLATINUM_THE_WORLD
- * @see net.arna.jcraft.client.model.entity.stand.StarPlatinumModel StarPlatinumModel
  * @see net.arna.jcraft.client.renderer.entity.stands.SPTWRenderer SPTWRenderer
  * @see SPTWGroundSlamAttack
  */
@@ -253,11 +252,6 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
     @Override
     protected State[] getStateValues() {
         return State.values();
-    }
-
-    @Override
-    protected String getSummonAnimation() {
-        return "animation.sptw.summon";
     }
 
     @Override

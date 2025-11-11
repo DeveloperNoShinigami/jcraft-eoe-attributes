@@ -11,7 +11,6 @@ import net.arna.jcraft.api.stand.StandInfo;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Goo_Goo_Dolls">Goo Goo Dolls</a>.
@@ -49,11 +48,6 @@ public class GooGooDollsEntity extends StandEntity<GooGooDollsEntity, GooGooDoll
     @Override
     protected State[] getStateValues() {
         return State.values();
-    }
-
-    @Override
-    protected @Nullable String getSummonAnimation() {
-        return "animation.goo_goo_dolls.summon";
     }
 
     @Override

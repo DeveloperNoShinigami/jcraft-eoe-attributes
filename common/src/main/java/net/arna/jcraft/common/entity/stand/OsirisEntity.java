@@ -11,7 +11,6 @@ import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Osiris">Osiris</a>.
@@ -57,8 +56,4 @@ public class OsirisEntity extends StandEntity<OsirisEntity, OsirisEntity.State> 
         return State.BLOCK;
     }
 
-    @Override
-    protected @Nullable String getSummonAnimation() {
-        return "animation.osiris.summon";
-    }
 }

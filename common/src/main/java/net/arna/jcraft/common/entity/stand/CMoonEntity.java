@@ -371,11 +371,6 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
     }
 
     @Override
-    protected String getSummonAnimation() {
-        return "animation.cmoon.summon";
-    }
-
-    @Override
     public State getBlockState() {
         return State.BLOCK;
     }

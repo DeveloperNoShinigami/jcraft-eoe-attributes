@@ -32,7 +32,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.function.Supplier;
@@ -373,11 +372,6 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
     @Override
     protected State[] getStateValues() {
         return State.values();
-    }
-
-    @Override
-    protected @Nullable String getSummonAnimation() {
-        return "animation.twoh.summon";
     }
 
     @Override
