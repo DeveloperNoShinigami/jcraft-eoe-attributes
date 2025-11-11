@@ -27,9 +27,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static net.arna.jcraft.api.stand.StandTypeUtil.generateStandTypeForMob;
 
 public class SpecUserMob extends PathfinderMob implements JSpecHolder, IFoodData {
@@ -129,7 +126,7 @@ public class SpecUserMob extends PathfinderMob implements JSpecHolder, IFoodData
             return;
         }
 
-        standComponent.setType(generateStandTypeForMob(this, level().getGameRules()));
+        standComponent.setType(generateStandTypeForMob(level().getGameRules()));
 
         if (random.nextFloat() > 0.9f) {
             standComponent.setSkin(random.nextInt(3));

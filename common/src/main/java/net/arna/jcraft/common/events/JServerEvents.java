@@ -372,7 +372,7 @@ public class JServerEvents {
             if (100 - random.nextInt(0, 100) > gameRules.getInt(CHANCE_MOB_SPAWNS_WITH_STAND)) {
                 return EventResult.pass();
             }
-            final StandType type = StandTypeUtil.generateStandTypeForMob(entity, gameRules);
+            final StandType type = StandTypeUtil.generateStandTypeForMob(gameRules);
             standData.setType(type);
 
             // ATTRIBUTES
