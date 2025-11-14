@@ -260,6 +260,15 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
     }
 
     @Override
+    public void tick() {
+        super.tick();
+
+        if (level().isClientSide) {
+            INHALE.tick(this);
+        }
+    }
+
+    @Override
     public boolean initMove(MoveClass moveClass) {
         if (tryFollowUp(moveClass, MoveClass.LIGHT)) return true;
         return super.initMove(moveClass);
@@ -273,8 +282,8 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
 
     // Animation code
     public enum State implements StandAnimationState<StarPlatinumEntity> {
-        // TODO reenable inhaleidle
-        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "idle", AzPlayBehaviors.LOOP)),
+        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.star_platinum.idle", AzPlayBehaviors.LOOP)),
+        INHALE_IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.star_platinum.inhaleidle", AzPlayBehaviors.LOOP)),
         PUNCH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.star_platinum.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.star_platinum.block", AzPlayBehaviors.LOOP)),
         HEAVY(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.star_platinum.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
@@ -300,6 +309,11 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
 
         @Override
         public void playAnimation(StarPlatinumEntity attacker) {
+            if (this == IDLE && attacker.getInhaleTime() > 0) {
+                INHALE_IDLE.animator.sendForEntity(attacker);
+                return;
+            }
+
             animator.sendForEntity(attacker);
         }
     }

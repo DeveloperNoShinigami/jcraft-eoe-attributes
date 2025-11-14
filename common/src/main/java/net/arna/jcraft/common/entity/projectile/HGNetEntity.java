@@ -1,7 +1,8 @@
 package net.arna.jcraft.common.entity.projectile;
 
 import lombok.NonNull;
-import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.MoveUsage;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
@@ -326,6 +327,11 @@ public class HGNetEntity extends JAttackEntity implements ICustomDamageHandler {
         lifeTime = tag.getInt("lifeTime");
         readMasterNbt(tag);
     }
+
+    public static final AzCommand SPAWN = AzCommand.create( JCraft.BASE_CONTROLLER, "animation.hg_nets.spawn");
+    public static final AzCommand WILT = AzCommand.create( JCraft.BASE_CONTROLLER, "animation.hg_nets.wilt");
+    public static final AzCommand CONSTRICT = AzCommand.create( JCraft.BASE_CONTROLLER, "animation.hg_nets.constrict");
+    public static final AzCommand IDLE = AzCommand.create( JCraft.BASE_CONTROLLER, "animation.hg_nets.idle", AzPlayBehaviors.LOOP);
 
     // Animations
     /*

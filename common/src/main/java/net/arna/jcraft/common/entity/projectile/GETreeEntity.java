@@ -2,6 +2,7 @@ package net.arna.jcraft.common.entity.projectile;
 
 import lombok.NonNull;
 import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.api.registry.JEntityTypeRegistry;
@@ -90,9 +91,24 @@ public class GETreeEntity extends AbstractArrow {
         return false;
     }
 
-    public static final AzCommand ANIMATION = AzCommand.compose(
-            AzCommand.create(JCraft.BASE_CONTROLLER, "animation.getree.spawn"),
-            AzCommand.create(JCraft.BASE_CONTROLLER, "animation.getree.idle"),
-            AzCommand.create(JCraft.BASE_CONTROLLER, "animation.getree.return")
-    );
+    public static final AzCommand ANIMATION = AzCommand.controllerBuilder().
+            playSequence(
+                JCraft.BASE_CONTROLLER,
+                sequenceBuilder -> sequenceBuilder.queue(
+                        "animation.getree.spawn",
+                    props -> props.withPlayBehavior(AzPlayBehaviors.PLAY_ONCE)
+                ).queue(
+                        "animation.getree.idle",
+                        props -> props.withPlayBehavior(AzPlayBehaviors.PLAY_ONCE)
+                ).queue(
+                        "animation.getree.return",
+                        props -> props.withPlayBehavior(AzPlayBehaviors.PLAY_ONCE)
+                )
+            )
+            .setFreezeTickOffset(JCraft.BASE_CONTROLLER, 0)
+            .setStartTickOffset(JCraft.BASE_CONTROLLER, 0)
+            .setSpeed(JCraft.BASE_CONTROLLER, 1)
+            .setRepeatAmount(JCraft.BASE_CONTROLLER, 0)
+            .setReverseAnimation(JCraft.BASE_CONTROLLER, false)
+            .build();
 }

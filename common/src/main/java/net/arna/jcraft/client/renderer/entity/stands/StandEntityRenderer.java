@@ -1,14 +1,18 @@
 package net.arna.jcraft.client.renderer.entity.stands;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import lombok.NonNull;
+import mod.azure.azurelib.model.AzBone;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
 import mod.azure.azurelib.render.entity.AzEntityRendererConfig;
+import mod.azure.azurelib.render.layer.AzBlockAndItemLayer;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.registry.JStandTypeRegistry;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.client.JClientConfig;
 import net.arna.jcraft.client.renderer.entity.AbstractEntityRenderer;
-import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.client.renderer.entity.StandEntityModelRenderer;
 import net.arna.jcraft.client.util.JClientUtils;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
@@ -20,7 +24,10 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ShieldItem;
 
 import java.util.UUID;
 import java.util.function.Function;
@@ -219,4 +226,54 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
         }
     }
 
+    protected static class HandItemsRenderLayer<T extends Mob> extends AzBlockAndItemLayer<UUID, T> {
+        protected ItemStack mainHandItem;
+        protected ItemStack offHandItem;
+
+        @Override
+        public void preRender(final AzRendererPipelineContext<UUID, T> context) {
+            mainHandItem = context.animatable().getMainHandItem();
+            offHandItem = context.animatable().getOffhandItem();
+        }
+
+        @Override
+        public ItemStack itemStackForBone(final AzBone bone, final T animatable) {
+            // Retrieve the items in the entity's hands for the relevant bone
+            return switch (bone.getName()) {
+                case LEFT_HAND -> animatable.isLeftHanded() ? mainHandItem : offHandItem;
+                case RIGHT_HAND -> animatable.isLeftHanded() ? offHandItem : mainHandItem;
+                default -> null;
+            };
+        }
+
+        @Override
+        protected ItemDisplayContext getTransformTypeForStack(final AzBone bone, final ItemStack stack, final T animatable) {
+            // Apply the camera transform for the given hand
+            return switch (bone.getName()) {
+                case LEFT_HAND -> ItemDisplayContext.THIRD_PERSON_LEFT_HAND;
+                case RIGHT_HAND -> ItemDisplayContext.THIRD_PERSON_RIGHT_HAND;
+                default -> ItemDisplayContext.NONE;
+            };
+        }
+
+        @Override
+        protected void renderItemForBone(final AzRendererPipelineContext<UUID, T> context, final AzBone bone, final ItemStack itemStack, final T animatable) {
+            final PoseStack poseStack = context.poseStack();
+            poseStack.mulPose(Axis.XP.rotationDegrees(bone.getRotX() - 90f));
+            poseStack.mulPose(Axis.ZP.rotationDegrees(bone.getRotZ() - 90f));
+            if (itemStack == mainHandItem) {
+                poseStack.mulPose(Axis.XP.rotationDegrees(-90f));
+                if (itemStack.getItem() instanceof ShieldItem) {
+                    poseStack.translate(0, 0.125, -0.25);
+                }
+            } else if (itemStack == offHandItem) {
+                poseStack.mulPose(Axis.XP.rotationDegrees(-90f));
+                if (itemStack.getItem() instanceof ShieldItem) {
+                    poseStack.translate(0, 0.125, 0.25);
+                    poseStack.mulPose(Axis.YP.rotationDegrees(180));
+                }
+            }
+            super.renderItemForBone(context, bone, itemStack, animatable);
+        }
+    }
 }

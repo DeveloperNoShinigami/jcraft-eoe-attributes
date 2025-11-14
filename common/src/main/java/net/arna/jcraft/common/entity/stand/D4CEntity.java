@@ -207,7 +207,6 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
     public boolean initMove(MoveClass moveClass) {
         switch (moveClass) {
             case ULTIMATE -> {
-                // TODO is this necessary? Seems like it just restarts the dim hop move?
                 if (getCurrentMove() instanceof DimensionalHopMove) {
                     setMoveStun(0);
                     setCurrentMove(null);

@@ -28,6 +28,23 @@ public class HGNetRenderer extends AbstractEntityRenderer<HGNetEntity> {
                 entity -> JCraft.id(AbstractEntityRenderer.MODEL_STR_TEMPLATE.formatted(ID)),
                 entity -> SKINS.get(entity.getSkin()))
                 .setAnimatorProvider(() -> new EntityAnimator<>(ID))
+                .setRenderEntry((pc) -> {
+                    final HGNetEntity entity = pc.animatable();
+
+                    if (entity.tickCount < 5) {
+                        HGNetEntity.SPAWN.sendForEntity(entity);
+                    } else {
+                        if (entity.getState() == 3) {
+                            HGNetEntity.WILT.sendForEntity(entity);
+                        } else if (entity.getState() == 2) {
+                            HGNetEntity.CONSTRICT.sendForEntity(entity);
+                        } else {
+                            HGNetEntity.IDLE.sendForEntity(entity);
+                        }
+                    }
+
+                    return pc;
+                })
                 .addRenderLayer(new HGNetGlowLayer())
                 .setShadowRadius(1.25f)
                 .build(),
