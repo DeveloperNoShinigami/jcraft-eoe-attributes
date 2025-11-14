@@ -1,12 +1,13 @@
 package net.arna.jcraft.api.spec;
 
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.component.player.CommonSpecComponent;
 import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.arna.jcraft.common.events.JServerEvents;
 import net.arna.jcraft.common.food.IFoodData;
 import net.arna.jcraft.common.tickable.JEnemies;
-import net.arna.jcraft.common.util.DashData;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.nbt.CompoundTag;
@@ -40,6 +41,8 @@ public class SpecUserMob extends PathfinderMob implements JSpecHolder, IFoodData
     private static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(SpecUserMob.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Float> ANIMATION_SPEED = SynchedEntityData.defineId(SpecUserMob.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(SpecUserMob.class, EntityDataSerializers.INT);
+
+    public static final String MOVEMENT_CONTROLLER = "movement";
 
     protected FoodData foodData = null;
 
@@ -77,12 +80,15 @@ public class SpecUserMob extends PathfinderMob implements JSpecHolder, IFoodData
 
             spec.tickSpec();
 
-            // TODO: make animations run once without needing to be reset like this (like player animator)
-            if (spec.getMoveStun() <= 0 && !DashData.isDashing(this)) setAnimation("", 1.0f);
+            // if (spec.getMoveStun() <= 0 && !DashData.isDashing(this)) setAnimation("", 1.0f);
         } else {
             setAnimation("", 1.0f);
         }
     }
+
+    private static final AzCommand IDLE = AzCommand.create(MOVEMENT_CONTROLLER, "misc.idle", AzPlayBehaviors.LOOP);
+    private static final AzCommand WALK = AzCommand.create(MOVEMENT_CONTROLLER, "move.walk", AzPlayBehaviors.LOOP);
+    private static final AzCommand RUN = AzCommand.create(MOVEMENT_CONTROLLER, "move.run", AzPlayBehaviors.LOOP);
 
     protected int getInitialVariant() { return 0; }
 
@@ -192,8 +198,22 @@ public class SpecUserMob extends PathfinderMob implements JSpecHolder, IFoodData
     public void setAnimation(String animationID, float animationSpeed) {
         entityData.set(ANIMATION_RESET, entityData.get(ANIMATION).equals(animationID));
 
+        if (animationID.isEmpty()) return;
+
         entityData.set(ANIMATION, animationID);
         entityData.set(ANIMATION_SPEED, animationSpeed);
+
+        AzCommand.create(
+                JCraft.BASE_CONTROLLER,
+                animationID,
+                AzPlayBehaviors.PLAY_ONCE,
+                0f,
+                animationSpeed,
+                0f,
+                0f,
+                0f,
+                false
+        ).sendForEntity(this);
     }
 
     /*

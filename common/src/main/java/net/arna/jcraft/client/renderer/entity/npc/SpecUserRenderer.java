@@ -1,24 +1,36 @@
 package net.arna.jcraft.client.renderer.entity.npc;
 
 import lombok.NonNull;
+import mod.azure.azurelib.animation.controller.AzAnimationController;
+import mod.azure.azurelib.animation.controller.AzAnimationControllerContainer;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.spec.SpecUserMob;
 import net.arna.jcraft.client.renderer.entity.AbstractEntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
 
 public class SpecUserRenderer<T extends SpecUserMob> extends AbstractEntityRenderer<T> {
 
     protected static final ResourceLocation GENERIC_ANIMATIONS = JCraft.id("animations/spec/spec_user.animation.json");
 
-    protected ItemStack mainHandItem, offHandItem;
-
-    protected static final String LEFT_HAND = "bipedHandLeft";
-    protected static final String RIGHT_HAND = "bipedHandRight";
-
     public SpecUserRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull ResourceLocation model, final @NonNull ResourceLocation texture) {
-        super(context, () -> new EntityAnimator<>(GENERIC_ANIMATIONS), model, texture);
+        super(context, () -> new SpecUserAnimator<>(GENERIC_ANIMATIONS),
+                b -> b.addRenderLayer(new HandItemsRenderLayer<>()),
+                model,
+                texture
+        );
+    }
+
+    private static class SpecUserAnimator<T extends SpecUserMob> extends EntityAnimator<T> {
+        public SpecUserAnimator(@NonNull ResourceLocation animation) {
+            super(animation);
+        }
+
+        @Override
+        public void registerControllers(@NonNull AzAnimationControllerContainer<T> animationControllerContainer) {
+            super.registerControllers(animationControllerContainer);
+            animationControllerContainer.add(AzAnimationController.builder(this, SpecUserMob.MOVEMENT_CONTROLLER).setTransitionLength(0).build());
+        }
     }
 
     // TODO: armor rendering support
