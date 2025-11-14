@@ -239,7 +239,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         return entityData.get(STATE);
     }
 
-    private boolean isReset() {
+    protected boolean isReset() {
         return entityData.get(RESET);
     }
 
@@ -835,8 +835,25 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         discard();
     }
 
-    // Define idle override
+    /**
+     * The function that is executed when the stand should be idle while having idleOverride set to true.
+     * By default, an idle that is meant for remote stands.
+     */
     public void idleOverride() {
+        if (getCurrentMove() != null) setCurrentMove(null);
+
+        setStandGauge(Mth.clamp(this.getStandGauge() + 0.5f, 0, maxStandGauge));
+
+        if (getRawState() != 0 || isReset()) {
+            if (navigation.isDone() && getDeltaMovement().lengthSqr() < 0.001) { // remote stand movement
+                setRawState(0);
+                boxState(0).playAnimation(getThis());
+                setReset(false);
+            }
+
+            setDistanceOffset(getStandData().getIdleDistance());
+            setRotationOffset(getStandData().getIdleRotation());
+        }
     }
 
     public void cancelMove() {

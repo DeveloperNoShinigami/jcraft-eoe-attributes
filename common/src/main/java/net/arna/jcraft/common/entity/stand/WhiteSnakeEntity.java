@@ -257,6 +257,7 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
     @Override
     public void tick() {
         super.tick();
+        idleOverride = isRemote();
 
         if (!isRemoteAndControllable()) {
             return;
@@ -271,18 +272,21 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
 
             tickRemoteMovement(f, s, jump);
 
-            if (getState() == State.IDLE) { // Replace idle anim
-                if (s > 0) {
-                    setStateNoReset(onGround() ? State.RIGHT : State.RIGHT_DASH);
-                }
-                if (s < 0) {
-                    setStateNoReset(onGround() ? State.LEFT : State.LEFT_DASH);
-                }
-                if (f < 0) {
-                    setStateNoReset(onGround() ? State.BACKWARD : State.BACKWARD_DASH);
-                }
-                if (f > 0) {
-                    setStateNoReset(onGround() ? State.FORWARD : State.FORWARD_DASH);
+            if (getMoveStun() <= 0) {
+                if (f == 0) {
+                    if (s > 0) {
+                        setStateNoReset(onGround() ? State.RIGHT : State.RIGHT_DASH);
+                    }
+                    if (s < 0) {
+                        setStateNoReset(onGround() ? State.LEFT : State.LEFT_DASH);
+                    }
+                } else {
+                    if (f < 0) {
+                        setStateNoReset(onGround() ? State.BACKWARD : State.BACKWARD_DASH);
+                    }
+                    if (f > 0) {
+                        setStateNoReset(onGround() ? State.FORWARD : State.FORWARD_DASH);
+                    }
                 }
             }
         }
@@ -339,8 +343,11 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
             remoteSpeed = userPos.subtract(pos).scale(0.025); // 1/40th so it scales with distance
         }
 
+        if (f == 0 && s == 0 && !jump) {
+            push(-getDeltaMovement().x * 0.4, -getDeltaMovement().y * 0.4, -getDeltaMovement().z * 0.4);
+        }
+
         push(remoteSpeed.x, remoteSpeed.y, remoteSpeed.z);
-        hasImpulse = true;
         hurtMarked = true;
     }
 
@@ -377,14 +384,14 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
         DISC_GIVE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.disc_give", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         UPPERCUT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.uppercut", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
 
-        FORWARD(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.forw", AzPlayBehaviors.LOOP)),
-        BACKWARD(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.back", AzPlayBehaviors.LOOP)),
-        LEFT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.left", AzPlayBehaviors.LOOP)),
-        RIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.right", AzPlayBehaviors.LOOP)),
-        FORWARD_DASH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.fdash", AzPlayBehaviors.LOOP)),
-        BACKWARD_DASH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.bdash", AzPlayBehaviors.LOOP)),
-        LEFT_DASH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.ldash", AzPlayBehaviors.LOOP)),
-        RIGHT_DASH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.rdash", AzPlayBehaviors.LOOP)),
+        FORWARD(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.whitesnake.forw", AzPlayBehaviors.LOOP)),
+        BACKWARD(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.whitesnake.back", AzPlayBehaviors.LOOP)),
+        LEFT(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.whitesnake.left", AzPlayBehaviors.LOOP)),
+        RIGHT(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.whitesnake.right", AzPlayBehaviors.LOOP)),
+        FORWARD_DASH(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.whitesnake.fdash", AzPlayBehaviors.LOOP)),
+        BACKWARD_DASH(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.whitesnake.bdash", AzPlayBehaviors.LOOP)),
+        LEFT_DASH(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.whitesnake.ldash", AzPlayBehaviors.LOOP)),
+        RIGHT_DASH(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.whitesnake.rdash", AzPlayBehaviors.LOOP)),
 
         MELT_YOUR_HEART(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.meltyourheart", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         LIGHT_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME));

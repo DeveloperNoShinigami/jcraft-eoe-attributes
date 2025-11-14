@@ -6,15 +6,19 @@ import mod.azure.azurelib.animation.dispatch.command.AzCommand;
 import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.Attacks;
+import net.arna.jcraft.api.attack.MoveMap;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
-import net.arna.jcraft.api.stand.*;
+import net.arna.jcraft.api.attack.StateContainer;
 import net.arna.jcraft.api.attack.enums.MoveClass;
 import net.arna.jcraft.api.attack.enums.MoveInputType;
-import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.enums.StunType;
-import net.arna.jcraft.api.attack.MoveSet;
-import net.arna.jcraft.api.attack.StateContainer;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
+import net.arna.jcraft.api.component.player.CommonPhComponent;
+import net.arna.jcraft.api.registry.JSoundRegistry;
+import net.arna.jcraft.api.registry.JStandTypeRegistry;
+import net.arna.jcraft.api.registry.JStatusRegistry;
+import net.arna.jcraft.api.stand.*;
 import net.arna.jcraft.common.ai.AttackerBrainInfo;
 import net.arna.jcraft.common.ai.IJAttackerBrain;
 import net.arna.jcraft.common.ai.brain.StandAttackerBrain;
@@ -23,14 +27,10 @@ import net.arna.jcraft.common.attack.moves.purplehaze.PHGroundSlamAttack;
 import net.arna.jcraft.common.attack.moves.purplehaze.PHRekkaAttack;
 import net.arna.jcraft.common.attack.moves.purplehaze.PlayMove;
 import net.arna.jcraft.common.attack.moves.shared.*;
-import net.arna.jcraft.api.component.player.CommonPhComponent;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.api.registry.JSoundRegistry;
-import net.arna.jcraft.api.registry.JStandTypeRegistry;
-import net.arna.jcraft.api.registry.JStatusRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
@@ -348,19 +348,23 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
     @Override
     protected void tickRemoteState(double f, double s, boolean dashing) {
         LivingEntity user = getUserOrThrow();
-        if (getState() == State.IDLE) {
+
+        if (getMoveStun() <= 0) {
             if (JUtils.canAct(user)) {
-                if (s > 0) {
-                    setStateNoReset(dashing ? State.RIGHT : State.RIGHT_DASH);
-                }
-                if (s < 0) {
-                    setStateNoReset(dashing ? State.LEFT : State.LEFT_DASH);
-                }
-                if (f < 0) {
-                    setStateNoReset(dashing ? State.BACKWARD : State.BACKWARD_DASH);
-                }
-                if (f > 0) {
-                    setStateNoReset(dashing ? State.FORWARD : State.FORWARD_DASH);
+                if (f == 0) {
+                    if (s > 0) {
+                        setStateNoReset(onGround() ? State.RIGHT : State.RIGHT_DASH);
+                    }
+                    if (s < 0) {
+                        setStateNoReset(onGround() ? State.LEFT : State.LEFT_DASH);
+                    }
+                } else {
+                    if (f < 0) {
+                        setStateNoReset(onGround() ? State.BACKWARD : State.BACKWARD_DASH);
+                    }
+                    if (f > 0) {
+                        setStateNoReset(onGround() ? State.FORWARD : State.FORWARD_DASH);
+                    }
                 }
             } else {
                 setStateNoReset(State.HURT);
@@ -437,14 +441,14 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
         HURT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.hurt", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         PLAY(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.play", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
 
-        FORWARD(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.forw", AzPlayBehaviors.LOOP)),
-        BACKWARD(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.back", AzPlayBehaviors.LOOP)),
-        LEFT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.left", AzPlayBehaviors.LOOP)),
-        RIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.right", AzPlayBehaviors.LOOP)),
-        FORWARD_DASH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.fdash", AzPlayBehaviors.LOOP)),
-        BACKWARD_DASH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.bdash", AzPlayBehaviors.LOOP)),
-        LEFT_DASH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.ldash", AzPlayBehaviors.LOOP)),
-        RIGHT_DASH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.rdash", AzPlayBehaviors.LOOP)),
+        FORWARD(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.purple_haze.forw", AzPlayBehaviors.LOOP)),
+        BACKWARD(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.purple_haze.back", AzPlayBehaviors.LOOP)),
+        LEFT(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.purple_haze.left", AzPlayBehaviors.LOOP)),
+        RIGHT(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.purple_haze.right", AzPlayBehaviors.LOOP)),
+        FORWARD_DASH(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.purple_haze.fdash", AzPlayBehaviors.LOOP)),
+        BACKWARD_DASH(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.purple_haze.bdash", AzPlayBehaviors.LOOP)),
+        LEFT_DASH(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.purple_haze.ldash", AzPlayBehaviors.LOOP)),
+        RIGHT_DASH(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.purple_haze.rdash", AzPlayBehaviors.LOOP)),
         ;
 
         private final AzCommand animator;

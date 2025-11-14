@@ -312,7 +312,9 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
         super.tick();
 
         final boolean isRemote = isRemote();
+        idleOverride = isRemote;
         setNoGravity(isRemote);
+
         if (!isRemote) {
             return;
         }
@@ -325,18 +327,21 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
 
             tickRemoteMovement(f, s, getRemoteJumpInput(), getRemoteSneakInput());
 
-            if (getState() == State.IDLE && getMoveStun() <= 0) { // Replace idle anim
-                if (s > 0) {
-                    setStateNoReset(State.RIGHT);
-                }
-                if (s < 0) {
-                    setStateNoReset(State.LEFT);
-                }
-                if (f < 0) {
-                    setStateNoReset(State.BACKWARD);
-                }
-                if (f > 0) {
-                    setStateNoReset(State.FORWARD);
+            if (getMoveStun() <= 0) {
+                if (f == 0) {
+                    if (s > 0) {
+                        setStateNoReset(State.RIGHT);
+                    }
+                    if (s < 0) {
+                        setStateNoReset(State.LEFT);
+                    }
+                } else {
+                    if (f < 0) {
+                        setStateNoReset(State.BACKWARD);
+                    }
+                    if (f > 0) {
+                        setStateNoReset(State.FORWARD);
+                    }
                 }
             }
         }
@@ -371,12 +376,14 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
 
         remoteSpeed = remoteSpeed.scale(dragMult);
 
+        final double stabilization = (f == 0 && s == 0 && !jump && !sneak) ? 0.7 : 0.2;
+
         final Vec3 userPos = getUserOrThrow().position();
         if (pos.add(remoteSpeed).distanceToSqr(userPos) > 30 * 30) {
             remoteSpeed = userPos.subtract(pos).scale(0.025); // 1/40th so it scales with distance
         }
 
-        push(-getDeltaMovement().x * 0.2, -getDeltaMovement().y * 0.2, -getDeltaMovement().z * 0.2);
+        push(-getDeltaMovement().x * stabilization, -getDeltaMovement().y * stabilization, -getDeltaMovement().z * stabilization);
         push(remoteSpeed.x, remoteSpeed.y, remoteSpeed.z);
         hasImpulse = true;
         hurtMarked = true;
@@ -410,10 +417,10 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
 
         UPPERCUT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.hg.uppercut", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
 
-        FORWARD(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.hg.forw", AzPlayBehaviors.LOOP)),
-        BACKWARD(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.hg.back", AzPlayBehaviors.LOOP)),
-        LEFT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.hg.left", AzPlayBehaviors.LOOP)),
-        RIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.hg.right", AzPlayBehaviors.LOOP));
+        FORWARD(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.hg.forw", AzPlayBehaviors.LOOP)),
+        BACKWARD(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.hg.back", AzPlayBehaviors.LOOP)),
+        LEFT(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.hg.left", AzPlayBehaviors.LOOP)),
+        RIGHT(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.hg.right", AzPlayBehaviors.LOOP));
 
         private final AzCommand animator;
 

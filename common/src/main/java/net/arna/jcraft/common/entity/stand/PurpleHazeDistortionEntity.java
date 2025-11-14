@@ -142,7 +142,7 @@ public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<P
 
     @Override
     protected void tickRemoteState(double f, double s, boolean dashing) {
-        if (getState() == State.IDLE) { // Replace idle anim
+        if (getMoveStun() <= 0) { // Replace idle anim
             if (s > 0) {
                 setStateNoReset(dashing ? State.RIGHT : State.RIGHT_DASH);
             }
@@ -189,14 +189,14 @@ public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<P
         BACKHAND_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.backhand_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         LIGHT_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
 
-        FORWARD(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.forw", AzPlayBehaviors.LOOP)),
-        BACKWARD(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.back", AzPlayBehaviors.LOOP)),
-        LEFT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.left", AzPlayBehaviors.LOOP)),
-        RIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.right", AzPlayBehaviors.LOOP)),
-        FORWARD_DASH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.fdash", AzPlayBehaviors.LOOP)),
-        BACKWARD_DASH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.bdash", AzPlayBehaviors.LOOP)),
-        LEFT_DASH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.ldash", AzPlayBehaviors.LOOP)),
-        RIGHT_DASH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.purple_haze.rdash", AzPlayBehaviors.LOOP)),
+        FORWARD(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.purple_haze.forw", AzPlayBehaviors.LOOP)),
+        BACKWARD(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.purple_haze.back", AzPlayBehaviors.LOOP)),
+        LEFT(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.purple_haze.left", AzPlayBehaviors.LOOP)),
+        RIGHT(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.purple_haze.right", AzPlayBehaviors.LOOP)),
+        FORWARD_DASH(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.purple_haze.fdash", AzPlayBehaviors.LOOP)),
+        BACKWARD_DASH(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.purple_haze.bdash", AzPlayBehaviors.LOOP)),
+        LEFT_DASH(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.purple_haze.ldash", AzPlayBehaviors.LOOP)),
+        RIGHT_DASH(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.purple_haze.rdash", AzPlayBehaviors.LOOP)),
         ;
 
         private final AzCommand animator;
