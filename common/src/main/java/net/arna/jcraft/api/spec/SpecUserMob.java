@@ -2,6 +2,7 @@ package net.arna.jcraft.api.spec;
 
 import mod.azure.azurelib.animation.dispatch.command.AzCommand;
 import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
+import mod.azure.azurelib.util.MoveAnalysis;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.component.player.CommonSpecComponent;
 import net.arna.jcraft.api.registry.JStandTypeRegistry;
@@ -85,10 +86,6 @@ public class SpecUserMob extends PathfinderMob implements JSpecHolder, IFoodData
             setAnimation("", 1.0f);
         }
     }
-
-    private static final AzCommand IDLE = AzCommand.create(MOVEMENT_CONTROLLER, "misc.idle", AzPlayBehaviors.LOOP);
-    private static final AzCommand WALK = AzCommand.create(MOVEMENT_CONTROLLER, "move.walk", AzPlayBehaviors.LOOP);
-    private static final AzCommand RUN = AzCommand.create(MOVEMENT_CONTROLLER, "move.run", AzPlayBehaviors.LOOP);
 
     protected int getInitialVariant() { return 0; }
 
@@ -198,10 +195,12 @@ public class SpecUserMob extends PathfinderMob implements JSpecHolder, IFoodData
     public void setAnimation(String animationID, float animationSpeed) {
         entityData.set(ANIMATION_RESET, entityData.get(ANIMATION).equals(animationID));
 
-        if (animationID.isEmpty()) return;
-
         entityData.set(ANIMATION, animationID);
         entityData.set(ANIMATION_SPEED, animationSpeed);
+
+        if (animationID.isEmpty()) {
+            return;
+        }
 
         AzCommand.create(
                 JCraft.BASE_CONTROLLER,
@@ -214,6 +213,37 @@ public class SpecUserMob extends PathfinderMob implements JSpecHolder, IFoodData
                 0f,
                 false
         ).sendForEntity(this);
+    }
+
+    private final MoveAnalysis moveAnalysis = new MoveAnalysis(this);
+
+    private static final AzCommand IDLE = AzCommand.create(MOVEMENT_CONTROLLER, "misc.idle", AzPlayBehaviors.LOOP);
+    private static final AzCommand WALK = AzCommand.create(MOVEMENT_CONTROLLER, "move.walk", AzPlayBehaviors.LOOP);
+    private static final AzCommand RUN = AzCommand.create(MOVEMENT_CONTROLLER, "move.run", AzPlayBehaviors.LOOP);
+
+    public void updateAnimations() {
+        //TODO: uncomment this once the MOVEMENT_CONTROLLER can be made additive
+        /*
+        boolean isMovingOnGround = moveAnalysis.isMovingHorizontally() && onGround();
+
+        if (this.isDeadOrDying()) {
+            return;
+        }
+
+        if (isMovingOnGround) {
+            if (this.isAggressive() && !this.swinging) {
+                RUN.sendForEntity(this);
+            } else {
+                WALK.sendForEntity(this);
+            }
+            return;
+        }
+
+        if (!this.isAggressive()) {
+            IDLE.sendForEntity(this);
+        }
+
+         */
     }
 
     /*

@@ -3,11 +3,14 @@ package net.arna.jcraft.client.renderer.entity.npc;
 import lombok.NonNull;
 import mod.azure.azurelib.animation.controller.AzAnimationController;
 import mod.azure.azurelib.animation.controller.AzAnimationControllerContainer;
+import mod.azure.azurelib.model.AzBakedModel;
+import mod.azure.azurelib.model.AzBone;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.spec.SpecUserMob;
 import net.arna.jcraft.client.renderer.entity.AbstractEntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 
 public class SpecUserRenderer<T extends SpecUserMob> extends AbstractEntityRenderer<T> {
 
@@ -15,7 +18,12 @@ public class SpecUserRenderer<T extends SpecUserMob> extends AbstractEntityRende
 
     public SpecUserRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull ResourceLocation model, final @NonNull ResourceLocation texture) {
         super(context, () -> new SpecUserAnimator<>(GENERIC_ANIMATIONS),
-                b -> b.addRenderLayer(new HandItemsRenderLayer<>()),
+                b -> b
+                        .addRenderLayer(new HandItemsRenderLayer<>())
+                        .setRenderEntry((pc) -> {
+                            pc.animatable().updateAnimations();
+                            return pc;
+                        }),
                 model,
                 texture
         );
@@ -30,6 +38,24 @@ public class SpecUserRenderer<T extends SpecUserMob> extends AbstractEntityRende
         public void registerControllers(@NonNull AzAnimationControllerContainer<T> animationControllerContainer) {
             super.registerControllers(animationControllerContainer);
             animationControllerContainer.add(AzAnimationController.builder(this, SpecUserMob.MOVEMENT_CONTROLLER).setTransitionLength(0).build());
+        }
+
+        @Override
+        public void setCustomAnimations(final T animatable, final float partialTicks) {
+            final AzBakedModel model = context().boneCache().getBakedModel();
+            final AzBone head = model.getBoneOrNull("head");
+
+            if (head != null) {
+                head.setRotX(-animatable.getXRot() * Mth.DEG_TO_RAD);
+                head.setRotY((animatable.getYRot() - animatable.getViewYRot(partialTicks)) * Mth.DEG_TO_RAD);
+            }
+
+            /*
+            final AzBone leftLeg = model.getBoneOrNull("leftLeg");
+            final AzBone rightLeg = model.getBoneOrNull("rightLeg");
+            final AzBone leftArm = model.getBoneOrNull("leftArm");
+            final AzBone rightArm = model.getBoneOrNull("rightArm");
+             */
         }
     }
 
