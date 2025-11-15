@@ -398,13 +398,13 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
 
     // Animation code
     public enum State implements StandAnimationState<HGEntity> {
-        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.hg.idle", AzPlayBehaviors.LOOP)),
+        IDLE(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.hg.idle", AzPlayBehaviors.LOOP)),
         LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.hg.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.hg.block", AzPlayBehaviors.LOOP)),
         LIGHT_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.hg.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         CROUCHING_LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.hg.crouching_light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         CROUCHING_LIGHT_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.hg.crouching_light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         AIR_LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.hg.air_light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.hg.block", AzPlayBehaviors.LOOP)),
         SENDOFF(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.hg.sendoff", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         BARRAGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.hg.barrage", AzPlayBehaviors.LOOP)),
         NET_SET(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.hg.net_place", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),

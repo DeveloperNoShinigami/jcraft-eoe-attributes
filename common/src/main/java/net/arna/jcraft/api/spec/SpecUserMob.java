@@ -62,7 +62,10 @@ public class SpecUserMob extends PathfinderMob implements JSpecHolder, IFoodData
 
         super.tick();
 
-        if (level().isClientSide()) return;
+        if (level().isClientSide()) {
+            moveAnalysis.update();
+            return;
+        }
 
         entityData.set(ANIMATION_RESET, false);
 
@@ -222,8 +225,6 @@ public class SpecUserMob extends PathfinderMob implements JSpecHolder, IFoodData
     private static final AzCommand RUN = AzCommand.create(MOVEMENT_CONTROLLER, "move.run", AzPlayBehaviors.LOOP);
 
     public void updateAnimations() {
-        //TODO: uncomment this once the MOVEMENT_CONTROLLER can be made additive
-        /*
         boolean isMovingOnGround = moveAnalysis.isMovingHorizontally() && onGround();
 
         if (this.isDeadOrDying()) {
@@ -242,8 +243,6 @@ public class SpecUserMob extends PathfinderMob implements JSpecHolder, IFoodData
         if (!this.isAggressive()) {
             IDLE.sendForEntity(this);
         }
-
-         */
     }
 
     /*

@@ -276,9 +276,9 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
 
     // Animation code
     public enum State implements StandAnimationState<ShadowTheWorldEntity> {
-        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.shadow_the_world.idle", AzPlayBehaviors.LOOP)),
+        IDLE(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.shadow_the_world.idle", AzPlayBehaviors.LOOP)),
         LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.shadow_the_world.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.shadow_the_world.block", AzPlayBehaviors.LOOP)),
+        BLOCK(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.shadow_the_world.block", AzPlayBehaviors.LOOP)),
         LUNGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.shadow_the_world.lunge", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         GUARD_CANCEL(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.shadow_the_world.guard_cancel", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         THREE_HIT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.shadow_the_world.3hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),

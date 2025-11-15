@@ -3,6 +3,8 @@ package net.arna.jcraft.common.entity.stand;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
 import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import mod.azure.azurelib.animation.dispatch.command.action.AzAction;
+import mod.azure.azurelib.animation.dispatch.command.action.impl.controller.AzControllerSetAnimationSpeedAction;
 import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.Attacks;
@@ -40,6 +42,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Silver_Chariot">Silver Chariot</a>.
@@ -476,10 +481,9 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
 
     // Animation code
     public enum State implements StandAnimationState<SilverChariotEntity> {
-        // TODO reenable armorless and possessed idle
-        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.idle", AzPlayBehaviors.LOOP)),
+        IDLE(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.silverchariot.idle", AzPlayBehaviors.LOOP)),
         STAB(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.stab", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.block", AzPlayBehaviors.LOOP)),
+        BLOCK(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.silverchariot.block", AzPlayBehaviors.LOOP)),
         HEAVY(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         BARRAGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.barrage", AzPlayBehaviors.LOOP)),
         SPIN(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.spin", AzPlayBehaviors.LOOP)),
@@ -499,7 +503,11 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
         LAST_SHOT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.lastshot", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         CIRCLE_CHARGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.circle_charge", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         CIRCLE_SLASH(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.circle_slash", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        LIGHT_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
+        LIGHT_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+
+        POSSESSED_IDLE(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.silverchariot.idle_possessed", AzPlayBehaviors.LOOP)),
+        ARMORLESS_IDLE(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.silverchariot.idle_armorless", AzPlayBehaviors.LOOP)),
+        ;
 
         private final AzCommand animator;
 
@@ -509,10 +517,52 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
 
         @Override
         public void playAnimation(SilverChariotEntity attacker) {
+            final Mode mode = attacker.getMode();
+
+            if (this == IDLE) {
+                switch (mode) {
+                    case REGULAR -> IDLE.animator.sendForEntity(attacker);
+                    case ARMORLESS -> ARMORLESS_IDLE.animator.sendForEntity(attacker);
+                    case POSSESSED -> POSSESSED_IDLE.animator.sendForEntity(attacker);
+                }
+
+                return;
+            }
+
+            if (mode == Mode.ARMORLESS) {
+                doubleSpeedAnimations[ordinal()].sendForEntity(attacker);
+                return;
+            }
+
             animator.sendForEntity(attacker);
         }
 
-        // TODO fix animation speed on armorless
+        private static final State[] allStates = State.values();
+        private static final AzCommand[] doubleSpeedAnimations = new AzCommand[allStates.length];
+
+        static {
+            for (int i = 0; i < allStates.length; i++) {
+                final AzCommand original = allStates[i].animator;
+
+                final List<AzAction> modifiedActions = new ArrayList<>();
+
+                for (final AzAction action : original.actions()) {
+                    if (action instanceof AzControllerSetAnimationSpeedAction speedAction) { // Should only happen once
+                        final AzControllerSetAnimationSpeedAction adjustedSpeedAction =
+                                new AzControllerSetAnimationSpeedAction(
+                                        speedAction.controllerName(),
+                                speedAction.animationSpeed() * 1.33
+                                );
+
+                        modifiedActions.add(adjustedSpeedAction);
+                    } else {
+                        modifiedActions.add(action);
+                    }
+                }
+
+                doubleSpeedAnimations[i] = new AzCommand(modifiedActions);
+            }
+        }
     }
 
     @Override

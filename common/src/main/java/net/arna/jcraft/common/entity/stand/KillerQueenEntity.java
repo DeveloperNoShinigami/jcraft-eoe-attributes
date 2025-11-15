@@ -139,9 +139,9 @@ public final class KillerQueenEntity extends AbstractKillerQueenEntity<KillerQue
 
     // Animations
     public enum State implements StandAnimationState<KillerQueenEntity> {
-        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.killerqueen.idle", AzPlayBehaviors.LOOP)),
+        IDLE(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.killerqueen.idle", AzPlayBehaviors.LOOP)),
         LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.killerqueen.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.killerqueen.block", AzPlayBehaviors.LOOP)),
+        BLOCK(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.killerqueen.block", AzPlayBehaviors.LOOP)),
         HEAVY(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.killerqueen.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         BARRAGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.killerqueen.barrage", AzPlayBehaviors.LOOP)),
         DETONATE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.killerqueen.detonate", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),

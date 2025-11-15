@@ -185,8 +185,7 @@ public abstract class AbstractEntityRenderer<T extends Entity> extends AzEntityR
         @Override
         protected void renderItemForBone(final AzRendererPipelineContext<UUID, T> context, final AzBone bone, final ItemStack itemStack, final T animatable) {
             final PoseStack poseStack = context.poseStack();
-            poseStack.mulPose(Axis.XP.rotationDegrees(bone.getRotX() - 90f));
-            poseStack.mulPose(Axis.ZP.rotationDegrees(bone.getRotZ() - 90f));
+
             if (itemStack == mainHandItem) {
                 poseStack.mulPose(Axis.XP.rotationDegrees(-90f));
                 if (itemStack.getItem() instanceof ShieldItem) {
@@ -199,6 +198,7 @@ public abstract class AbstractEntityRenderer<T extends Entity> extends AzEntityR
                     poseStack.mulPose(Axis.YP.rotationDegrees(180));
                 }
             }
+
             super.renderItemForBone(context, bone, itemStack, animatable);
         }
     }

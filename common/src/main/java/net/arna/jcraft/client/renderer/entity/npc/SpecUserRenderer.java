@@ -36,8 +36,8 @@ public class SpecUserRenderer<T extends SpecUserMob> extends AbstractEntityRende
 
         @Override
         public void registerControllers(@NonNull AzAnimationControllerContainer<T> animationControllerContainer) {
-            super.registerControllers(animationControllerContainer);
             animationControllerContainer.add(AzAnimationController.builder(this, SpecUserMob.MOVEMENT_CONTROLLER).setTransitionLength(0).build());
+            animationControllerContainer.add(AzAnimationController.builder(this, JCraft.BASE_CONTROLLER).setTransitionLength(0).build());
         }
 
         @Override

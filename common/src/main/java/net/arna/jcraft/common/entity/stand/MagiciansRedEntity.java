@@ -303,9 +303,9 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
 
     // Animation code
     public enum State implements StandAnimationState<MagiciansRedEntity> {
-        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.mr.idle", AzPlayBehaviors.LOOP)),
+        IDLE(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.mr.idle", AzPlayBehaviors.LOOP)),
         LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.mr.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.mr.block", AzPlayBehaviors.LOOP)),
+        BLOCK(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.mr.block", AzPlayBehaviors.LOOP)),
         HEAVY(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.mr.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         BARRAGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.mr.barrage", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         CROSSFIRE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.mr.crossfire", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),

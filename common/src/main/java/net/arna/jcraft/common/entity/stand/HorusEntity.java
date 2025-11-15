@@ -324,8 +324,8 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
 
     // Animation code
     public enum State implements StandAnimationState<HorusEntity> {
-        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.horus.idle", AzPlayBehaviors.LOOP)),
-        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.horus.block", AzPlayBehaviors.LOOP)),
+        IDLE(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.horus.idle", AzPlayBehaviors.LOOP)),
+        BLOCK(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.horus.block", AzPlayBehaviors.LOOP)),
         LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.horus.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         LIGHT_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.horus.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         LIGHT_LOW(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.horus.light_low", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),

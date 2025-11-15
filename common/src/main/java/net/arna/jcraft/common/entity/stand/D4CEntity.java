@@ -257,9 +257,9 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
 
     // Animation code
     public enum State implements StandAnimationState<D4CEntity> {
-        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.d4c.idle", AzPlayBehaviors.LOOP)),
+        IDLE(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.d4c.idle", AzPlayBehaviors.LOOP)),
         LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.d4c.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.d4c.block", AzPlayBehaviors.LOOP)),
+        BLOCK(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.d4c.block", AzPlayBehaviors.LOOP)),
         HEAVY(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.d4c.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         BARRAGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.d4c.barrage", AzPlayBehaviors.LOOP)),
         DIM_HOP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.d4c.dimhop", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),

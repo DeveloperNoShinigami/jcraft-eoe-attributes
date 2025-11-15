@@ -390,9 +390,9 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
 
     // Animations
     public enum State implements StandAnimationState<KingCrimsonEntity> {
-        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.kingcrimson.idle", AzPlayBehaviors.LOOP)),
+        IDLE(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.kingcrimson.idle", AzPlayBehaviors.LOOP)),
         DUAL_CHOP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.kingcrimson.dual_chop", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.kingcrimson.block", AzPlayBehaviors.LOOP)),
+        BLOCK(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.kingcrimson.block", AzPlayBehaviors.LOOP)),
         OVERHEAD(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.kingcrimson.overhead", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         DONUT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.kingcrimson.donut", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         BARRAGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.kingcrimson.barrage", AzPlayBehaviors.LOOP)),

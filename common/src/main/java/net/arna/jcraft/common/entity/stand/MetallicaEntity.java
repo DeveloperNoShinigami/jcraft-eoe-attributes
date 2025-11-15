@@ -507,9 +507,9 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
 
     // Animations
     public enum State implements StandAnimationState<MetallicaEntity> {
-        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.metallica.idle", AzPlayBehaviors.LOOP)),
-        NONE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.metallica.idle", AzPlayBehaviors.LOOP)),
-        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.metallica.block", AzPlayBehaviors.LOOP)),
+        IDLE(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.metallica.idle", AzPlayBehaviors.LOOP)),
+        NONE(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.metallica.idle", AzPlayBehaviors.LOOP)),
+        BLOCK(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.metallica.block", AzPlayBehaviors.LOOP)),
         LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.metallica.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         LIGHT_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.metallica.light2", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         LIGHT_FINAL(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.metallica.light3", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),

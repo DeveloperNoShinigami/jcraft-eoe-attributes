@@ -681,11 +681,11 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
 
     // Animation code
     public enum State implements StandAnimationState<CreamEntity> {
-        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.idle", AzPlayBehaviors.LOOP)),
+        IDLE(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.cream.idle", AzPlayBehaviors.LOOP)),
         LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         LIGHT_FOLLOWUP(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         BALL_LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.balllight", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.block", AzPlayBehaviors.LOOP)),
+        BLOCK(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.cream.block", AzPlayBehaviors.LOOP)),
         BALL_BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.ballblock", AzPlayBehaviors.LOOP)),
         HEAVY(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         BALL_HEAVY(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.ballheavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
@@ -702,8 +702,8 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
         DESTROY(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.destroy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         BITE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.bite", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
 
-        VOID_IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.voididle", AzPlayBehaviors.LOOP)),
-        HALF_BALL_IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.cream.ballidle", AzPlayBehaviors.LOOP)),
+        VOID_IDLE(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.cream.voididle", AzPlayBehaviors.LOOP)),
+        HALF_BALL_IDLE(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.cream.ballidle", AzPlayBehaviors.LOOP)),
 
         ;
 
