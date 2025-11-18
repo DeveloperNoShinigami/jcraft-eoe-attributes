@@ -8,7 +8,7 @@ public class GiornoJacketRenderer extends ArmorRenderer {
     public static final String ID = "giornojacket";
 
     public GiornoJacketRenderer() {
-        super(() -> new ArmorAnimator(ID), new GiornoJacketBoneContext(), ID);
+        super(() -> new FlutteringArmorAnimator(ID), new GiornoJacketBoneContext(), ID);
     }
 
     protected static class GiornoJacketBoneContext extends AzArmorBoneContext {

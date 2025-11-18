@@ -153,6 +153,13 @@ public class ArmorRenderer extends AzArmorRenderer {
         return () -> new ArmorRenderer(() -> new ArmorAnimator(id), id);
     }
 
+    /**
+     * Returns a supplier for a simple fluttering {@link ArmorRenderer}, only identified by its ID.
+     */
+    public static Supplier<AzArmorRenderer> flutter(final String id) {
+        return () -> new ArmorRenderer(() -> new FlutteringArmorAnimator(id), id);
+    }
+
     /*
     public JArmor(final GeoModel<T> model) {
         super(model);
@@ -271,5 +278,30 @@ public class ArmorRenderer extends AzArmorRenderer {
         public @NotNull ResourceLocation getAnimationLocation(final @NonNull ItemStack animatable) {
             return animation;
         }
+    }
+
+    public static class FlutteringArmorAnimator extends ArmorAnimator {
+
+        /**
+         * Constructs a fluttering animator with the given animation path.
+         */
+        public FlutteringArmorAnimator(final @NonNull ResourceLocation animation) {
+            super(animation);
+        }
+
+        /**
+         * Constructs a fluttering animator with the given ID.
+         * <p>
+         * Resulting animation path will be equivalent to <code>JCraft.id("animations/" + id + ".animation.json")</code>
+         */
+        public FlutteringArmorAnimator(final @NonNull String id) {
+            super(id);
+        }
+
+        @Override
+        public void registerControllers(final @NonNull AzAnimationControllerContainer<ItemStack> animationControllerContainer) {
+            animationControllerContainer.add(AzAnimationController.builder(this, JCraft.BASE_CONTROLLER).setTransitionLength(10).build());
+        }
+
     }
 }

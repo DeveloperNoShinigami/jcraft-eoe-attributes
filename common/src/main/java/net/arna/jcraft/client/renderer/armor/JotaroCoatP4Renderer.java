@@ -9,7 +9,7 @@ public class JotaroCoatP4Renderer extends ArmorRenderer {
     public static final String ID = "jotarocoatp4";
 
     public JotaroCoatP4Renderer() {
-        super(() -> new ArmorAnimator(ID), new JotaroCoatP4BoneContext(), ID);
+        super(() -> new FlutteringArmorAnimator(ID), new JotaroCoatP4BoneContext(), ID);
     }
 
     protected static class JotaroCoatP4BoneContext extends AzArmorBoneContext {

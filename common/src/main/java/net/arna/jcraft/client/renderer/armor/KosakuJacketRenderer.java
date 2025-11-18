@@ -10,6 +10,6 @@ public class KosakuJacketRenderer extends ArmorRenderer{
     public static final ResourceLocation TEXTURE = JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID));
 
     public KosakuJacketRenderer() {
-        super(() -> new ArmorAnimator(ID), MODEL, TEXTURE);
+        super(() -> new FlutteringArmorAnimator(ID), MODEL, TEXTURE);
     }
 }

@@ -9,7 +9,7 @@ public class PucciRobeRenderer extends ArmorRenderer {
     public static final String ID = "puccirobe";
 
     public PucciRobeRenderer() {
-        super(() -> new ArmorAnimator(ID), new PucciRobeBoneContext(), ID);
+        super(() -> new FlutteringArmorAnimator(ID), new PucciRobeBoneContext(), ID);
     }
 
     public static class PucciRobeBoneContext extends AzArmorBoneContext {

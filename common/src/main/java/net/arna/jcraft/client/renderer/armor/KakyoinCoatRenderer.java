@@ -9,7 +9,7 @@ public class KakyoinCoatRenderer extends ArmorRenderer {
     public static final String ID = "kakyoinshirt";
 
     public KakyoinCoatRenderer() {
-        super(() -> new ArmorAnimator(ID), new KakyoinCoatBoneContext(), ID);
+        super(() -> new FlutteringArmorAnimator(ID), new KakyoinCoatBoneContext(), ID);
     }
 
     protected static class KakyoinCoatBoneContext extends AzArmorBoneContext {

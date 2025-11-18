@@ -107,11 +107,11 @@ public class JCraftClient {
         PoseModifiers.register();
 
         AzArmorRendererRegistry.register(
-                DiavoloArmorRenderer::new,
+                ArmorRenderer.simple("diavoloclothes"),
                 JItemRegistry.DIAVOLO_WIG.get(),
                 JItemRegistry.DIAVOLO_PANTS.get(),
                 JItemRegistry.DIAVOLO_BOOTS.get());
-        AzArmorRendererRegistry.register(ArmorRenderer.simple("diavoloshirt"), JItemRegistry.DIAVOLO_SHIRT.get());
+        AzArmorRendererRegistry.register(ArmorRenderer.flutter("diavoloshirt"), JItemRegistry.DIAVOLO_SHIRT.get());
         AzArmorRendererRegistry.register(
                 ArmorRenderer.simple("diegooutfit"),
                 JItemRegistry.DIEGO_HAT.get(),
@@ -119,7 +119,7 @@ public class JCraftClient {
                 JItemRegistry.DIEGO_PANTS.get(),
                 JItemRegistry.DIEGO_BOOTS.get());
         AzArmorRendererRegistry.register(
-                DIOJacketRenderer::new,
+                ArmorRenderer.flutter("diojacket"),
                 JItemRegistry.DIO_HEADBAND.get(),
                 JItemRegistry.DIO_JACKET.get());
         AzArmorRendererRegistry.register(

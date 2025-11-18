@@ -9,6 +9,6 @@ public class FinalKiraJacketRenderer extends ArmorRenderer {
     public static final ResourceLocation TEXTURE = JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID));
 
     public FinalKiraJacketRenderer() {
-        super(() -> new ArmorRenderer.ArmorAnimator(ID), KosakuJacketRenderer.MODEL, TEXTURE);
+        super(() -> new ArmorRenderer.FlutteringArmorAnimator(ID), KosakuJacketRenderer.MODEL, TEXTURE);
     }
 }
