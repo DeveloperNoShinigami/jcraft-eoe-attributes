@@ -550,6 +550,11 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
         return entityData.get(SCALE);
     }
 
+    @Override
+    public float getScale() {
+        return entityData.get(SCALE);
+    }
+
     public float getScale(float tickDelta) {
         return Mth.lerp(tickDelta, prevScale, curScale);
     }

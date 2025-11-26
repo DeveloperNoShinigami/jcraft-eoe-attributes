@@ -44,7 +44,7 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
                         .setModelRenderer(StandEntityModelRenderer::new)
                         .setRenderType(renderType())
                         .setPrerenderEntry(preRenderEntry())
-                        .setRenderEntry(renderEntry())
+                        // .setRenderEntry(renderEntry())
         ).build(), context, type.getId().getPath());
     }
 
@@ -103,6 +103,10 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
             float a = getAlpha(animatable, pc.partialTick());
             a *= pc.alpha();
 
+            if (animatable.isPlaySummonAnim() && animatable.getMoveStun() <= 0) {
+                StandEntity.SUMMON_ANIMATION.sendForEntity(animatable);
+            }
+
             if (a > 0.01f) {
                 pc.setAlpha(a);
             }
@@ -111,17 +115,19 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
         };
     }
 
+    /*
     private static @NonNull <T extends StandEntity<?,?>> Function<AzRendererPipelineContext<UUID, T>, AzRendererPipelineContext<UUID, T>> renderEntry() {
         return pc -> {
             final var animatable = pc.animatable();
 
-            if (animatable.isPlaySummonAnim()) {
+            if (animatable.isPlaySummonAnim() && animatable.getMoveStun() <= 0) {
                 StandEntity.SUMMON_ANIMATION.sendForEntity(animatable);
             }
 
             return pc;
         };
     }
+     */
 
     public static boolean standIsFirstPersonViewers(final StandEntity<?, ?> stand) {
         final Minecraft mcClient = Minecraft.getInstance();

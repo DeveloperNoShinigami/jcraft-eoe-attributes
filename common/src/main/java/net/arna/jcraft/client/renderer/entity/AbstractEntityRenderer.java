@@ -23,6 +23,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 import java.util.function.Function;
@@ -144,7 +145,7 @@ public abstract class AbstractEntityRenderer<T extends Entity> extends AzEntityR
         }
 
         @Override
-        public @NotNull ResourceLocation getAnimationLocation(final @NonNull T animatable) {
+        public @NotNull ResourceLocation getAnimationLocation(@Nullable final T animatable) {
             return animation;
         }
     }
