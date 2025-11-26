@@ -1,6 +1,9 @@
 package net.arna.jcraft.common.entity.projectile;
 
 import lombok.NonNull;
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.entity.stand.MagiciansRedEntity;
@@ -156,6 +159,8 @@ public class MeteorProjectile extends AbstractArrow {
         super.tick();
 
         if (level().isClientSide()) {
+            if (tickCount == 1) START.sendForEntity(this);
+
             final Vec3 vel = getDeltaMovement();
             level().addParticle(
                     getSkin() == 2 ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
@@ -208,6 +213,8 @@ public class MeteorProjectile extends AbstractArrow {
                         false, 10, JDamageSources.create(level(), DamageTypes.ON_FIRE), owner, CommonHitPropertyComponent.HitAnimation.LAUNCH);
             }
         }
+
+        EXPLODE.sendForEntity(this);
     }
 
     @Override
@@ -215,32 +222,22 @@ public class MeteorProjectile extends AbstractArrow {
         return true;
     }
 
-    // Animations
-    /*
-    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
-
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "controller", 1, this::predicate));
-    }
-
-    private static final RawAnimation EXPLODE = RawAnimation.begin().thenPlayAndHold("animation.meteor.explode");
-    private static final RawAnimation IDLE = RawAnimation.begin()
-            .thenPlay("animation.meteor.spawn")
-            .thenLoop("animation.meteor.idle");
-    private PlayState predicate(AnimationState<GeoAnimatable> state) {
-        if (inGround) {
-            if (ticksInGround == 1) {
-                state.getController().setAnimation(EXPLODE);
-            }
-        } else {
-            state.getController().setAnimation(IDLE);
-        }
-        return PlayState.CONTINUE;
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return cache;
-    }*/
+    private static final AzCommand EXPLODE = AzCommand.create(JCraft.BASE_CONTROLLER, "animation.meteor.explode");
+    public static final AzCommand START = AzCommand.controllerBuilder().
+            playSequence(
+                    JCraft.BASE_CONTROLLER,
+                    sequenceBuilder -> sequenceBuilder.queue(
+                            "animation.meteor.spawn",
+                            props -> props.withPlayBehavior(AzPlayBehaviors.PLAY_ONCE)
+                    ).queue(
+                            "animation.meteor.idle",
+                            props -> props.withPlayBehavior(AzPlayBehaviors.LOOP)
+                    )
+            )
+            .setFreezeTickOffset(JCraft.BASE_CONTROLLER, 0)
+            .setStartTickOffset(JCraft.BASE_CONTROLLER, 0)
+            .setSpeed(JCraft.BASE_CONTROLLER, 1)
+            .setRepeatAmount(JCraft.BASE_CONTROLLER, 0)
+            .setReverseAnimation(JCraft.BASE_CONTROLLER, false)
+            .build();
 }

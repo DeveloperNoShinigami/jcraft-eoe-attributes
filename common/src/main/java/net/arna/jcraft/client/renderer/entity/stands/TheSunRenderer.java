@@ -18,9 +18,15 @@ public class TheSunRenderer extends StandEntityRenderer<TheSunEntity> {
 
     public TheSunRenderer(final @NonNull EntityRendererProvider.Context context) {
         super(context, b -> b
-                .addRenderLayer(new SunGlowLayer())
-                //TODO: translucent layer that isn't layered over and has no shading
-                .setRenderType(renderType(RenderType::dragonExplosionAlpha)),
+                        .setPrerenderEntry((ctx) -> {
+                            // TODO: there used to be an isReRender check; we need a replacement
+                            final float scale = ctx.animatable().getRawScale();
+                            ctx.poseStack().scale(scale, scale, scale);
+                            return ctx;
+                        })
+                        .addRenderLayer(new SunGlowLayer())
+                        //TODO: translucent layer that isn't layered over and has no shading
+                        .setRenderType(renderType(RenderType::dragonExplosionAlpha)),
                 JStandTypeRegistry.THE_SUN.get(), false, false, 0f, 0f, 90f);
     }
 
@@ -33,14 +39,4 @@ public class TheSunRenderer extends StandEntityRenderer<TheSunEntity> {
     protected int getSkyLightLevel(final @NonNull TheSunEntity entity, final @NonNull BlockPos pos) {
         return 15;
     }
-
-    /*@Override
-    public void preRender(final PoseStack poseStack, final TheSunEntity animatable, final BakedGeoModel model, final MultiBufferSource bufferSource, final VertexConsumer buffer, final boolean isReRender, final float partialTick, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha) {
-        if (!isReRender) {
-            final float scale = animatable.getScale(partialTick);
-            poseStack.scale(scale, scale, scale);
-        }
-
-        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-    }*/
 }

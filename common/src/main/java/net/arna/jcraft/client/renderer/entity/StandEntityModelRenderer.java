@@ -79,7 +79,7 @@ public class StandEntityModelRenderer<T extends StandEntity<?, ?>> extends AzEnt
     private static <T extends StandEntity<?, ?>> float getStandLerpRot(final @NonNull T animatable, final float partialTick) {
         final LivingEntity user = animatable.getUser();
         final boolean hasUser = user != null;
-        if (hasUser) {
+        if (hasUser && !animatable.isRemote()) {
             return Mth.rotLerp(
                     partialTick,
                     user.yHeadRotO,

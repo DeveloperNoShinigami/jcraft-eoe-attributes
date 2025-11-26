@@ -1,6 +1,7 @@
 package net.arna.jcraft.common.entity.projectile;
 
 import lombok.NonNull;
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
@@ -116,6 +117,8 @@ public class SunBeamProjectile extends AbstractArrow {
         }
 
         if (level().isClientSide()) {
+            if (tickCount == 1) FIRE.sendForEntity(this);
+
             if (tickCount <= 20) {
                 Vec3 velocity = getDeltaMovement().scale(random.nextDouble() * length * 10.0);
                 level().addParticle(
@@ -173,6 +176,8 @@ public class SunBeamProjectile extends AbstractArrow {
             }
         }
     }
+
+    private static final AzCommand FIRE = AzCommand.create(JCraft.BASE_CONTROLLER, "animation.sunbeam.fire");
 
     // Animations
     /*private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
