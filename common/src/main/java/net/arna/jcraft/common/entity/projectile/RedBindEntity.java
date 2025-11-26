@@ -1,6 +1,9 @@
 package net.arna.jcraft.common.entity.projectile;
 
 import lombok.NonNull;
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.arna.jcraft.api.registry.JStatusRegistry;
@@ -22,18 +25,13 @@ import static net.arna.jcraft.api.Attacks.damageLogic;
 public class RedBindEntity extends JAttackEntity {
     private LivingEntity boundEntity;
     private float boundHealth;
+    private boolean hasExploded = false;
     public static final int LIFE_TIME = 60;
     private int timeLeft = LIFE_TIME;
-    private static final EntityDataAccessor<Boolean> EXPLODED;
     private static final EntityDataAccessor<Float> WIDTH;
 
     static {
-        EXPLODED = SynchedEntityData.defineId(RedBindEntity.class, EntityDataSerializers.BOOLEAN);
         WIDTH = SynchedEntityData.defineId(RedBindEntity.class, EntityDataSerializers.FLOAT);
-    }
-
-    public boolean hasExploded() {
-        return this.entityData.get(EXPLODED);
     }
 
     public float getBoundWidth() {
@@ -51,7 +49,6 @@ public class RedBindEntity extends JAttackEntity {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        entityData.define(EXPLODED, false);
         entityData.define(WIDTH, 1f);
     }
 
@@ -66,18 +63,20 @@ public class RedBindEntity extends JAttackEntity {
 
     @Override
     public void tick() {
-        if (!level().isClientSide) {
+        if (level().isClientSide) {
+            if (tickCount == 1) IDLE.sendForEntity(this);
+        } else {
             if (boundEntity == null) { // If boundEntity data was wiped, attempt to recover
                 if (getVehicle() instanceof LivingEntity living) {
                     setBoundEntity(living);
                 }
-            } else if (!isPassenger() && !hasExploded()) { // If detached
+            } else if (!isPassenger() && !hasExploded) { // If detached
                 detonate();
             }
 
             if (boundEntity == null) {
                 discard();
-            } else if (!hasExploded() && (--timeLeft <= 0 || boundEntity.getHealth() < boundHealth)) {
+            } else if (!hasExploded && (--timeLeft <= 0 || boundEntity.getHealth() < boundHealth)) {
                 detonate();
             }
 
@@ -99,7 +98,8 @@ public class RedBindEntity extends JAttackEntity {
                     6, false, 4, level().damageSources().mobAttack(master), master, CommonHitPropertyComponent.HitAnimation.MID, false, true);
         }
 
-        entityData.set(EXPLODED, true);
+        EXPLODE.sendForEntity(this);
+        hasExploded = true;
         kill();
     }
 
@@ -137,23 +137,6 @@ public class RedBindEntity extends JAttackEntity {
         readMasterNbt(tag);
     }
 
-    // Animations
-    /*
-    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return cache;
-    }
-
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
-    }
-
-    private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("animation.red_bind.idle");
-    private static final RawAnimation EXPLODE = RawAnimation.begin().thenLoop("animation.red_bind.explode");
-    private PlayState predicate(AnimationState<RedBindEntity> state) {
-        return state.setAndContinue(hasExploded() ? EXPLODE : IDLE);
-    }*/
+    private static final AzCommand IDLE = AzCommand.create(JCraft.BASE_CONTROLLER, "animation.red_bind.idle", AzPlayBehaviors.LOOP);
+    private static final AzCommand EXPLODE = AzCommand.create(JCraft.BASE_CONTROLLER, "animation.red_bind.explode");
 }

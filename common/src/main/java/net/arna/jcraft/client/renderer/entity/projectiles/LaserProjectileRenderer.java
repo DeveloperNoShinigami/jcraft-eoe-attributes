@@ -15,10 +15,11 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 public class LaserProjectileRenderer extends ProjectileRenderer<LaserProjectile> {
 
     public static final String ID = "laser";
+    private static final RenderType RENDER_TYPE = RenderType.entityTranslucent(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID)));
 
     public LaserProjectileRenderer(final @NonNull EntityRendererProvider.Context context) {
         super(context, () -> new EntityAnimator<>(ID), b -> b
-                .setRenderType(RenderType.entityTranslucent(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID)))),
+                .setRenderType(RENDER_TYPE),
                 ID);
     }
 

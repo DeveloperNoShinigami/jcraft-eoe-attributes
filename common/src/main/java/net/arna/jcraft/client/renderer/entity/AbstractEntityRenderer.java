@@ -201,5 +201,9 @@ public abstract class AbstractEntityRenderer<T extends Entity> extends AzEntityR
 
             super.renderItemForBone(context, bone, itemStack, animatable);
         }
+
+        protected void superRenderItemForBone(final AzRendererPipelineContext<UUID, T> context, final AzBone bone, final ItemStack itemStack, final T animatable) {
+            super.renderItemForBone(context, bone, itemStack, animatable);
+        }
     }
 }

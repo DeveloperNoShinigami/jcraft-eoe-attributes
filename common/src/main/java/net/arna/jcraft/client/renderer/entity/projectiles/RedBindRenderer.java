@@ -15,10 +15,11 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 public class RedBindRenderer extends AbstractEntityRenderer<RedBindEntity> {
 
     public static final String ID = "red_bind";
+    private static final RenderType RENDER_TYPE = RenderType.eyes(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID)));
 
     public RedBindRenderer(final @NonNull EntityRendererProvider.Context context) {
         super(context, () -> new EntityAnimator<>(ID), b -> b
-                .setRenderType(RenderType.eyes(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID)))),
+                .setRenderType(RENDER_TYPE),
                 ID);
     }
 

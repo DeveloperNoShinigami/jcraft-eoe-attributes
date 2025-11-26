@@ -16,10 +16,11 @@ import net.minecraft.core.BlockPos;
 public class AnkhRenderer extends ProjectileRenderer<AnkhProjectile> {
 
     public static final String ID = "ankh";
+    private static final RenderType RENDER_TYPE = RenderType.eyes(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID)));
 
     public AnkhRenderer(final @NonNull EntityRendererProvider.Context context) {
         super(context, () -> new EntityAnimator<>(ID), b -> b
-                .setRenderType(RenderType.eyes(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID)))),
+                .setRenderType(RENDER_TYPE),
                 ID);
     }
 

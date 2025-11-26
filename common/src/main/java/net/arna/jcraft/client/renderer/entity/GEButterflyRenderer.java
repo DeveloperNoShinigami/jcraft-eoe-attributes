@@ -24,10 +24,11 @@ import java.util.UUID;
 @Environment(EnvType.CLIENT)
 public class GEButterflyRenderer extends AbstractEntityRenderer<GEButterflyEntity> {
     public static final String ID = "gebutterfly";
+    private static final RenderType RENDER_TYPE = RenderType.entityTranslucent(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID)));
 
     public GEButterflyRenderer(final @NonNull EntityRendererProvider.Context context) {
         super(context, () -> new EntityAnimator<>(ID), b -> b
-                .setRenderType(RenderType.entityTranslucent(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID))))
+                .setRenderType(RENDER_TYPE)
                 .addRenderLayer(new GEButterflyRendererLayer()),
                 ID);
     }

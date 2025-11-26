@@ -23,10 +23,11 @@ import java.util.UUID;
 public class LargeIcicleRenderer extends ProjectileRenderer<LargeIcicleProjectile> {
 
     public static final String ID = "large_icicle";
+    private static final RenderType RENDER_TYPE = RenderType.entityTranslucent(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID)));
 
     public LargeIcicleRenderer(final @NonNull EntityRendererProvider.Context context) {
         super(context, () -> new EntityAnimator<>(ID), b -> b
-                .setRenderType(RenderType.entityTranslucent(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID))))
+                .setRenderType(RENDER_TYPE)
                 .setRenderEntry(contextPipeline -> {
                     final var animatable = contextPipeline.animatable();
 

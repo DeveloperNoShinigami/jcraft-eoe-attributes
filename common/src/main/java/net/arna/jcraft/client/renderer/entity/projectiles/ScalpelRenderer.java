@@ -12,10 +12,11 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 public class ScalpelRenderer extends ProjectileRenderer<ScalpelProjectile> {
 
     public static final String ID = "scalpel";
+    private static final RenderType RENDER_TYPE = RenderType.entityTranslucent(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID)));
 
     public ScalpelRenderer(final @NonNull EntityRendererProvider.Context context) {
         super(context, () -> new EntityAnimator<>(ID), b -> b
-                .setRenderType(RenderType.entityTranslucent(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID)))),
+                .setRenderType(RENDER_TYPE),
                 ID);
     }
 

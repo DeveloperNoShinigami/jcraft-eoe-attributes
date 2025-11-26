@@ -15,10 +15,11 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 public class BubbleRenderer extends ProjectileRenderer<BubbleProjectile> {
 
     public static final String ID = "bubble";
+    private static final RenderType RENDER_TYPE = RenderType.entityTranslucent(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID)));
 
     public BubbleRenderer(final @NonNull EntityRendererProvider.Context context) {
         super(context, () -> new EntityAnimator<>(ID), b -> b
-                .setRenderType(RenderType.entityTranslucent(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID)))),
+                .setRenderType(RENDER_TYPE),
                 ID);
     }
 

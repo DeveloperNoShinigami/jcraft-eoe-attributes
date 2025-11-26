@@ -47,7 +47,8 @@ public class WhiteSnakeRenderer extends StandEntityRenderer<WhiteSnakeEntity> {
                     poseStack.mulPose(Axis.YP.rotationDegrees(180));
                 }
             }
-            super.renderItemForBone(context, bone, itemStack, animatable);
+
+            super.superRenderItemForBone(context, bone, itemStack, animatable);
         }
     }
 }

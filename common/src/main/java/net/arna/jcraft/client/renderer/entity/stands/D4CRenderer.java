@@ -10,7 +10,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ShieldItem;
 
 import java.util.UUID;
 
@@ -38,23 +37,8 @@ public class D4CRenderer extends StandEntityRenderer<D4CEntity> {
             final var poseStack = context.poseStack();
 
             poseStack.mulPose(Axis.XP.rotationDegrees(bone.getRotX() * 57.29578f));
-            // poseStack.mulPose(Axis.YP.rotationDegrees(bone.getRotY() * 57.29578f));
-            poseStack.mulPose(Axis.ZP.rotationDegrees(180f));
-
-            if (stack == mainHandItem) {
-                poseStack.mulPose(Axis.YN.rotationDegrees(90f));
-
-                if (stack.getItem() instanceof ShieldItem) {
-                    poseStack.translate(0, 0.125, -0.25);
-                }
-            } else if (stack == offHandItem) {
-                poseStack.mulPose(Axis.YN.rotationDegrees(-90f));
-
-                if (stack.getItem() instanceof ShieldItem) {
-                    poseStack.translate(0, 0.125, 0.25);
-                    poseStack.mulPose(Axis.YP.rotationDegrees(180));
-                }
-            }
+            poseStack.mulPose(Axis.XP.rotationDegrees(90f));
+            // poseStack.mulPose(Axis.ZP.rotationDegrees(180f));
 
             super.renderItemForBone(context, bone, stack, animatable);
         }

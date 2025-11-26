@@ -23,10 +23,11 @@ public class BlockProjectileRenderer extends AbstractEntityRenderer<BlockProject
     private final ItemRenderer itemRenderer;
 
     public static final String ID = "block";
+    private static final RenderType RENDER_TYPE = RenderType.eyes(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID)));
 
     public BlockProjectileRenderer(final @NonNull EntityRendererProvider.Context context) {
         super(context, () -> new EntityAnimator<>(ID), b -> b
-                        .setRenderType(RenderType.eyes(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID)))),
+                        .setRenderType(RENDER_TYPE),
                 ID);
         this.itemRenderer = context.getItemRenderer();
     }

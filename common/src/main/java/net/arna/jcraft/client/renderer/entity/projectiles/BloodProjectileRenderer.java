@@ -15,10 +15,11 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 public class BloodProjectileRenderer extends ProjectileRenderer<BloodProjectile> {
 
     public static final String ID = "bloodprojectile";
+    private static final RenderType RENDER_TYPE = RenderType.entityTranslucent(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID)));
 
     public BloodProjectileRenderer(final @NonNull EntityRendererProvider.Context context) {
         super(context, () -> new EntityAnimator<>(ID), b -> b
-                .setRenderType(RenderType.entityTranslucent(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID)))),
+                .setRenderType(RENDER_TYPE),
                 ID);
     }
 

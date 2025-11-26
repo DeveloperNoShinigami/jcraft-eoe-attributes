@@ -22,9 +22,10 @@ import org.jetbrains.annotations.NotNull;
 public class RoadRollerRenderer extends AbstractEntityRenderer<RoadRollerEntity> {
 
     public static final String ID = "road_roller";
+    private static final RenderType RENDER_TYPE = RenderType.entityTranslucent(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID)));
 
     public RoadRollerRenderer(final @NonNull EntityRendererProvider.Context context) {
-        super(context, RoadRollerAnimator::new, b -> b.setRenderType(RenderType.entityTranslucent(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID)))), ID);
+        super(context, RoadRollerAnimator::new, b -> b.setRenderType(RENDER_TYPE), ID);
     }
 
     @Override

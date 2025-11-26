@@ -14,10 +14,11 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 public class SheerHeartAttackRenderer extends AbstractEntityRenderer<SheerHeartAttackEntity> {
 
     public static final String ID = "sha";
+    private static final RenderType RENDER_TYPE = RenderType.entityTranslucent(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID)));
 
     public SheerHeartAttackRenderer(final EntityRendererProvider.Context context) {
         super(context, () -> new EntityAnimator<>(ID), b -> b
-                .setRenderType(RenderType.entityTranslucent(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID)))),
+                .setRenderType(RENDER_TYPE),
                 ID);
     }
 

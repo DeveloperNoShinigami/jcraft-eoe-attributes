@@ -23,10 +23,11 @@ import java.util.UUID;
 public class LifeDetectorRenderer extends AbstractEntityRenderer<LifeDetectorEntity> {
 
     public static final String ID = "detector";
+    private static final RenderType RENDER_TYPE = RenderType.eyes(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID)));
 
     public LifeDetectorRenderer(final @NonNull EntityRendererProvider.Context context) {
         super(context, () -> new EntityAnimator<>(ID), b -> b
-                .setRenderType(RenderType.eyes(JCraft.id(TEXTURE_STR_TEMPLATE.formatted(ID))))
+                .setRenderType(RENDER_TYPE)
                 .setModelRenderer((pc, layer) -> new BaseModelRenderer<>((AzEntityRendererPipeline<LifeDetectorEntity>) pc, layer) {
                     @Override
                     protected void midRender(@NonNull AzRendererPipelineContext<UUID, LifeDetectorEntity> pc) {
