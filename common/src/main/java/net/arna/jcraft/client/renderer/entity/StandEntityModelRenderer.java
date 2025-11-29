@@ -7,6 +7,8 @@ import mod.azure.azurelib.render.AzRendererPipelineContext;
 import mod.azure.azurelib.render.entity.AzEntityModelRenderer;
 import mod.azure.azurelib.render.entity.AzEntityRendererPipeline;
 import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.client.model.entity.stand.StandEntityModel;
+import net.arna.jcraft.client.renderer.entity.stands.StandEntityRenderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.Direction;
@@ -27,6 +29,11 @@ public class StandEntityModelRenderer<T extends StandEntity<?, ?>> extends AzEnt
     public void render(final @NonNull AzRendererPipelineContext<UUID, T> pc, final boolean isReRender) {
         final var animatable = pc.animatable();
         final var partialTick = pc.partialTick();
+
+        if (StandEntityRenderer.getAlpha(animatable, partialTick) <= 0.0f) {
+            return;
+        }
+
         final var poseStack = pc.poseStack();
 
         poseStack.pushPose();

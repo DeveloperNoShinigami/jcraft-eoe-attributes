@@ -86,7 +86,7 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
     protected static @NonNull ResourceLocation getTextureLocation(final @NonNull StandEntity<?,?> stand) {
         final int skin = stand.getSkin();
         final ResourceLocation id = stand.getStandType().getId();
-        if (stand.getStandType() == JStandTypeRegistry.THE_FOOL && ((TheFoolEntity)stand).isSand()) {
+        if (stand.getStandType() == JStandTypeRegistry.THE_FOOL.get() && ((TheFoolEntity)stand).isSand()) {
             return SAND_TEXTURE;
         }
         return id.withPath(TEXTURE_STR_TEMPLATE.formatted(id.getPath(), skin == 0 ? "default" : "skin" + skin));
@@ -103,7 +103,7 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
             float a = getAlpha(animatable, pc.partialTick());
             a *= pc.alpha();
 
-            if (animatable.isPlaySummonAnim() && animatable.getMoveStun() <= 0) {
+            if (animatable.isPlaySummonAnim() && animatable.tickCount == 0 && animatable.getMoveStun() <= 0) {
                 StandEntity.SUMMON_ANIMATION.sendForEntity(animatable);
             }
 
