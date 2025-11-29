@@ -29,8 +29,8 @@ public class FlutteringArmorItem extends ArmorItem {
     @Override
     public void inventoryTick(final @NotNull ItemStack stack, final @NotNull Level level, final @NotNull Entity entity, final int slotId, final boolean isSelected) {
         super.inventoryTick(stack, level, entity, slotId, isSelected);
-        if (!level.isClientSide()) {
-            final boolean moving = (entity instanceof Player player) ? !JUtils.deltaPos(player).equals(Vec3.ZERO) : entity.getDeltaMovement().horizontalDistanceSqr() > 0.01;
+        if (level.isClientSide()) {
+            final boolean moving = entity.getDeltaMovement().horizontalDistanceSqr() > 0.01;
             if (moving) {
                 MOVING_CMD.sendForItem(entity, stack);
             }
