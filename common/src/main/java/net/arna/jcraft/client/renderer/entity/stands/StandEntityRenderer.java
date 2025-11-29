@@ -21,6 +21,8 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
@@ -34,6 +36,7 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
 
     protected static final String TEXTURE_STR_TEMPLATE = "textures/entity/stands/%s/%s.png";
     protected static final ResourceLocation SAND_TEXTURE = JCraft.id("textures/entity/stands/the_fool/sand.png");
+    protected static final Map<TypeSkin, ResourceLocation> TEXTURE_MAP = new HashMap<>();
 
     protected StandEntityRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull Function<AzEntityRendererConfig.Builder<T>, AzEntityRendererConfig.Builder<T>> additionalConfigs,
                                   final @NonNull Function<T, ResourceLocation> model, final @NonNull Function<T, ResourceLocation> texture,
@@ -82,19 +85,26 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
     protected static @NonNull <T extends StandEntity<?,?>> Function<T, RenderType> renderType(final @NonNull Function<ResourceLocation, RenderType> renderTypeSelector) {
         return stand -> renderTypeSelector.apply(getTextureLocation(stand));
     }
+
+    public record TypeSkin(StandType type, Integer skin) {
+        // intentionally left empty
+    }
+
+    protected static ResourceLocation typeSkinToTexture(final @NonNull TypeSkin ts) {
+        return ts.type().getId().withPath(TEXTURE_STR_TEMPLATE.formatted(ts.type().getId().getPath(), ts.skin() == 0 ? "default" : "skin" + ts.skin()));
+    }
     
     protected static @NonNull ResourceLocation getTextureLocation(final @NonNull StandEntity<?,?> stand) {
         final int skin = stand.getSkin();
-        final ResourceLocation id = stand.getStandType().getId();
-        if (stand.getStandType() == JStandTypeRegistry.THE_FOOL.get() && ((TheFoolEntity)stand).isSand()) {
+        final StandType type = stand.getStandType();
+        if (type == JStandTypeRegistry.THE_FOOL.get() && ((TheFoolEntity)stand).isSand()) {
             return SAND_TEXTURE;
         }
-        return id.withPath(TEXTURE_STR_TEMPLATE.formatted(id.getPath(), skin == 0 ? "default" : "skin" + skin));
+        return TEXTURE_MAP.computeIfAbsent(new TypeSkin(type, skin), StandEntityRenderer::typeSkinToTexture);
     }
 
     protected static @NonNull ResourceLocation getTextureLocation(final @NonNull StandType type) {
-        final ResourceLocation id = type.getId();
-        return id.withPath(TEXTURE_STR_TEMPLATE.formatted(id.getPath(), "default"));
+        return TEXTURE_MAP.computeIfAbsent(new TypeSkin(type, 0), StandEntityRenderer::typeSkinToTexture);
     }
 
     protected static @NonNull <T extends StandEntity<?,?>> Function<AzRendererPipelineContext<UUID, T>, AzRendererPipelineContext<UUID, T>> preRenderEntry() {
