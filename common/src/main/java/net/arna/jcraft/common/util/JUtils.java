@@ -5,19 +5,24 @@ import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.IntObjectPair;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.api.registry.JSoundRegistry;
-import net.arna.jcraft.api.stand.StandType;
-import net.arna.jcraft.api.stand.StandTypeUtil;
+import net.arna.jcraft.api.AttackData;
 import net.arna.jcraft.api.attack.enums.MoveInputType;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.registry.JEntityTypeRegistry;
+import net.arna.jcraft.api.registry.JSoundRegistry;
+import net.arna.jcraft.api.registry.JStatusRegistry;
+import net.arna.jcraft.api.registry.JTagRegistry;
+import net.arna.jcraft.api.spec.JSpec;
+import net.arna.jcraft.api.spec.JSpecHolder;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandType;
+import net.arna.jcraft.api.stand.StandTypeUtil;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.entity.projectile.ItemTossProjectile;
 import net.arna.jcraft.common.entity.projectile.JAttackEntity;
 import net.arna.jcraft.common.entity.projectile.KnifeProjectile;
 import net.arna.jcraft.common.entity.projectile.ScalpelProjectile;
-import net.arna.jcraft.api.spec.JSpecHolder;
-import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.item.KnifeBundleItem;
 import net.arna.jcraft.common.item.KnifeItem;
@@ -25,12 +30,8 @@ import net.arna.jcraft.common.item.ScalpelItem;
 import net.arna.jcraft.common.network.s2c.JExplosionPacket;
 import net.arna.jcraft.common.network.s2c.PlayerAnimPacket;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
-import net.arna.jcraft.api.spec.JSpec;
 import net.arna.jcraft.common.splatter.JSplatterManager;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.api.registry.JEntityTypeRegistry;
-import net.arna.jcraft.api.registry.JStatusRegistry;
-import net.arna.jcraft.api.registry.JTagRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -58,19 +59,8 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.entity.projectile.Snowball;
-import net.minecraft.world.entity.projectile.ThrownEgg;
-import net.minecraft.world.entity.projectile.ThrownPotion;
-import net.minecraft.world.entity.projectile.ThrownTrident;
-import net.minecraft.world.item.ArrowItem;
-import net.minecraft.world.item.EggItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SnowballItem;
-import net.minecraft.world.item.ThrowablePotionItem;
-import net.minecraft.world.item.TridentItem;
+import net.minecraft.world.entity.projectile.*;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
@@ -343,33 +333,49 @@ public final class JUtils {
         return ent;
     }
 
-    public static void projectileDamageLogic(Projectile proj, Level world, Entity ent, Vec3 kb, int stunT, int stunType, boolean overrideStun, float damage, int blockstun, CommonHitPropertyComponent.HitAnimation hitAnimation) {
-        projectileDamageLogic(proj, world, ent, kb, stunT, stunType, overrideStun, damage, blockstun, hitAnimation, false, false);
+    public static void projectileDamageLogic(Projectile proj, Level world, Entity ent, Vec3 kb, int stunTicks, int stunType, boolean overrideStun,
+                                             float damage, int blockstun, CommonHitPropertyComponent.HitAnimation hitAnimation) {
+        projectileDamageLogic(proj, world, ent, kb, stunTicks, stunType, overrideStun, damage, blockstun, hitAnimation, false, false, true);
     }
 
-    public static void projectileDamageLogic(Projectile proj, Level world, Entity ent, Vec3 kb, int stunT, int stunType, boolean overrideStun, float damage, int blockstun, CommonHitPropertyComponent.HitAnimation hitAnimation, boolean unblockable, boolean canBackstab) {
+    public static void projectileDamageLogic(Projectile proj, Level world, Entity ent, Vec3 kb, int stunTicks, int stunType, boolean overrideStun,
+                                             float damage, int blockstun, CommonHitPropertyComponent.HitAnimation hitAnimation, boolean canBackstab, boolean unblockable) {
+        projectileDamageLogic(proj, world, ent, kb, stunTicks, stunType, overrideStun, damage, blockstun, hitAnimation, canBackstab, unblockable, true);
+    }
+
+    public static void projectileDamageLogic(Projectile proj, Level world, Entity ent, Vec3 kb, int stunTicks, int stunType, boolean overrideStun,
+                                             float damage, int blockstun, CommonHitPropertyComponent.HitAnimation hitAnimation,
+                                             boolean canBackstab, boolean unblockable, boolean cancelMoves) {
+        final Entity owner = proj.getOwner();
+
+        DamageSource source = (owner == null) ?
+                JDamageSources.create(world, DamageTypes.GENERIC) :
+                JDamageSources.create(world, DamageTypes.MOB_PROJECTILE, proj, owner);
+
+        projectileDamageLogic(proj, world, ent, new AttackData(
+                kb, stunTicks, stunType, overrideStun, damage, true,
+                blockstun, source, owner, hitAnimation, null,
+                canBackstab, unblockable, cancelMoves
+        ));
+    }
+
+    public static void projectileDamageLogic(Projectile proj, Level world, Entity ent, AttackData attackData) {
         if (world.isClientSide) {
             return;
         }
         Objects.requireNonNull(proj, "Attempted to run ProjectileDamageLogic with invalid projectile in world " + world);
-        Entity owner = proj.getOwner();
-        DamageSource source;
-        if (owner == null) {
-            source = JDamageSources.create(world, DamageTypes.GENERIC);
-        } else {
-            source = JDamageSources.create(world, DamageTypes.MOB_PROJECTILE, proj, owner);
-        }
 
         if (ent instanceof LivingEntity living) {
             LivingEntity target = living;
             if (ent instanceof StandEntity<?, ?> stand) {
                 target = stand.getUser();
             }
-            damageLogic(world, target, kb, stunT, stunType, overrideStun, damage, false, blockstun, source, owner, hitAnimation, canBackstab, unblockable);
+
+            damageLogic(world, target, attackData);
         }
 
         if (ent instanceof EndCrystal endCrystal) {
-            endCrystal.hurt(source, damage);
+            endCrystal.hurt(attackData.source(), attackData.damage());
         }
     }
 

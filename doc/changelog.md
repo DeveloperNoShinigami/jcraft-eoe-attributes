@@ -7,7 +7,10 @@
 * Added skins to Anubis Silver Chariot
 * added Jotaro Cosplay from Part 6 (thanks Bob)
 * Diego outfit has been updated
+* Thrown Knives no longer cancel moves
 ### NPCs & Stands
+* Gold Experience: Requiem
+  * Overhead Smash armor reduced from infinite to 1 point
 * (re)added max reach for Mandom, BTD Ult and GER RTZ teleport, all default to 200 blocks
 * Training Dummy is now vulnerable if below build height (to be able to die in the void) and killable via /kill
 ### Configs

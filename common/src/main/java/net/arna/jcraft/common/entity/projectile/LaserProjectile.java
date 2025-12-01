@@ -94,7 +94,7 @@ public class LaserProjectile extends AbstractArrow {
         }
 
         JUtils.projectileDamageLogic(this, level(), entity, getDeltaMovement(), 20, 1, false,
-                5f, 0, CommonHitPropertyComponent.HitAnimation.CRUSH, unblockable, false);
+                5f, 0, CommonHitPropertyComponent.HitAnimation.CRUSH, false, unblockable);
         hit.add(entity.getId());
     }
 

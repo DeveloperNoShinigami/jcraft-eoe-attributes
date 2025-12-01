@@ -136,13 +136,15 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
                     Component.literal("Punch"),
                     Component.literal("quick combo starter")
             );
+
+    // TODO: add an armored, high-damage knockdown with a cooldown (cr.H) which does the job of this move but without being spam material
     public static final KnockdownAttack<GEREntity> OVERHEAD_SMASH = new KnockdownAttack<GEREntity>(0, 10, 19,
             1f, 9f, 10, 1.5f, 1.1f, 0f, 30)
             .withAerialVariant(OVERHEAD_KICK)
             .withSound(JSoundRegistry.GER_HEAVY)
             .withImpactSound(JSoundRegistry.IMPACT_2)
             .withHitSpark(JParticleType.HIT_SPARK_3)
-            .withHyperArmor()
+            .withArmor(1)
             .withLaunch()
             .withExtraHitBox(1.5)
             .withInfo(

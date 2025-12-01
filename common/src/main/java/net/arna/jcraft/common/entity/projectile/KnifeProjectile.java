@@ -204,7 +204,8 @@ public class KnifeProjectile extends AbstractArrow {
 
         if (explosive) explode();
 
-        JUtils.projectileDamageLogic(this, level(), entity, Vec3.ZERO, stunT, 1, false, 2, blockstun, CommonHitPropertyComponent.HitAnimation.MID);
+        JUtils.projectileDamageLogic(this, level(), entity, Vec3.ZERO, stunT, 1, false, 2,
+                blockstun, CommonHitPropertyComponent.HitAnimation.MID, false, false, getLightning());
         playSound(SoundEvents.TRIDENT_HIT, 1, 1);
         if (entity instanceof LivingEntity living) {
             JComponentPlatformUtils.getMiscData(living).stab();
