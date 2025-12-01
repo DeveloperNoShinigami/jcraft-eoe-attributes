@@ -16,8 +16,14 @@ import java.util.stream.IntStream;
  * The {@link ProjectileRenderer} for {@link RapierProjectile}.
  */
 public class RapierRenderer extends ProjectileRenderer<RapierProjectile> {
-    protected static final List<ResourceLocation> SKINS = IntStream.range(0, 4).mapToObj(
+    public static final List<ResourceLocation> SKINS = IntStream.range(0, 4).mapToObj(
             i -> JCraft.id("textures/entity/stands/silver_chariot/rapier_" + (i == 0 ? "default" : "skin" + i) + ".png")).toList();
+
+    public final static List<ResourceLocation> POSSESSED_SKINS = IntStream.rangeClosed(0, 4)
+            .mapToObj(i -> JCraft.id("textures/entity/stands/silver_chariot/rapier_possessed" + i + ".png"))
+            .toList();
+
+    public static final ResourceLocation ARMOR_OFF_TEXTURE = JCraft.id("textures/entity/stands/silver_chariot/rapier_no_armor.png");
 
     public static final String ID = "rapier";
 
@@ -42,8 +48,8 @@ public class RapierRenderer extends ProjectileRenderer<RapierProjectile> {
     protected static ResourceLocation getTexture(final @NonNull RapierProjectile rapier) {
         final int skin = rapier.getSkin();
         return switch (skin) {
-            case -2 -> RapierProjectile.POSSESSED_TEXTURE;
-            case -1 -> RapierProjectile.ARMOR_OFF_TEXTURE;
+            case -2 -> POSSESSED_SKINS.get(0);
+            case -1 -> ARMOR_OFF_TEXTURE;
             default -> SKINS.get(skin);
         };
     }

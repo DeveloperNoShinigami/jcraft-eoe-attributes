@@ -248,6 +248,14 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     }
 
     /**
+     * Utility for one single hack in {@link net.arna.jcraft.client.renderer.entity.stands.StandEntityRenderer}.
+     * Do not use this.
+     */
+    public final void playStateAnimation() {
+        getState().playAnimation(getThis());
+    }
+
+    /**
      * Sets the stands state directly
      */
     public void setStateNoReset(@Nullable S state) {
@@ -1516,6 +1524,10 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         }
 
         return wantToBlock;
+    }
+
+    public void playSummonAnimation() {
+        StandEntity.SUMMON_ANIMATION.sendForEntity(this);
     }
 
     public enum DesiredBlocking {

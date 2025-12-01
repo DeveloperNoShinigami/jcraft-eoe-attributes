@@ -286,6 +286,16 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
     }
 
     @Override
+    public void playSummonAnimation() {
+        if (isPossessed()) {
+            POSSESSED_SUMMON.sendForEntity(this);
+            return;
+        }
+
+        super.playSummonAnimation();
+    }
+
+    @Override
     protected void switchMoveSet(String name) {
         final Vec3 lookDir = getMoveMap().findMoveByType(SCChargeAttack.class)
                 .map(SCChargeAttack::getLookDir)
@@ -480,6 +490,9 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
     }
 
     // Animation code
+
+    private static final AzCommand POSSESSED_SUMMON = AzCommand.create(JCraft.BASE_CONTROLLER, "summon_possessed");
+
     public enum State implements StandAnimationState<SilverChariotEntity> {
         IDLE(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.silverchariot.idle", AzPlayBehaviors.LOOP)),
         STAB(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.silverchariot.stab", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),

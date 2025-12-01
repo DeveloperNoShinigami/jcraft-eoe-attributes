@@ -3,6 +3,8 @@ package net.arna.jcraft.client.renderer.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import lombok.NonNull;
+import mod.azure.azurelib.animation.controller.AzAnimationController;
+import mod.azure.azurelib.animation.controller.AzAnimationControllerContainer;
 import mod.azure.azurelib.model.AzBone;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
 import mod.azure.azurelib.render.layer.AzBlockAndItemLayer;
@@ -25,9 +27,30 @@ public class GESnakeRenderer extends AbstractEntityRenderer<GESnakeEntity> {
     private static final String ID = "gesnake";
 
     public GESnakeRenderer(final @NonNull EntityRendererProvider.Context context) {
-        super(context, () -> new EntityAnimator<>(ID), b -> b
-                .addRenderLayer(new GESnakeRendererLayer()),
+        super(context, () -> new SnakeAnimator(ID), b -> b
+                        .addRenderLayer(new GESnakeRendererLayer())
+                        .setPrerenderEntry((pc) -> {
+                            final var snake = pc.animatable();
+
+                            if (snake.moveAnalysis.isMoving()) {
+                                GESnakeEntity.MOVE.sendForEntity(snake);
+                            }
+
+                            return pc;
+                        }),
                 ID);
+    }
+
+    protected static class SnakeAnimator extends EntityAnimator<GESnakeEntity> {
+        public SnakeAnimator(@NonNull String id) {
+            super(id);
+        }
+
+        @Override
+        public void registerControllers(@NonNull AzAnimationControllerContainer<GESnakeEntity> animationControllerContainer) {
+            animationControllerContainer.add(AzAnimationController.builder(this, GESnakeEntity.ATTACK_CONTROLLER).setTransitionLength(0).build());
+            animationControllerContainer.add(AzAnimationController.builder(this, GESnakeEntity.MOVEMENT_CONTROLLER).setTransitionLength(0).build());
+        }
     }
 
     protected static class GESnakeRendererLayer extends AzBlockAndItemLayer<UUID, GESnakeEntity> {
@@ -41,7 +64,7 @@ public class GESnakeRenderer extends AbstractEntityRenderer<GESnakeEntity> {
 
         @Override
         public ItemStack itemStackForBone(final AzBone bone, final GESnakeEntity animatable) {
-            if (bone.getName().equals("base")) {
+            if (bone.getName().equals("body")) {
                 return mainHandItem;
             }
             return null;

@@ -1,5 +1,8 @@
 package net.arna.jcraft.common.entity;
 
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.util.IOwnable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
@@ -68,9 +71,14 @@ public class GEButterflyEntity extends FlyingMob implements IOwnable {
     public void tick() {
         super.tick();
 
-        if (level().isClientSide || !hasMaster) {
+        if (level().isClientSide) {
+            IDLE.sendForEntity(this);
+        }
+
+        if (!hasMaster) {
             return;
         }
+
         if (master == null) {
             kill();
             return;
@@ -107,26 +115,5 @@ public class GEButterflyEntity extends FlyingMob implements IOwnable {
         }
     }
 
-    // Animations
-    /*
-    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
-
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
-    }
-
-    private PlayState predicate(AnimationState<GEButterflyEntity> state) {
-        if (isAlive()) {
-            state.setAnimation(RawAnimation.begin().thenLoop("animation.gebutterfly.idle"));
-            return PlayState.CONTINUE;
-        } else {
-            return PlayState.STOP;
-        }
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return cache;
-    }*/
+    public static final AzCommand IDLE = AzCommand.create(JCraft.BASE_CONTROLLER, "animation.gebutterfly.idle", AzPlayBehaviors.LOOP);
 }

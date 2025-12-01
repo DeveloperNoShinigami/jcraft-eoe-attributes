@@ -18,15 +18,9 @@ public class TheSunRenderer extends StandEntityRenderer<TheSunEntity> {
 
     public TheSunRenderer(final @NonNull EntityRendererProvider.Context context) {
         super(context, b -> b
-                /*
-                        .setPrerenderEntry((ctx) -> {
-                            // TODO: there used to be an isReRender check; we need a replacement
-                            // after this is fixed, we can use getScale() with the tickDelta and get a pretty smooth scaling
-                            final float scale = ctx.animatable().getRawScale();
-                            ctx.poseStack().scale(scale, scale, scale);
-                            return ctx;
+                        .setScale((sun) -> {
+                            return sun.getRawScale();
                         })
-                 */
                         .addRenderLayer(new SunGlowLayer())
                         //TODO: translucent layer that isn't layered over and has no shading
                         .setRenderType(renderType(RenderType::dragonExplosionAlpha)),

@@ -4,13 +4,13 @@ import lombok.NonNull;
 import mod.azure.azurelib.render.AzRendererPipelineContext;
 import mod.azure.azurelib.render.entity.AzEntityRendererConfig;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.client.JClientConfig;
 import net.arna.jcraft.client.renderer.entity.AbstractEntityRenderer;
 import net.arna.jcraft.client.renderer.entity.StandEntityModelRenderer;
 import net.arna.jcraft.client.util.JClientUtils;
+import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.fabricmc.api.EnvType;
@@ -36,6 +36,14 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
 
     protected static final String TEXTURE_STR_TEMPLATE = "textures/entity/stands/%s/%s.png";
     protected static final ResourceLocation SAND_TEXTURE = JCraft.id("textures/entity/stands/the_fool/sand.png");
+    protected static final ResourceLocation ARMORLESS_TEXTURE = JCraft.id("textures/entity/stands/silver_chariot/no_armor.png");
+    protected static final ResourceLocation[] POSSESSED_TEXTURES = new ResourceLocation[] {
+            JCraft.id("textures/entity/stands/silver_chariot/possessed0.png"),
+            JCraft.id("textures/entity/stands/silver_chariot/possessed1.png"),
+            JCraft.id("textures/entity/stands/silver_chariot/possessed2.png"),
+            JCraft.id("textures/entity/stands/silver_chariot/possessed3.png")
+    };
+
     protected static final Map<TypeSkin, ResourceLocation> TEXTURE_MAP = new HashMap<>();
 
     protected StandEntityRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull Function<AzEntityRendererConfig.Builder<T>, AzEntityRendererConfig.Builder<T>> additionalConfigs,
@@ -97,9 +105,19 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
     protected static @NonNull ResourceLocation getTextureLocation(final @NonNull StandEntity<?,?> stand) {
         final int skin = stand.getSkin();
         final StandType type = stand.getStandType();
-        if (type == JStandTypeRegistry.THE_FOOL.get() && ((TheFoolEntity)stand).isSand()) {
+
+        if (stand instanceof TheFoolEntity fool && fool.isSand()) {
             return SAND_TEXTURE;
+        } else if (stand instanceof SilverChariotEntity chariot) {
+            final SilverChariotEntity.Mode mode = chariot.getMode();
+
+            if (mode == SilverChariotEntity.Mode.ARMORLESS) {
+                return ARMORLESS_TEXTURE;
+            } else if (mode == SilverChariotEntity.Mode.POSSESSED) {
+                return POSSESSED_TEXTURES[chariot.getSkin()];
+            }
         }
+
         return TEXTURE_MAP.computeIfAbsent(new TypeSkin(type, skin), StandEntityRenderer::typeSkinToTexture);
     }
 
@@ -110,12 +128,24 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
     protected static @NonNull <T extends StandEntity<?,?>> Function<AzRendererPipelineContext<UUID, T>, AzRendererPipelineContext<UUID, T>> preRenderEntry() {
         return pc -> {
             final var animatable = pc.animatable();
-            float a = getAlpha(animatable, pc.partialTick());
-            a *= pc.alpha();
+            final var partialTick = pc.partialTick();
 
-            if (animatable.isPlaySummonAnim() && animatable.tickCount == 0 && animatable.getMoveStun() <= 0) {
-                StandEntity.SUMMON_ANIMATION.sendForEntity(animatable);
+            if (animatable.tickCount == 0) {
+                pc.setAlpha(0.2f * partialTick);
+                pc.poseStack().scale(partialTick, 1, partialTick);
+                return pc;
+            } else if (animatable.tickCount == 1) {
+                if (animatable.getMoveStun() <= 0 && animatable.isPlaySummonAnim()) {
+                    animatable.playSummonAnimation();
+                } else {
+                    // TODO: fix this hack. animations cant be played for entities that just spawned.
+                    // this is also probably what stops the summon from working as intended.
+                    animatable.playStateAnimation();
+                }
             }
+
+            float a = getAlpha(animatable, partialTick);
+            a *= pc.alpha();
 
             if (a > 0.01f) {
                 pc.setAlpha(a);
