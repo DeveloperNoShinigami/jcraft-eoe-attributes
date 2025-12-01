@@ -159,8 +159,6 @@ public class MeteorProjectile extends AbstractArrow {
         super.tick();
 
         if (level().isClientSide()) {
-            if (tickCount == 1) START.sendForEntity(this);
-
             final Vec3 vel = getDeltaMovement();
             level().addParticle(
                     getSkin() == 2 ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
@@ -169,7 +167,9 @@ public class MeteorProjectile extends AbstractArrow {
                     getZ() + random.nextFloat() * 0.5f - 0.25f,
                     vel.x / 2, vel.y / 2, vel.z / 2
             );
+
             if (inGround) ticksInGround++;
+            else ANIMATION.sendForEntity(this);
         } else {
             if (this.inGround) {
                 if (explosive && ticksInGround == 0) {
@@ -223,7 +223,7 @@ public class MeteorProjectile extends AbstractArrow {
     }
 
     private static final AzCommand EXPLODE = AzCommand.create(JCraft.BASE_CONTROLLER, "animation.meteor.explode");
-    public static final AzCommand START = AzCommand.controllerBuilder().
+    public static final AzCommand ANIMATION = AzCommand.controllerBuilder().
             playSequence(
                     JCraft.BASE_CONTROLLER,
                     sequenceBuilder -> sequenceBuilder.queue(

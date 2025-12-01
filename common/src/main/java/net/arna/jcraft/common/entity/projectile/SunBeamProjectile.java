@@ -34,8 +34,9 @@ import static net.arna.jcraft.api.Attacks.damageLogic;
 import static net.arna.jcraft.common.util.JUtils.canDamage;
 
 public class SunBeamProjectile extends AbstractArrow {
-    private int length = 0;
     private static final int MAX_LENGTH = 64;
+
+    private int length = 0;
     private final @Nullable TheSunEntity sun;
     private DamageSource damageSource;
 
@@ -117,7 +118,7 @@ public class SunBeamProjectile extends AbstractArrow {
         }
 
         if (level().isClientSide()) {
-            if (tickCount == 1) FIRE.sendForEntity(this);
+            FIRE.sendForEntity(this);
 
             if (tickCount <= 20) {
                 Vec3 velocity = getDeltaMovement().scale(random.nextDouble() * length * 10.0);
@@ -178,22 +179,4 @@ public class SunBeamProjectile extends AbstractArrow {
     }
 
     private static final AzCommand FIRE = AzCommand.create(JCraft.BASE_CONTROLLER, "animation.sunbeam.fire");
-
-    // Animations
-    /*private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
-
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
-    }
-
-    private static final RawAnimation FIRE = RawAnimation.begin().thenLoop("animation.sunbeam.fire");
-    private PlayState predicate(AnimationState<SunBeamProjectile> state) {
-        return state.setAndContinue(FIRE);
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return cache;
-    }*/
 }

@@ -64,7 +64,7 @@ public class RedBindEntity extends JAttackEntity {
     @Override
     public void tick() {
         if (level().isClientSide) {
-            if (tickCount == 1) IDLE.sendForEntity(this);
+            if (isAlive()) IDLE.sendForEntity(this);
         } else {
             if (boundEntity == null) { // If boundEntity data was wiped, attempt to recover
                 if (getVehicle() instanceof LivingEntity living) {
