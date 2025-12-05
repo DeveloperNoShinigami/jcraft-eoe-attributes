@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.MetallicaEntity;
 import net.arna.jcraft.common.tickable.MagneticFields;
 import net.arna.jcraft.common.tickable.RazorCoughs;
@@ -41,6 +42,18 @@ public class RazorCoughAttack extends AbstractMove<RazorCoughAttack, MetallicaEn
         MagneticFields.forAllOfOwner(user, (field) -> {
             Set<LivingEntity> hit = JUtils.generateHitbox(attacker.level(), field.pos, field.getStrength(), filter);
             for (LivingEntity target : hit) {
+                if (target instanceof StandEntity<?, ?> stand) {
+                    final LivingEntity targetUser = stand.getUser();
+
+                    if (targetUser == null) {
+                        continue;
+                    } else if (hit.contains(targetUser)) { // handled later in the iteration
+                        continue;
+                    } else {
+                        target = targetUser;
+                    }
+                }
+
                 RazorCoughs.add(user, target);
                 target.playSound(JSoundRegistry.METALLICA_RAZOR_VOMIT_PREPARE.get());
 

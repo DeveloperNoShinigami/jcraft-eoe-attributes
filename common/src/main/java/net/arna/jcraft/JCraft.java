@@ -12,6 +12,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import mod.azure.azurelib.animation.cache.AzIdentityRegistry;
 import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.api.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.api.component.living.CommonStandComponent;
@@ -131,6 +132,10 @@ public final class JCraft {
     public static final GameRules.Key<IntegerValue> STAND_ARROW_BASE_DAMAGE = register("standArrowBaseDamage", Category.MISC, IntegerValue.create(2));
 
     public static final GameRules.Key<BooleanValue> FALLING_METEORS = register("doFallingMeteors", Category.SPAWNING, BooleanValue.create(true));
+    /**
+     * String ID of the base controller.
+     */
+    public static final String BASE_CONTROLLER = "base_controller";
 
     // Dimensional travel bullshit
     /**
@@ -241,11 +246,98 @@ public final class JCraft {
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_MENU_CALL, MenuCallPacket::handle);
     }
 
+    private static void registerAzArmor() {
+        AzIdentityRegistry.register(
+                JItemRegistry.DIAVOLO_WIG.get(),
+                JItemRegistry.DIAVOLO_SHIRT.get(),
+                JItemRegistry.DIAVOLO_PANTS.get(),
+                JItemRegistry.DIAVOLO_BOOTS.get(),
+                JItemRegistry.DIEGO_HAT.get(),
+                JItemRegistry.DIEGO_SHIRT.get(),
+                JItemRegistry.DIEGO_PANTS.get(),
+                JItemRegistry.DIEGO_BOOTS.get(),
+                JItemRegistry.DIO_HEADBAND.get(),
+                JItemRegistry.DIO_CAPE.get(),
+                JItemRegistry.DIO_JACKET.get(),
+                JItemRegistry.DIO_PANTS.get(),
+                JItemRegistry.DIO_BOOTS.get(),
+                JItemRegistry.DIO_P1_WIG.get(),
+                JItemRegistry.DIO_P1_JACKET.get(),
+                JItemRegistry.DIO_P1_PANTS.get(),
+                JItemRegistry.DIO_P1_BOOTS.get(),
+                JItemRegistry.DOPPIO_WIG.get(),
+                JItemRegistry.DOPPIO_SHIRT.get(),
+                JItemRegistry.FINAL_KIRA_WIG.get(),
+                JItemRegistry.FINAL_KIRA_JACKET.get(),
+                JItemRegistry.FINAL_KIRA_PANTS.get(),
+                JItemRegistry.FINAL_KIRA_BOOTS.get(),
+                JItemRegistry.GIORNO_WIG.get(),
+                JItemRegistry.GIORNO_JACKET.get(),
+                JItemRegistry.GIORNO_PANTS.get(),
+                JItemRegistry.GIORNO_BOOTS.get(),
+                JItemRegistry.GYRO_HAT.get(),
+                JItemRegistry.GYRO_SHIRT.get(),
+                JItemRegistry.GYRO_PANTS.get(),
+                JItemRegistry.GYRO_BOOTS.get(),
+                JItemRegistry.HEAVEN_ATTAINED_WIG.get(),
+                JItemRegistry.HEAVEN_ATTAINED_SHIRT.get(),
+                JItemRegistry.HEAVEN_ATTAINED_PANTS.get(),
+                JItemRegistry.HEAVEN_ATTAINED_BOOTS.get(),
+                JItemRegistry.JOHNNY_CAP.get(),
+                JItemRegistry.JOHNNY_JACKET.get(),
+                JItemRegistry.JOHNNY_PANTS.get(),
+                JItemRegistry.JOHNNY_BOOTS.get(),
+                JItemRegistry.JOTARO_CAP.get(),
+                JItemRegistry.JOTARO_JACKET.get(),
+                JItemRegistry.JOTARO_PANTS.get(),
+                JItemRegistry.JOTARO_BOOTS.get(),
+                JItemRegistry.JOTARO_P4_CAP.get(),
+                JItemRegistry.JOTARO_P4_JACKET.get(),
+                JItemRegistry.JOTARO_P4_PANTS.get(),
+                JItemRegistry.JOTARO_P4_BOOTS.get(),
+                JItemRegistry.JOTARO_P6_CAP.get(),
+                JItemRegistry.JOTARO_P6_JACKET.get(),
+                JItemRegistry.JOTARO_P6_PANTS.get(),
+                JItemRegistry.JOTARO_P6_BOOTS.get(),
+                JItemRegistry.KAKYOIN_WIG.get(),
+                JItemRegistry.KAKYOIN_COAT.get(),
+                JItemRegistry.KAKYOIN_PANTS.get(),
+                JItemRegistry.KAKYOIN_BOOTS.get(),
+                JItemRegistry.KARS_HEADWRAP.get(),
+                JItemRegistry.KIRA_WIG.get(),
+                JItemRegistry.KIRA_JACKET.get(),
+                JItemRegistry.KIRA_PANTS.get(),
+                JItemRegistry.KIRA_BOOTS.get(),
+                JItemRegistry.KOSAKU_WIG.get(),
+                JItemRegistry.KOSAKU_JACKET.get(),
+                JItemRegistry.KOSAKU_PANTS.get(),
+                JItemRegistry.KOSAKU_BOOTS.get(),
+                JItemRegistry.PUCCIS_HAT.get(),
+                JItemRegistry.PUCCI_ROBE.get(),
+                JItemRegistry.PUCCI_PANTS.get(),
+                JItemRegistry.PUCCI_BOOTS.get(),
+                JItemRegistry.RED_HAT.get(),
+                JItemRegistry.RINGO_OUTFIT.get(),
+                JItemRegistry.RINGO_BOOTS.get(),
+                JItemRegistry.RISOTTO_CAP.get(),
+                JItemRegistry.RISOTTO_JACKET.get(),
+                JItemRegistry.RISOTTO_PANTS.get(),
+                JItemRegistry.RISOTTO_BOOTS.get(),
+                JItemRegistry.STONE_MASK.get(),
+                JItemRegistry.STRAIZO_PONCHO.get(),
+                JItemRegistry.VALENTINE_WIG.get(),
+                JItemRegistry.VALENTINE_JACKET.get(),
+                JItemRegistry.VALENTINE_PANTS.get(),
+                JItemRegistry.FINAL_KIRA_BOOTS.get()
+        );
+    }
+
     public static void postInit() {
         initBlockPostLoad();
         EvolutionItemHandler.init();
         initDispenserBehaviors();
         JStatRegistry.initFormatters();
+        registerAzArmor();
     }
 
     private static void initBlockPostLoad() {

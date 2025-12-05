@@ -1,11 +1,16 @@
 # Changelog
 ## General
+* __Updated to the newest AzureLib version (3.1.2)__
 * added a hidden advancement for the real hardcore players
 * players can no longer activate end portals in D4C's alt dimension
 ### Blocks & Items
+* Added skins to Anubis Silver Chariot
 * added Jotaro Cosplay from Part 6 (thanks Bob)
 * Diego outfit has been updated
+* Thrown Knives no longer cancel moves
 ### NPCs & Stands
+* Gold Experience: Requiem
+  * Overhead Smash armor reduced from infinite to 1 point
 * (re)added max reach for Mandom, BTD Ult and GER RTZ teleport, all default to 200 blocks
 * Training Dummy is now vulnerable if below build height (to be able to die in the void) and killable via /kill
 ### Configs
@@ -29,7 +34,11 @@
 * Training Dummy no longer has doubled knockback
 * some cosplay nitpicks
 ### Known Bugs
-* …
+* Some items are duplicated in the Creative Menu
+* Silver Chariot's rapier doesn't render in first-person
+
+
+
 
 ## TODO (SOME UPDATE) :D
 * Spin
@@ -37,5 +46,4 @@
 * MR barrage fire :)
 * Timestop should stop stand anims
 * CRAZY DIAMOND, Hermit Purple, Yellow Temperance
-* Stand NBT serialization
 * Actually use effect keyframes in animations

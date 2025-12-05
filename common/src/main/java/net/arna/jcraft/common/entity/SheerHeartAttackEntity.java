@@ -1,12 +1,7 @@
 package net.arna.jcraft.common.entity;
 
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.ai.goal.SHAAttackGoal;
@@ -41,7 +36,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class SheerHeartAttackEntity extends Mob implements GeoEntity, IOwnable {
+public class SheerHeartAttackEntity extends Mob implements IOwnable {
     private static final EntityDataAccessor<Optional<UUID>> OWNER_ID = SynchedEntityData.defineId(SheerHeartAttackEntity.class, EntityDataSerializers.OPTIONAL_UUID);
     private LivingEntity master;
 
@@ -213,18 +208,17 @@ public class SheerHeartAttackEntity extends Mob implements GeoEntity, IOwnable {
     }
 
     // Animations
-    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
+    /*private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
-    }
+    }*/
 
-    public static final RawAnimation
-            SHA_WALK = RawAnimation.begin().thenLoop("animation.sha.walk"),
-            SHA_IDLE = RawAnimation.begin().thenLoop("animation.sha.idle");
+    public static final AzCommand SHA_WALK = AzCommand.create("base_controller", "animation.sha.walk", AzPlayBehaviors.LOOP);
+    public static final AzCommand SHA_IDLE = AzCommand.create("base_controller", "animation.sha.idle", AzPlayBehaviors.LOOP);
 
-    private PlayState predicate(AnimationState<SheerHeartAttackEntity> state) {
+    /*private PlayState predicate(AnimationState<SheerHeartAttackEntity> state) {
         state.setAnimation(
                 state.isMoving() ? SHA_WALK : SHA_IDLE
         );
@@ -234,5 +228,5 @@ public class SheerHeartAttackEntity extends Mob implements GeoEntity, IOwnable {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
-    }
+    }*/
 }

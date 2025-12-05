@@ -21,6 +21,8 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public class CreateMagneticFieldMove extends AbstractMove<CreateMagneticFieldMove, MetallicaEntity> {
+    public static final float IRON_COST = 10.0f;
+
     public CreateMagneticFieldMove(int cooldown, int windup, int duration) {
         super(cooldown, windup, duration, 0);
     }
@@ -50,6 +52,8 @@ public class CreateMagneticFieldMove extends AbstractMove<CreateMagneticFieldMov
                         ).scale(2.0)
                 )
         );
+
+        attacker.drainIron(IRON_COST);
 
         return Set.of();
     }

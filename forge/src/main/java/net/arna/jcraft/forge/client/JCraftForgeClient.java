@@ -66,7 +66,7 @@ public class JCraftForgeClient {
         ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory(
                 (minecraft, screen) -> AutoConfig.getConfigScreen(JClientConfig.class, screen).get()));
 
-        BlockEntityRenderers.register(JBlockEntityTypeRegistry.COFFIN_TILE.get(), CoffinTileRenderer::new);
+        BlockEntityRenderers.register(JBlockEntityTypeRegistry.COFFIN_TILE.get(), context -> new CoffinTileRenderer());
 
         registerClientCapabilityReceivers();
 

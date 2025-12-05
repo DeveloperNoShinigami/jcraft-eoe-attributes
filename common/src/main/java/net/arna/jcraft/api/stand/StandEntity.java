@@ -4,14 +4,7 @@ import com.google.common.base.MoreObjects;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.AttackData;
 import net.arna.jcraft.api.MoveUsage;
@@ -83,7 +76,7 @@ import static net.arna.jcraft.JCraft.comboBreak;
 import static net.arna.jcraft.api.Attacks.damageLogic;
 
 public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S> & StandAnimationState<E>>
-        extends Mob implements GeoEntity, IAttacker<E, S>, ICustomDamageHandler, MoveSet.ReloadListener<E, S> {
+        extends Mob implements IAttacker<E, S>, ICustomDamageHandler, MoveSet.ReloadListener<E, S> {
 
     // TODO: finish custom player idle poses for all stands
 
@@ -159,14 +152,16 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     @Setter
     private boolean remoteJumpInput = false, remoteSneakInput = false;
 
+    @Getter
     private boolean playSummonAnim = true;
     @Setter
     private boolean playSummonSound = true, playDesummonSound = true;
 
+    public static final AzCommand SUMMON_ANIMATION = AzCommand.create(JCraft.BASE_CONTROLLER, "summon");
+
     // Data
     @Getter
     private final StandType standType;
-    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
     protected Vector3f[] auraColors = {new Vector3f(), new Vector3f(1f, 0f, 0f), new Vector3f(0f, 1f, 0f), new Vector3f(0f, 0f, 1f)};
 
     protected StandEntity(StandType type, Level world) {
@@ -244,12 +239,20 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         return entityData.get(STATE);
     }
 
-    private boolean isReset() {
+    protected boolean isReset() {
         return entityData.get(RESET);
     }
 
     protected void setReset(boolean reset) {
         entityData.set(RESET, reset);
+    }
+
+    /**
+     * Utility for one single hack in {@link net.arna.jcraft.client.renderer.entity.stands.StandEntityRenderer}.
+     * Do not use this.
+     */
+    public final void playStateAnimation() {
+        getState().playAnimation(getThis());
     }
 
     /**
@@ -260,6 +263,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             return;
         }
         setRawStateNoReset(state.ordinal());
+        state.playAnimation(getThis());
     }
 
     public void setRawStateNoReset(int state) {
@@ -271,8 +275,14 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
      */
     public void setState(S state) {
         setRawState(state.ordinal());
+        state.playAnimation(getThis());
     }
 
+
+    /**
+     * *Actually* sets the stands state using the ordinal ID. Does not handle setting the animation.
+     * @param state id
+     */
     public void setRawState(int state) {
         int oldState = getRawState();
         boolean sameState = oldState == state || oldState <= 1;
@@ -833,8 +843,25 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         discard();
     }
 
-    // Define idle override
+    /**
+     * The function that is executed when the stand should be idle while having idleOverride set to true.
+     * By default, an idle that is meant for remote stands.
+     */
     public void idleOverride() {
+        if (getCurrentMove() != null) setCurrentMove(null);
+
+        setStandGauge(Mth.clamp(this.getStandGauge() + 0.5f, 0, maxStandGauge));
+
+        if (getRawState() != 0 || isReset()) {
+            if (navigation.isDone() && getDeltaMovement().lengthSqr() < 0.001) { // remote stand movement
+                setRawState(0);
+                boxState(0).playAnimation(getThis());
+                setReset(false);
+            }
+
+            setDistanceOffset(getStandData().getIdleDistance());
+            setRotationOffset(getStandData().getIdleRotation());
+        }
     }
 
     public void cancelMove() {
@@ -1057,8 +1084,11 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                 setStandGauge(Mth.clamp(this.getStandGauge() + 0.5f, 0, maxStandGauge));
 
                 if (getRawState() != 0 || isReset()) {
-                    setRawState(0);
-                    setReset(false);
+                    if (!playSummonAnim) {
+                        setRawState(0);
+                        boxState(0).playAnimation(getThis());
+                        setReset(false);
+                    }
 
                     setDistanceOffset(getStandData().getIdleDistance());
                     setRotationOffset(getStandData().getIdleRotation());
@@ -1496,6 +1526,10 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         return wantToBlock;
     }
 
+    public void playSummonAnimation() {
+        StandEntity.SUMMON_ANIMATION.sendForEntity(this);
+    }
+
     public enum DesiredBlocking {
         PASS(false, false, false),
         BLOCK(true, false, true),
@@ -1614,37 +1648,6 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         return auraColors[getSkin()];
     }
 
-    // Animation code
-
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(getThis(), "controller", 0, this::predicate));
-    }
-
-    private PlayState predicate(AnimationState<E> state) {
-        AnimationController<E> controller = state.getController();
-
-        String summonAnimation = getSummonAnimation();
-        if (playSummonAnim && summonAnimation != null) {
-            return state.setAndContinue(RawAnimation.begin().thenPlay(summonAnimation));
-        }
-
-        if (isSameState()) {
-            controller.forceAnimationReset();
-        }
-
-        S superState = getState();
-        superState.playAnimation(getThis(), state);
-        superState.configureController(getThis(), controller);
-
-        return PlayState.CONTINUE;
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return cache;
-    }
-
     @Override
     public boolean isSilent() {
         // Make stands silent if their users are.
@@ -1741,9 +1744,6 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     public boolean isBlocking() {
         return getState() == getBlockState();
     }
-
-    @Nullable
-    protected abstract String getSummonAnimation();
 
     /**
      * Gets called after damage calculation if the damaged entity was slain.
