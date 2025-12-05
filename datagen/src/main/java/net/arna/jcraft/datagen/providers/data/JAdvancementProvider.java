@@ -98,7 +98,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 JStandTypeRegistry.SHADOW_THE_WORLD,
                 JStandTypeRegistry.METALLICA,
                 JStandTypeRegistry.THE_HAND,
-                JStandTypeRegistry.MANDOM
+                JStandTypeRegistry.MANDOM,
+                JStandTypeRegistry.CRAZY_DIAMOND
         );
         final Advancement.Builder obtainAllStandsBuilder = Advancement.Builder.advancement()
                 .display(JItemRegistry.STAND_DISC.get(),

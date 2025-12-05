@@ -265,6 +265,15 @@ public interface JEntityTypeRegistry {
             ).sized(0.6f, 1.8f).build("horus")
     );
 
+    RegistrySupplier<EntityType<CrazyDiamondEntity>> CRAZY_DIAMOND = ENTITY_TYPE_REGISTRY.register(JCraft.id("crazy_diamond"),
+            () -> EntityType.Builder.of(
+                    WorldOnlyEntityFactory.from(CrazyDiamondEntity::new),
+                    MobCategory.CREATURE
+            ).sized(
+                    0.6f,
+                    1.8f
+            ).build("crazy_diamond"));
+
     RegistrySupplier<EntityType<GEREntity>> GER = ENTITY_TYPE_REGISTRY.register(JCraft.id("ger"),
             () -> EntityType.Builder.of(
                     WorldOnlyEntityFactory.from(GEREntity::new),
@@ -721,6 +730,7 @@ public interface JEntityTypeRegistry {
         EntityAttributeRegistry.register(HIEROPHANT_GREEN, HGEntity::createMobAttributes);
         EntityAttributeRegistry.register(THE_SUN, TheSunEntity::createMobAttributes);
         EntityAttributeRegistry.register(HORUS, HorusEntity::createMobAttributes);
+        EntityAttributeRegistry.register(CRAZY_DIAMOND, CrazyDiamondEntity::createMobAttributes);
         EntityAttributeRegistry.register(CINDERELLA, CinderellaEntity::createMobAttributes);
         EntityAttributeRegistry.register(OSIRIS, OsirisEntity::createMobAttributes);
         EntityAttributeRegistry.register(ATUM, AtumEntity::createMobAttributes);
