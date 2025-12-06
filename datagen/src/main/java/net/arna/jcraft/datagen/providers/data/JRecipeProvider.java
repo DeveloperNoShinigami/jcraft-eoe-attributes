@@ -1152,6 +1152,12 @@ public class JRecipeProvider extends FabricRecipeProvider {
         new CrazyDiamondRecipeBuilder(Blocks.DARK_OAK_WOOD)
                 .requires(Blocks.STRIPPED_DARK_OAK_WOOD)
                 .save(exporter, JCraft.id("crazy_diamond/dark_oak_wood"));
+        new CrazyDiamondRecipeBuilder(Blocks.JUNGLE_LOG)
+                .requires(Blocks.STRIPPED_JUNGLE_LOG)
+                .save(exporter, JCraft.id("crazy_diamond/jungle_log"));
+        new CrazyDiamondRecipeBuilder(Blocks.JUNGLE_WOOD)
+                .requires(Blocks.STRIPPED_JUNGLE_WOOD)
+                .save(exporter, JCraft.id("crazy_diamond/jungle_wood"));
         new CrazyDiamondRecipeBuilder(Blocks.MANGROVE_LOG)
                 .requires(Blocks.STRIPPED_MANGROVE_LOG)
                 .save(exporter, JCraft.id("crazy_diamond/mangrove_log"));
