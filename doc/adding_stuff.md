@@ -109,7 +109,7 @@
 1. Create a move class (preferably in some subpackage in `net.arna.jcraft.attack.moves` in the `common` project) that derives from some base class (see `net.arna.jcraft.attack.moves.base`).
    The most basic moves should at least derive from `AbstractMove`.
 2. If the move is not abstract or is abstract and adds any field that should be serialized, make sure to add an (abstract) type class in it that extends from the type class of the super class as well.
-3. Register the move's type in `MoveSetLoader`. Preferably ensure the type has a `public static final INSTANCE` field, although this should not make a difference.
+3. Register the move's type in `JMoveTypeRegistry`. Preferably ensure the type has a `public static final INSTANCE` field, although this should not make a difference.
 
 ## Adding move actions and conditions
 1. Create a class deriving from MoveAction/MoveCondition and implement it.

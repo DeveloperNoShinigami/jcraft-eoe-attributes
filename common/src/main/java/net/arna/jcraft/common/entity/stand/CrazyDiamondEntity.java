@@ -12,7 +12,7 @@ import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandInfo;
-import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
+import net.arna.jcraft.common.attack.moves.shared.RestorationAttack;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
@@ -21,8 +21,8 @@ public class CrazyDiamondEntity extends StandEntity<CrazyDiamondEntity, CrazyDia
     public static final MoveSet<CrazyDiamondEntity, CrazyDiamondEntity.State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.CRAZY_DIAMOND,
             CrazyDiamondEntity::registerDefaultMoves, CrazyDiamondEntity.State.class);
 
-    // TODO Ayutac copied this from CreamEntity
-    public static final SimpleAttack<CrazyDiamondEntity> PUNCH = SimpleAttack.<CrazyDiamondEntity>lightAttack(
+    // TODO Ayutac copied the values from CreamEntity
+    public static final RestorationAttack<CrazyDiamondEntity> PUNCH = RestorationAttack.<CrazyDiamondEntity>lightAttack(
             6, 14,0.75f, 5f, 20, 0.3f, -0.1f);
 
     public static final StandData DATA = StandData.builder()
