@@ -37,7 +37,9 @@ configurations {
 }
 
 repositories {
-    maven { url "https://maven.createmod.net/" } // for flywheel, ponder, create
+    //maven { url "https://maven.createmod.net/" } // for flywheel, ponder, create
+    //maven { url "https://maven.fzzyhmstrs.me/" } // for fzzy config
+    //maven { url = "https://thedarkcolour.github.io/KotlinForForge/" } // for kotlin
 }
 
 dependencies {
@@ -90,8 +92,8 @@ dependencies {
     //modRuntimeOnly("curse.maven:weather2-additions-1091174:6666847")
     //modRuntimeOnly("curse.maven:wuffys-weather2-additions-1115203:5807550")
     // for Particle Core
-    //modRuntimeOnly("curse.maven:kotlin-for-forge-351264:7291067")
-    //modRuntimeOnly("curse.maven:fzzy-config-1005914:7085017")
+    //modRuntimeOnly("thedarkcolour:kotlinforforge:4.12.0")
+    //modRuntimeOnly("me.fzzyhmstrs:fzzy_config:0.7.3+1.20.1+forge")
     //modRuntimeOnly("curse.maven:particle-core-985426:6427560")
     // for Waystones
     //modRuntimeOnly("curse.maven:balm-531761:7087245")
