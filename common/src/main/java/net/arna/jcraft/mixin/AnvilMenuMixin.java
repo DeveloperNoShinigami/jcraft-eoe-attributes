@@ -28,6 +28,9 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
     @Shadow @Final private DataSlot cost;
     @Shadow private String itemName;
 
+    @Shadow
+    private int repairItemCountCost;
+
     private AnvilMenuMixin(@Nullable MenuType<?> type, int containerId, Inventory playerInventory, ContainerLevelAccess access) {
         super(type, containerId, playerInventory, access);
     }
@@ -95,6 +98,8 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
         if (level >= standType.getData().getInfo().getSkinCount() || level == StandDiscItem.getSkin(disc)) {
             return;
         }
+        // hack to make it not consume multiple Cinderella masks at once
+        repairItemCountCost = 1;
         // prepare the result
         final ItemStack newDisc = StandDiscItem.createDiscStack(standType, level);
         int c = 5;
