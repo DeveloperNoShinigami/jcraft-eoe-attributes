@@ -41,7 +41,7 @@ public class CreateMagneticFieldMove extends AbstractMove<CreateMagneticFieldMov
 
         final Vec3 hitPos = hitResult.getLocation();
 
-        JComponentPlatformUtils.getCooldowns(user).setCooldown(CooldownType.SPECIAL2, 400);
+        JComponentPlatformUtils.getCooldowns(user).setCooldown(CooldownType.STAND_SP2, 400);
 
         MagneticFields.createField(
                 (ServerLevel) user.level(),

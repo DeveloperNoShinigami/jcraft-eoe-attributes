@@ -437,6 +437,9 @@ public interface Attacks {
         damage = JUtils.getDamageThroughArmor(damage, armor * 0.9f, toughness * 0.9f);
         damage = ((LivingEntityInvoker) ent).invokeModifyAppliedDamage(damageSource, damage);
 
+        // Functionally a callback invocation; we can't copy the nuances of all damage effects, so we do this instead.
+        ent.hurt(damageSource, Float.MIN_NORMAL);
+
         // Apply absorption
         applyAbsorptionAndStats(damage, damageSource, ent);
     }

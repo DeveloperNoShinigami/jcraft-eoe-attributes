@@ -213,7 +213,7 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?
     }
 
     /**
-     * Selects and uses a move
+     * Selects and uses a move. Also handles queueing.
      */
     default @Nullable AbstractMove<?, ? super A> doMoveSelection(AttackerBrainInfo info, Mob mob, LivingEntity target, JumpControl mobJumpControl,
                                  StandEntity<?, ?> enemyStand, AbstractMove<?, ?> enemyAttack, double distance, int enemyMoveStun, int stunTicks) {

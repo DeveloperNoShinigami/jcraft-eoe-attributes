@@ -9,7 +9,7 @@ import net.arna.jcraft.forge.capability.impl.entity.GravityCapability;
 import net.arna.jcraft.forge.capability.impl.entity.TimeStopCapability;
 import net.arna.jcraft.forge.capability.impl.living.*;
 import net.arna.jcraft.forge.capability.impl.player.PhCapability;
-import net.arna.jcraft.forge.capability.impl.player.SpecCapability;
+import net.arna.jcraft.forge.capability.impl.living.SpecCapability;
 import net.arna.jcraft.forge.capability.impl.world.ShockwaveHandlerCapability;
 import net.arna.jcraft.api.registry.JStatusRegistry;
 import net.minecraft.core.BlockPos;
@@ -86,7 +86,7 @@ public class RuntimeEvents {
         // BombTrackerCapability.syncEntityCapability(event);
         CooldownsCapability.syncEntityCapability(event);
         // HitPropertyCapability.syncEntityCapability(event);
-        MiscCapability.syncEntityCapability(event);
+        // MiscCapability.syncEntityCapability(event);
         StandCapability.syncEntityCapability(event);
         // VampireCapability.syncEntityCapability(event);
         PhCapability.syncEntityCapability(event);

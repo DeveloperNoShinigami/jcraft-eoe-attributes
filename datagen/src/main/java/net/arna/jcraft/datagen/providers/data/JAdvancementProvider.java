@@ -236,7 +236,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         final var obtainableSpecs = List.of(
                 JSpecTypeRegistry.ANUBIS,
                 JSpecTypeRegistry.BRAWLER,
-                JSpecTypeRegistry.VAMPIRE
+                JSpecTypeRegistry.VAMPIRE,
+                JSpecTypeRegistry.HAMON
         );
         final Advancement.Builder obtainAllSpecsBuilder = Advancement.Builder.advancement()
                 .display(JItemRegistry.SPEC_DISC.get(),
