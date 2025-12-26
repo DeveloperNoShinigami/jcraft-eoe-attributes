@@ -7,6 +7,9 @@ import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
 import net.arna.jcraft.common.spec.HamonSpec;
 import net.arna.jcraft.common.util.JUtils;
+import net.minecraft.world.entity.LivingEntity;
+
+import java.util.Set;
 
 public final class ZoomPunchAttack extends AbstractSimpleAttack<ZoomPunchAttack, HamonSpec> {
     public static final float CHARGE_COST = 10.0F;
@@ -23,7 +26,9 @@ public final class ZoomPunchAttack extends AbstractSimpleAttack<ZoomPunchAttack,
     @Override
     public void onInitiate(HamonSpec attacker) {
         super.onInitiate(attacker);
+
         attacker.drainCharge(CHARGE_COST);
+        attacker.setUseHamonNext(false);
 
         final float pitch = attacker.user.getXRot();
 
@@ -59,11 +64,16 @@ public final class ZoomPunchAttack extends AbstractSimpleAttack<ZoomPunchAttack,
         }
     }
 
-    // @Override
-    // public @NonNull Set<LivingEntity> perform(HamonSpec attacker, LivingEntity user) {
-    //     Set<LivingEntity> targets = super.perform(attacker, user);
-    //     return targets;
-    // }
+    @Override
+    public @NonNull Set<LivingEntity> perform(HamonSpec attacker, LivingEntity user) {
+        final Set<LivingEntity> targets = super.perform(attacker, user);
+
+        if (JUtils.getSpec(user) instanceof HamonSpec hamonSpec)
+            for (LivingEntity target : targets)
+                hamonSpec.processTarget(target);
+
+        return targets;
+    }
 
     @Override
     protected @NonNull ZoomPunchAttack getThis() {

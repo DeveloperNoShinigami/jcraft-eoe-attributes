@@ -5,6 +5,8 @@ import lombok.NonNull;
 import net.arna.jcraft.api.component.living.CommonMiscComponent;
 import net.arna.jcraft.common.entity.stand.MetallicaEntity;
 import net.arna.jcraft.api.registry.JSoundRegistry;
+import net.arna.jcraft.common.spec.HamonSpec;
+import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -128,10 +130,18 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
     public float getHamonCharge() {
         return hamonCharge;
     }
-
     @Override
     public void setHamonCharge(float charge) {
         hamonCharge = charge;
+        sync(entity);
+    }
+
+    private boolean hamonizeReady = false;
+    public boolean isHamonizeReady() {
+        return hamonizeReady;
+    }
+    public void setHamonizeReady(final boolean ready) {
+        hamonizeReady = ready;
         sync(entity);
     }
 
@@ -182,6 +192,14 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
                 updateKnifeTimer();
             }
         }
+
+        if (hamonCharge > 0 || hamonizeReady) {
+            if (!(JUtils.getSpec(entity) instanceof HamonSpec)) {
+                hamonCharge = 0;
+                hamonizeReady = false;
+                sync(entity);
+            }
+        }
     }
 
     public LivingEntity getMaster() {
@@ -205,6 +223,7 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
         buf.writeVarInt(stuckKnifeCount);
         buf.writeFloat(attackSpeedMult);
         buf.writeFloat(hamonCharge);
+        buf.writeBoolean(hamonizeReady);
     }
 
     public void applySyncPacket(FriendlyByteBuf buf) {
@@ -212,6 +231,7 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
         stuckKnifeCount = buf.readVarInt();
         attackSpeedMult = buf.readFloat();
         hamonCharge = buf.readFloat();
+        hamonizeReady = buf.readBoolean();
     }
 
     public void readFromNbt(@NonNull CompoundTag tag) {

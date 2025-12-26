@@ -54,4 +54,6 @@ public interface CommonMiscComponent extends JComponent {
     // HamonSpec
     float getHamonCharge();
     void setHamonCharge(final float charge);
+    boolean isHamonizeReady();
+    void setHamonizeReady(final boolean ready);
 }
