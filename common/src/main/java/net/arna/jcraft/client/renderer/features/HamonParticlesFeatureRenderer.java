@@ -43,6 +43,8 @@ public class HamonParticlesFeatureRenderer<T extends LivingEntity, M extends Age
         prepareHamonAura(null);
     }
     public static void prepareHamonAura(LivingEntity livingEntity) {
+        if (livingEntity != null) HAMON_COLOR.y = 0.5f + livingEntity.getRandom().nextFloat() * 0.3f;
+
         AuraArcParticle.Factory.parent = livingEntity;
         AuraArcParticle.Factory.color = HAMON_COLOR;
         AuraBlobParticle.Factory.parent = livingEntity;

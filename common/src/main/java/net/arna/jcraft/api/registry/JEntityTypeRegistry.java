@@ -548,6 +548,13 @@ public interface JEntityTypeRegistry {
                     .build("purple_haze_cloud")
     );
 
+    RegistrySupplier<EntityType<HamonWaveEntity>> HAMON_WAVE = ENTITY_TYPE_REGISTRY.register(JCraft.id("hamon_wave"),
+            () -> EntityType.Builder.of(
+                    WorldOnlyEntityFactory.from(HamonWaveEntity::new),
+                    MobCategory.MISC
+            ).sized(2.0f, 0.2f).build("hamon_wave")
+    );
+
     RegistrySupplier<EntityType<PetshopEntity>> PETSHOP = ENTITY_TYPE_REGISTRY.register(JCraft.id("petshop"),
             () -> EntityType.Builder.of(
                             (EntityType<PetshopEntity> entityType, Level world) -> new PetshopEntity(world),
@@ -767,6 +774,7 @@ public interface JEntityTypeRegistry {
         EntityAttributeRegistry.register(RED_BIND, RedBindEntity::createLivingAttributes);
         EntityAttributeRegistry.register(BLOCK_PROJECTILE, BlockProjectile::createBlockAttributes);
         EntityAttributeRegistry.register(SAND_TORNADO, SandTornadoEntity::createTornadoAttributes);
+        EntityAttributeRegistry.register(HAMON_WAVE, HamonWaveEntity::createLivingAttributes);
 
         EntityAttributeRegistry.register(PETSHOP, PetshopEntity::createPetshopAttributes);
         EntityAttributeRegistry.register(AYA_TSUJI, AyaTsujiEntity::createAyaTsujiAttributes);

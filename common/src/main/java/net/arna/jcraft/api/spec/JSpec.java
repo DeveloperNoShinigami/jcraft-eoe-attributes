@@ -233,10 +233,14 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
         return handleMove(moveClass, 1f);
     }
 
+    public MoveMap.Entry<A, S> getMoveEntry(MoveClass moveClass, boolean crouching, boolean aerial) {
+        return moveMap.getFirstValidEntry(moveClass, getThis(), crouching, aerial);
+    }
+
     public boolean handleMove(MoveClass moveClass, float animationSpeed) {
         boolean crouching = hasUser() && user.isShiftKeyDown();
         boolean aerial = hasUser() && !user.onGround();
-        MoveMap.Entry<A, S> entry = moveMap.getFirstValidEntry(moveClass, getThis(), crouching, aerial);
+        MoveMap.Entry<A, S> entry = getMoveEntry(moveClass, crouching, aerial);
         if (entry == null) {
             return false;
         }
