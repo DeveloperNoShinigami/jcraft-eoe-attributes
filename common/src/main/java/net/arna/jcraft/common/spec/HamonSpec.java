@@ -13,11 +13,12 @@ import net.arna.jcraft.api.registry.JSoundRegistry;
 import net.arna.jcraft.api.registry.JSpecTypeRegistry;
 import net.arna.jcraft.api.spec.JSpec;
 import net.arna.jcraft.api.spec.SpecData;
+import net.arna.jcraft.common.attack.actions.LaunchUpAction;
 import net.arna.jcraft.common.attack.actions.LungeAction;
 import net.arna.jcraft.common.attack.conditions.HamonChargeCondition;
 import net.arna.jcraft.common.attack.core.MoveMapImpl;
 import net.arna.jcraft.common.attack.moves.hamon.RippleAttack;
-import net.arna.jcraft.common.attack.moves.hamon.SendoKickAttack;
+import net.arna.jcraft.common.attack.moves.hamon.SendoAttack;
 import net.arna.jcraft.common.attack.moves.hamon.ZoomPunchAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.config.JServerConfig;
@@ -107,20 +108,45 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
             .withImpactSound(JSoundRegistry.IMPACT_3)
             .withHitSpark(JParticleType.HIT_SPARK_1)
             .withInitAction(LungeAction.lunge(0.5f, 0.25f))
+            .withAnim(State.SENDO)
             .withInfo(
                     Component.literal("Knee Thrust"),
                     Component.literal("Charge with hamon for Sendo Wave Kick, which knocks the enemy down, and then props them back up with an aftershock of hamon.")
             );
-    public static final SendoKickAttack SENDO_KICK = new SendoKickAttack(100, 12,
+    public static final SendoAttack SENDO_KICK = new SendoAttack(100, 12,
             19, 1.0f, 6.5f, 20, 1.6f, 2.0f, -0.1f)
             .withSound(JSoundRegistry.HAMON_SWOOSH)
             .withImpactSound(JSoundRegistry.HAMON_CRACKLE_IMPACT)
-            .withCondition(HamonChargeCondition.atLeast(SendoKickAttack.CHARGE_COST))
+            .withCondition(HamonChargeCondition.atLeast(SendoAttack.CHARGE_COST))
             .withInitAction(LungeAction.lunge(0.5f, 0.25f))
             .withLaunch()
+            .withAnim(State.SENDO)
             .withInfo(
                     Component.literal("Sendo Wave Kick"),
                     Component.literal("")
+            );
+
+    public static final SimpleAttack<HamonSpec> UPPERCUT = new SimpleAttack<HamonSpec>(0, 10,
+            16, 1.0f, 6f, 18, 1.5f, 1.0f, -0.4f)
+            .withImpactSound(JSoundRegistry.IMPACT_3)
+            .withHitSpark(JParticleType.HIT_SPARK_1)
+            .withAction(LaunchUpAction.launchUp(1.0f))
+            .withAerialVariant(KNEE_THRUST)
+            .withInfo(
+                    Component.literal("Uppercut"),
+                    Component.literal("Charge with hamon for Sendo Punch, which knocks the enemy down, and then props them back up with an aftershock of hamon.")
+            );
+    public static final SendoAttack SENDO_UPPERCUT = new SendoAttack(0, 10,
+            16, 1.0f, 6f, 18, 1.5f, 1.0f, -0.4f)
+            .withSound(JSoundRegistry.HAMON_SWOOSH)
+            .withImpactSound(JSoundRegistry.HAMON_CRACKLE_IMPACT)
+            .withHitSpark(JParticleType.HIT_SPARK_2)
+            .withCondition(HamonChargeCondition.atLeast(SendoAttack.CHARGE_COST))
+            .withAction(LaunchUpAction.launchUp(1.0f))
+            .withAerialVariant(SENDO_KICK)
+            .withInfo(
+                    Component.literal("Uppercut"),
+                    Component.literal("Charge with hamon for Sendo Punch, which knocks the enemy down, and then props them back up with an aftershock of hamon.")
             );
 
     public static final Map<MoveClass, MoveMap.Entry<HamonSpec, State>> HAMONIZED_MOVES = Map.ofEntries(
@@ -143,7 +169,7 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
             Map.entry(MoveClass.SPECIAL2,
                     new MoveMapImpl.EntryImpl<>(
                             MoveClass.SPECIAL2,
-                            SENDO_KICK,
+                            SENDO_UPPERCUT,
                             CooldownType.SPECIAL2,
                             State.SENDO
                     )
@@ -154,7 +180,7 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
         // moves.register(MoveClass.BARRAGE, COMBO, CooldownType.BARRAGE, VampireSpec.State.COMBO);
         moves.register(MoveClass.HEAVY, FOCUS_STRIKE, CooldownType.HEAVY, State.FOCUS_STRIKE);
         moves.register(MoveClass.SPECIAL1, STOMP, CooldownType.SPECIAL1, State.STOMP);
-        moves.register(MoveClass.SPECIAL2, KNEE_THRUST, CooldownType.SPECIAL2, State.SENDO);
+        moves.register(MoveClass.SPECIAL2, UPPERCUT, CooldownType.SPECIAL2, State.UPPERCUT);
     }
 
     @Override
@@ -273,6 +299,7 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
         ZOOM_PUNCH_LOW("hm.zp.lo"),
 
         SENDO("hm.snd"),
+        UPPERCUT("hm.uct"),
 
         STOMP("hm.stm"),
         RIPPLE("hm.rpl"),

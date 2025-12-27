@@ -25,18 +25,18 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.Set;
 
-public class SendoKickAttack extends AbstractSimpleAttack<SendoKickAttack, HamonSpec> {
+public class SendoAttack extends AbstractSimpleAttack<SendoAttack, HamonSpec> {
     public static final float CHARGE_COST = 10.0F;
     private static final int AFTERSHOCK_DELAY = 30;
     private final Object2IntMap<LivingEntity> aftershockTimers = new Object2IntOpenHashMap<>(4);
-    public SendoKickAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                           float hitboxSize, float knockback, float offset) {
+    public SendoAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
+                       float hitboxSize, float knockback, float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
     }
 
     @Override
-    public @NonNull MoveType<SendoKickAttack> getMoveType() {
-        return SendoKickAttack.Type.INSTANCE;
+    public @NonNull MoveType<SendoAttack> getMoveType() {
+        return SendoAttack.Type.INSTANCE;
     }
 
     @Override
@@ -51,39 +51,37 @@ public class SendoKickAttack extends AbstractSimpleAttack<SendoKickAttack, Hamon
     public void tick(HamonSpec attacker) {
         super.tick(attacker);
 
-        if (attacker.getCurrentMove() instanceof SendoKickAttack sendo) {
-            final var entrySet = sendo.aftershockTimers.object2IntEntrySet();
+        final var entrySet = this.aftershockTimers.object2IntEntrySet();
 
-            for (var entry : entrySet) {
-                final LivingEntity entity = entry.getKey();
-                final int time = entry.getIntValue() - 1;
-                sendo.aftershockTimers.replace(entity, time);
+        for (var entry : entrySet) {
+            final LivingEntity entity = entry.getKey();
+            final int time = entry.getIntValue() - 1;
+            this.aftershockTimers.replace(entity, time);
 
-                if (time == 0) {
-                    final ServerLevel level = (ServerLevel) entity.level();
+            if (time == 0) {
+                final ServerLevel level = (ServerLevel) entity.level();
 
-                    entity.removeEffect(JStatusRegistry.KNOCKDOWN.get());
+                entity.removeEffect(JStatusRegistry.KNOCKDOWN.get());
 
-                    Attacks.damageLogic(level, entity, new AttackData(
-                            Vec3.ZERO, 10, StunType.BURSTABLE.ordinal(), false,
-                            3f, true, 3, level.damageSources().indirectMagic(attacker.user, null),
-                            attacker.user, CommonHitPropertyComponent.HitAnimation.CRUSH, null,
-                            false, false
-                    ));
+                Attacks.damageLogic(level, entity, new AttackData(
+                        Vec3.ZERO, 10, StunType.BURSTABLE.ordinal(), false,
+                        3f, true, 3, level.damageSources().indirectMagic(attacker.user, null),
+                        attacker.user, CommonHitPropertyComponent.HitAnimation.CRUSH, null,
+                        false, false
+                ));
 
-                    var packet = new ClientboundLevelParticlesPacket(JParticleTypeRegistry.HAMON_SPARK.get(),
-                            false,
-                            entity.getX(), entity.getY(), entity.getZ(),
-                            1, 1, 1,
-                            0.2f, 10);
+                var packet = new ClientboundLevelParticlesPacket(JParticleTypeRegistry.HAMON_SPARK.get(),
+                        false,
+                        entity.getX(), entity.getY(), entity.getZ(),
+                        1, 1, 1,
+                        0.2f, 10);
 
-                    for (ServerPlayer tracker : JUtils.tracking(entity))
-                        tracker.connection.send(packet);
-                }
+                for (ServerPlayer tracker : JUtils.tracking(entity))
+                    tracker.connection.send(packet);
             }
-
-            entrySet.removeIf((entry -> entry.getIntValue() <= 0));
         }
+
+        entrySet.removeIf((entry -> entry.getIntValue() <= 0));
     }
 
     @Override
@@ -104,22 +102,22 @@ public class SendoKickAttack extends AbstractSimpleAttack<SendoKickAttack, Hamon
     }
 
     @Override
-    protected @NonNull SendoKickAttack getThis() {
+    protected @NonNull SendoAttack getThis() {
         return this;
     }
 
     @Override
-    public @NonNull SendoKickAttack copy() {
-        return copyExtras(new SendoKickAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getDamage(),
+    public @NonNull SendoAttack copy() {
+        return copyExtras(new SendoAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getDamage(),
                 getStun(), getHitboxSize(), getKnockback(), getOffset()));
     }
 
-    public static class Type extends AbstractSimpleAttack.Type<SendoKickAttack> {
-        public static final SendoKickAttack.Type INSTANCE = new SendoKickAttack.Type();
+    public static class Type extends AbstractSimpleAttack.Type<SendoAttack> {
+        public static final SendoAttack.Type INSTANCE = new SendoAttack.Type();
 
         @Override
-        protected @NonNull App<RecordCodecBuilder.Mu<SendoKickAttack>, SendoKickAttack> buildCodec(RecordCodecBuilder.Instance<SendoKickAttack> instance) {
-            return attackDefault(instance, SendoKickAttack::new);
+        protected @NonNull App<RecordCodecBuilder.Mu<SendoAttack>, SendoAttack> buildCodec(RecordCodecBuilder.Instance<SendoAttack> instance) {
+            return attackDefault(instance, SendoAttack::new);
         }
     }
 }
