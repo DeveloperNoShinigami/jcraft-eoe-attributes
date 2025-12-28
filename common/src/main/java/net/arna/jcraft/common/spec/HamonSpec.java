@@ -16,6 +16,7 @@ import net.arna.jcraft.api.spec.JSpec;
 import net.arna.jcraft.api.spec.SpecData;
 import net.arna.jcraft.common.attack.actions.LaunchUpAction;
 import net.arna.jcraft.common.attack.actions.LungeAction;
+import net.arna.jcraft.common.attack.actions.UserAnimationAction;
 import net.arna.jcraft.common.attack.conditions.HamonChargeCondition;
 import net.arna.jcraft.common.attack.moves.hamon.RippleAttack;
 import net.arna.jcraft.common.attack.moves.hamon.SendoAttack;
@@ -39,11 +40,11 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
     public static final MoveSet<HamonSpec, HamonSpec.State> MOVE_SET = MoveSetManager.create(JSpecTypeRegistry.HAMON, HamonSpec::registerMoves, HamonSpec.State.class);
     public static final SpecData DATA = SpecData.builder()
             .name(Component.translatable("spec.jcraft.hamon"))
-            .description(Component.literal("Supernatural all-ranger"))
+            .description(Component.literal("Superpowered Mid-ranger"))
             .details(Component.literal("""
-                    PASSIVES: Burns in sunlight, Replaces hunger with blood, Night vision
-                    Excellent frametraps with Sweep or Axe Kick.
-                    Bloodsuck is extremely rewarding and allows linking into almost any move."""))
+                    PASSIVES: Hamon breath
+                    Tap Barrage to toggle whether the next move uses Hamon or not.
+                    """))
             .build();
     public static final float MAX_CHARGE = 20.0f;
 
@@ -62,6 +63,8 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
             14, 1.5f, 4f, 9, 1.5f, 1.0f, 0f)
             .withImpactSound(JSoundRegistry.IMPACT_6)
             .withHitSpark(JParticleType.HIT_SPARK_2)
+            // Because Zoom Punch plays its own animations, the entry must have a null state. This is how we animate despite that.
+            .withInitAction(UserAnimationAction.play("hm.fcs").force())
             .withInfo(
                     Component.literal("Focus Strike"),
                     Component.literal("Charge with hamon for Zoom Punch, a slow yet far-reaching, launching strike. Can take one hit without being stopped.")
@@ -75,7 +78,6 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
             .withLaunch()
             .withCondition(HamonChargeCondition.atLeast(ZoomPunchAttack.CHARGE_COST))
             .withExtraHitBox(1.5)
-            .withArmor(1)
             .withInfo(
                     Component.literal("Zoom Punch"),
                     Component.literal("")
@@ -96,6 +98,7 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withStaticY()
             .withCondition(HamonChargeCondition.atLeast(RippleAttack.CHARGE_COST))
+            .withAnim(State.RIPPLE)
             .withInfo(
                     Component.literal("Ripple"),
                     Component.literal("")
@@ -151,7 +154,7 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
     private final SendoAttack sendoUppercut = SENDO_UPPERCUT.copy();
 
     private static void registerMoves(MoveMap<HamonSpec, HamonSpec.State> moves) {
-        moves.register(MoveClass.HEAVY, FOCUS_STRIKE, CooldownType.HEAVY, State.FOCUS_STRIKE);
+        moves.register(MoveClass.HEAVY, FOCUS_STRIKE, CooldownType.HEAVY, null);
         moves.register(MoveClass.SPECIAL1, STOMP, CooldownType.SPECIAL1, State.STOMP);
         moves.register(MoveClass.SPECIAL2, UPPERCUT, CooldownType.SPECIAL2, State.UPPERCUT)
                 .withAerialVariant(State.SENDO);
@@ -230,10 +233,10 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
             misc.setHamonCharge(charge);
         }
 
-        ZOOM_PUNCH.tick(this);
-        RIPPLE_ATTACK.tick(this);
-        SENDO_KICK.tick(this);
-        SENDO_UPPERCUT.tick(this);
+        zoomPunchAttack.tick(this);
+        rippleAttack.tick(this);
+        sendoKick.tick(this);
+        sendoUppercut.tick(this);
     }
 
     public void processTarget(@NonNull LivingEntity target) {

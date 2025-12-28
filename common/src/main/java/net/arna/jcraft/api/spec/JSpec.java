@@ -258,12 +258,11 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
         }
 
         final AbstractMove<?, ? super A> move = overrideMoveSelection(entry.getMove(), crouching, aerial);
-        final Enum<?> overrideAnimation = move.getAnimation();
 
         return handleMove(
                 move.isCopyOnUse() ? move.copy() : move,
                 entry.getCooldownType(),
-                overrideAnimation == null ? entry.getAnimState() : (S)overrideAnimation,
+                entry.getAnimState(),
                 animationSpeed
         );
     }
@@ -321,6 +320,11 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
         }
 
         armorPoints = move.getArmor();
+
+        final Enum<? extends Enum<?>> overrideAnimation = move.getAnimation();
+        if (overrideAnimation != null) {
+            state = (S) overrideAnimation;
+        }
 
         if (state != null) {
             setAnimation((this.state = state).getKey(getThis()), moveStun, animationSpeed);
