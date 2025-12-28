@@ -62,18 +62,21 @@ public class HamonWaveEntity extends JAttackEntity {
         final Direction gravity = GravityChangerAPI.getGravityDirection(this);
 
         if (level() instanceof ServerLevel serverLevel) {
+            HamonSpec hamonSpec = null;
+            if (master == null) {
+                discard();
+                return;
+            } else if (JUtils.getSpec(master) instanceof HamonSpec typecheck) {
+                hamonSpec = typecheck;
+            } else {
+                JCraft.LOGGER.warn("HamonWaveEntity exists for owner without Hamon!");
+            }
+
             final List<Entity> potentialHits = serverLevel.getEntities(
                     this,
                     AABB.ofSize(position(), size * 2, size * 2, size * 2),
                     EntitySelector.NO_CREATIVE_OR_SPECTATOR
             );
-
-            HamonSpec hamonSpec = null;
-            if (JUtils.getSpec(master) instanceof HamonSpec typecheck) {
-                hamonSpec = typecheck;
-            } else {
-                JCraft.LOGGER.warn("HamonWaveEntity exists for owner without Hamon!");
-            }
 
             boolean anyHit = false;
 

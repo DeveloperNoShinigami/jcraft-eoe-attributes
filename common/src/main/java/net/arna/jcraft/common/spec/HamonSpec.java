@@ -7,6 +7,7 @@ import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.api.component.living.CommonMiscComponent;
 import net.arna.jcraft.api.registry.JParticleTypeRegistry;
 import net.arna.jcraft.api.registry.JSoundRegistry;
@@ -16,7 +17,6 @@ import net.arna.jcraft.api.spec.SpecData;
 import net.arna.jcraft.common.attack.actions.LaunchUpAction;
 import net.arna.jcraft.common.attack.actions.LungeAction;
 import net.arna.jcraft.common.attack.conditions.HamonChargeCondition;
-import net.arna.jcraft.common.attack.core.MoveMapImpl;
 import net.arna.jcraft.common.attack.moves.hamon.RippleAttack;
 import net.arna.jcraft.common.attack.moves.hamon.SendoAttack;
 import net.arna.jcraft.common.attack.moves.hamon.ZoomPunchAttack;
@@ -34,8 +34,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
-
-import java.util.Map;
 
 public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
     public static final MoveSet<HamonSpec, HamonSpec.State> MOVE_SET = MoveSetManager.create(JSpecTypeRegistry.HAMON, HamonSpec::registerMoves, HamonSpec.State.class);
@@ -108,7 +106,6 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
             .withImpactSound(JSoundRegistry.IMPACT_3)
             .withHitSpark(JParticleType.HIT_SPARK_1)
             .withInitAction(LungeAction.lunge(0.5f, 0.25f))
-            .withAnim(State.SENDO)
             .withInfo(
                     Component.literal("Knee Thrust"),
                     Component.literal("Charge with hamon for Sendo Wave Kick, which knocks the enemy down, and then props them back up with an aftershock of hamon.")
@@ -120,7 +117,6 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
             .withCondition(HamonChargeCondition.atLeast(SendoAttack.CHARGE_COST))
             .withInitAction(LungeAction.lunge(0.5f, 0.25f))
             .withLaunch()
-            .withAnim(State.SENDO)
             .withInfo(
                     Component.literal("Sendo Wave Kick"),
                     Component.literal("")
@@ -145,42 +141,20 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
             .withAction(LaunchUpAction.launchUp(1.0f))
             .withAerialVariant(SENDO_KICK)
             .withInfo(
-                    Component.literal("Uppercut"),
+                    Component.literal("Sendo Uppercut"),
                     Component.literal("Charge with hamon for Sendo Punch, which knocks the enemy down, and then props them back up with an aftershock of hamon.")
             );
-
-    public static final Map<MoveClass, MoveMap.Entry<HamonSpec, State>> HAMONIZED_MOVES = Map.ofEntries(
-            Map.entry(MoveClass.HEAVY,
-                    new MoveMapImpl.EntryImpl<>(
-                            MoveClass.HEAVY,
-                            ZOOM_PUNCH,
-                            CooldownType.HEAVY,
-                            null
-                    )
-            ),
-            Map.entry(MoveClass.SPECIAL1,
-                    new MoveMapImpl.EntryImpl<>(
-                            MoveClass.SPECIAL1,
-                            RIPPLE_ATTACK,
-                            CooldownType.SPECIAL1,
-                            State.RIPPLE
-                    )
-            ),
-            Map.entry(MoveClass.SPECIAL2,
-                    new MoveMapImpl.EntryImpl<>(
-                            MoveClass.SPECIAL2,
-                            SENDO_UPPERCUT,
-                            CooldownType.SPECIAL2,
-                            State.SENDO
-                    )
-            )
-    );
+    // These aren't stored in any movemap and have fields that must be unique to them, so we make copies.
+    private final ZoomPunchAttack zoomPunchAttack = ZOOM_PUNCH.copy();
+    private final RippleAttack rippleAttack = RIPPLE_ATTACK.copy();
+    private final SendoAttack sendoKick = SENDO_KICK.copy();
+    private final SendoAttack sendoUppercut = SENDO_UPPERCUT.copy();
 
     private static void registerMoves(MoveMap<HamonSpec, HamonSpec.State> moves) {
-        // moves.register(MoveClass.BARRAGE, COMBO, CooldownType.BARRAGE, VampireSpec.State.COMBO);
         moves.register(MoveClass.HEAVY, FOCUS_STRIKE, CooldownType.HEAVY, State.FOCUS_STRIKE);
         moves.register(MoveClass.SPECIAL1, STOMP, CooldownType.SPECIAL1, State.STOMP);
-        moves.register(MoveClass.SPECIAL2, UPPERCUT, CooldownType.SPECIAL2, State.UPPERCUT);
+        moves.register(MoveClass.SPECIAL2, UPPERCUT, CooldownType.SPECIAL2, State.UPPERCUT)
+                .withAerialVariant(State.SENDO);
     }
 
     @Override
@@ -213,14 +187,17 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
     }
 
     @Override
-    public MoveMap.Entry<HamonSpec, State> getMoveEntry(MoveClass moveClass, boolean crouching, boolean aerial) {
+    protected AbstractMove<?, ? super HamonSpec> overrideMoveSelection(AbstractMove<?, ? super HamonSpec> original, boolean crouching, boolean aerial) {
         if (useHamonNext) {
-            if (HAMONIZED_MOVES.containsKey(moveClass)) {
-                return HAMONIZED_MOVES.get(moveClass);
-            }
+            return switch (original.getMoveClass()) {
+                case HEAVY -> zoomPunchAttack;
+                case SPECIAL1 -> rippleAttack;
+                case SPECIAL2 -> aerial ? sendoKick : sendoUppercut;
+                default -> super.overrideMoveSelection(original, crouching, aerial);
+            };
         }
 
-        return super.getMoveEntry(moveClass, crouching, aerial);
+        return super.overrideMoveSelection(original, crouching, aerial);
     }
 
     @Override
@@ -256,6 +233,7 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
         ZOOM_PUNCH.tick(this);
         RIPPLE_ATTACK.tick(this);
         SENDO_KICK.tick(this);
+        SENDO_UPPERCUT.tick(this);
     }
 
     public void processTarget(@NonNull LivingEntity target) {

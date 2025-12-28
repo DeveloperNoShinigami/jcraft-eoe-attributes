@@ -51,12 +51,12 @@ public class SendoAttack extends AbstractSimpleAttack<SendoAttack, HamonSpec> {
     public void tick(HamonSpec attacker) {
         super.tick(attacker);
 
-        final var entrySet = this.aftershockTimers.object2IntEntrySet();
+        final var entrySet = aftershockTimers.object2IntEntrySet();
 
         for (var entry : entrySet) {
             final LivingEntity entity = entry.getKey();
             final int time = entry.getIntValue() - 1;
-            this.aftershockTimers.replace(entity, time);
+            aftershockTimers.replace(entity, time);
 
             if (time == 0) {
                 final ServerLevel level = (ServerLevel) entity.level();

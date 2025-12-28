@@ -237,6 +237,10 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
         return moveMap.getFirstValidEntry(moveClass, getThis(), crouching, aerial);
     }
 
+    protected AbstractMove<?, ? super A> overrideMoveSelection(AbstractMove<?, ? super A> original, boolean crouching, boolean aerial) {
+        return original;
+    }
+
     public boolean handleMove(MoveClass moveClass, float animationSpeed) {
         boolean crouching = hasUser() && user.isShiftKeyDown();
         boolean aerial = hasUser() && !user.onGround();
@@ -252,7 +256,16 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
         } else if (!user.onGround() && entry.getAerialVariant() != null) {
             entry = entry.getAerialVariant();
         }
-        return handleMove(entry.getMove(), entry.getCooldownType(), entry.getAnimState(), animationSpeed);
+
+        final AbstractMove<?, ? super A> move = overrideMoveSelection(entry.getMove(), crouching, aerial);
+        final Enum<?> overrideAnimation = move.getAnimation();
+
+        return handleMove(
+                move.isCopyOnUse() ? move.copy() : move,
+                entry.getCooldownType(),
+                overrideAnimation == null ? entry.getAnimState() : (S)overrideAnimation,
+                animationSpeed
+        );
     }
 
     public boolean handleMove(AbstractMove<?, ? super A> move, CooldownType cooldownType, S state) {
