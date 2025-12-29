@@ -15,6 +15,7 @@ import net.arna.jcraft.common.entity.npc.PetshopEntity;
 import net.arna.jcraft.common.entity.projectile.*;
 import net.arna.jcraft.common.entity.spec.AnubisSpecUser;
 import net.arna.jcraft.common.entity.spec.BrawlerSpecUser;
+import net.arna.jcraft.common.entity.spec.HamonSpecUser;
 import net.arna.jcraft.common.entity.spec.VampireSpecUser;
 import net.arna.jcraft.common.entity.stand.*;
 import net.arna.jcraft.common.entity.vehicle.RoadRollerEntity;
@@ -687,6 +688,11 @@ public interface JEntityTypeRegistry {
             () -> createSpecUser(BrawlerSpecUser::new, "brawler_spec_user")
     );
 
+    RegistrySupplier<EntityType<HamonSpecUser>> HAMON_SPEC_USER = ENTITY_TYPE_REGISTRY.register(
+            JCraft.id("hamon_spec_user"),
+            () -> createSpecUser(HamonSpecUser::new, "hamon_spec_user")
+    );
+
     RegistrySupplier<EntityType<VampireSpecUser>> VAMPIRE_SPEC_USER = ENTITY_TYPE_REGISTRY.register(
             JCraft.id("vampire_spec_user"),
             () -> createSpecUser(VampireSpecUser::new, "vampire_spec_user")
@@ -793,6 +799,7 @@ public interface JEntityTypeRegistry {
         );
 
         EntityAttributeRegistry.register(BRAWLER_SPEC_USER, BrawlerSpecUser::createUserAttributes);
+        EntityAttributeRegistry.register(HAMON_SPEC_USER, HamonSpecUser::createUserAttributes);
         EntityAttributeRegistry.register(VAMPIRE_SPEC_USER, VampireSpecUser::createUserAttributes);
         EntityAttributeRegistry.register(ANUBIS_SPEC_USER, AnubisSpecUser::createUserAttributes);
     }
