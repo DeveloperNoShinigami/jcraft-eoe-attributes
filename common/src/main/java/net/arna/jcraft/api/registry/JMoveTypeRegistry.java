@@ -14,6 +14,10 @@ import net.arna.jcraft.common.attack.moves.goldexperience.LifeGiverAttack;
 import net.arna.jcraft.common.attack.moves.goldexperience.OverclockAttack;
 import net.arna.jcraft.common.attack.moves.goldexperience.TreeAttack;
 import net.arna.jcraft.common.attack.moves.goldexperience.requiem.*;
+import net.arna.jcraft.common.attack.moves.hamon.ChargeHamonMove;
+import net.arna.jcraft.common.attack.moves.hamon.RippleAttack;
+import net.arna.jcraft.common.attack.moves.hamon.SendoAttack;
+import net.arna.jcraft.common.attack.moves.hamon.ZoomPunchAttack;
 import net.arna.jcraft.common.attack.moves.hierophantgreen.EmeraldSplashAttack;
 import net.arna.jcraft.common.attack.moves.hierophantgreen.NetSetMove;
 import net.arna.jcraft.common.attack.moves.horus.*;
@@ -250,6 +254,12 @@ public interface JMoveTypeRegistry {
     RegistrySupplier<MoveType<?>> VAMPIRE_NIGHT_VISION_MOVE = register("vampire_night_vision_move", NightVisionMove.Type.INSTANCE);
     RegistrySupplier<MoveType<?>> VAMPIRE_REVIVE_MOVE = register("vampire_revive_move", ReviveMove.Type.INSTANCE);
     RegistrySupplier<MoveType<?>> VAMPIRE_SPACE_RIPPER_ATTACK = register("vampire_space_ripper_attack", SpaceRipperAttack.Type.INSTANCE);
+
+    RegistrySupplier<MoveType<?>> HAMON_CHARGE_MOVE = register("hamon_charge_move", ChargeHamonMove.Type.INSTANCE);
+    RegistrySupplier<MoveType<?>> HAMON_RIPPLE_ATTACK = register("hamon_ripple_attack", RippleAttack.Type.INSTANCE);
+    RegistrySupplier<MoveType<?>> HAMON_SENDO_ATTACK = register("hamon_sendo_attack", SendoAttack.Type.INSTANCE);
+    RegistrySupplier<MoveType<?>> HAMON_ZOOM_PUNCH_ATTACK = register("hamon_zoom_punch_attack", ZoomPunchAttack.Type.INSTANCE);
+
 
     RegistrySupplier<MoveType<?>> WHITESNAKE_CHARGED_SPEW_ATTACK = register("whitesnake_charged_spew_attack", ChargedSpewAttack.Type.INSTANCE);
     RegistrySupplier<MoveType<?>> WHITESNAKE_GIVE_STAND_ATTACK = register("whitesnake_give_stand_attack", GiveStandAttack.Type.INSTANCE);

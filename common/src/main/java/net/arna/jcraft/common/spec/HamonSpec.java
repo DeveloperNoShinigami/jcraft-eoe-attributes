@@ -18,6 +18,7 @@ import net.arna.jcraft.common.attack.actions.LaunchUpAction;
 import net.arna.jcraft.common.attack.actions.LungeAction;
 import net.arna.jcraft.common.attack.actions.UserAnimationAction;
 import net.arna.jcraft.common.attack.conditions.HamonChargeCondition;
+import net.arna.jcraft.common.attack.moves.hamon.ChargeHamonMove;
 import net.arna.jcraft.common.attack.moves.hamon.RippleAttack;
 import net.arna.jcraft.common.attack.moves.hamon.SendoAttack;
 import net.arna.jcraft.common.attack.moves.hamon.ZoomPunchAttack;
@@ -32,6 +33,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -44,12 +46,12 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
             .details(Component.literal("""
                     PASSIVES: Hamon breath
                     Tap Barrage to toggle whether the next move uses Hamon or not.
+                    Hold Ultimate to charge Hamon. Executing a move during breath also activates the Hamon variant.
                     """))
             .build();
     public static final float MAX_CHARGE = 20.0f;
 
     private boolean useHamonNext = false;
-    private int ticksSinceBreathSound = 0;
     @Getter
     private float charge = 0.0f;
     private final CommonMiscComponent misc;
@@ -58,6 +60,13 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
         super(JSpecTypeRegistry.HAMON.get(), livingEntity);
         misc = JComponentPlatformUtils.getMiscData(user);
     }
+
+    public static final ChargeHamonMove CHARGE_HAMON = new ChargeHamonMove(60 * 20, 0, 1)
+            .withSound(JSoundRegistry.HAMON_BREATHE)
+            .withInfo(
+                    Component.literal("Charge Hamon"),
+                    Component.literal("")
+            );
 
     public static final SimpleAttack<HamonSpec> FOCUS_STRIKE = new SimpleAttack<HamonSpec>(0, 8,
             14, 1.5f, 4f, 9, 1.5f, 1.0f, 0f)
@@ -158,6 +167,8 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
         moves.register(MoveClass.SPECIAL1, STOMP, CooldownType.SPECIAL1, State.STOMP);
         moves.register(MoveClass.SPECIAL2, UPPERCUT, CooldownType.SPECIAL2, State.UPPERCUT)
                 .withAerialVariant(State.SENDO);
+
+        moves.register(MoveClass.ULTIMATE, CHARGE_HAMON, CooldownType.ULTIMATE, null);
     }
 
     @Override
@@ -191,7 +202,9 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
 
     @Override
     protected AbstractMove<?, ? super HamonSpec> overrideMoveSelection(AbstractMove<?, ? super HamonSpec> original, boolean crouching, boolean aerial) {
-        if (useHamonNext) {
+        if (willUseHamonNext()) {
+            if (getCurrentMove() instanceof ChargeHamonMove && !(original instanceof ChargeHamonMove)) cancelMove();
+
             return switch (original.getMoveClass()) {
                 case HEAVY -> zoomPunchAttack;
                 case SPECIAL1 -> rippleAttack;
@@ -201,6 +214,10 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
         }
 
         return super.overrideMoveSelection(original, crouching, aerial);
+    }
+
+    public boolean willUseHamonNext() {
+        return useHamonNext || getCurrentMove() instanceof ChargeHamonMove;
     }
 
     @Override
@@ -218,13 +235,6 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
                 if (user != null) {
                     float healthRatio = user.getHealth() / user.getMaxHealth();
                     add *= healthRatio;
-
-                    if (user.getRandom().nextFloat() <= 0.05f && ticksSinceBreathSound > 40) {
-                        playAttackerSound(JSoundRegistry.HAMON_BREATHE.get(), 0.5f, 0.9f);
-                        ticksSinceBreathSound = 0;
-                    }
-
-                    ticksSinceBreathSound++;
                 }
 
                 charge += add;
@@ -244,8 +254,7 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
                 !target.isInvertedHealAndHarm() &&
                 !(
                         JServerConfig.PLAYER_VAMPS_DIE_TO_HAMON.getValue() &&
-                        target instanceof ServerPlayer serverPlayer &&
-                        JComponentPlatformUtils.getVampirism(serverPlayer).isVampire()
+                        JUtils.getSpec(target) instanceof VampireSpec
                 )
         ) {
             return;
@@ -257,15 +266,17 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
     }
 
     public void drainCharge(float reduction) {
-        this.charge -= reduction;
-        if (this.charge < 0.0F) this.charge = 0.0F;
+        charge = Mth.clamp(charge - reduction, 0.0F, MAX_CHARGE);
+        misc.setHamonCharge(charge);
+    }
 
-        misc.setHamonCharge(this.charge);
+    public void updateClientHamonBar() {
+        misc.setHamonizeReady(willUseHamonNext());
     }
 
     public void setUseHamonNext(boolean use) {
         useHamonNext = use;
-        misc.setHamonizeReady(useHamonNext);
+        updateClientHamonBar();
     }
 
     @Override
