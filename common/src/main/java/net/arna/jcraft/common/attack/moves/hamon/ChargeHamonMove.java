@@ -29,7 +29,7 @@ public class ChargeHamonMove extends AbstractBarrageAttack<ChargeHamonMove, Hamo
     @Override
     public void onInitiate(HamonSpec attacker) {
         super.onInitiate(attacker);
-        attacker.updateClientHamonBar();
+        attacker.flashClientHamonBar();
     }
 
     @Override

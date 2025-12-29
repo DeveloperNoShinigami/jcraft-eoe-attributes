@@ -69,7 +69,7 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
             );
 
     public static final SimpleAttack<HamonSpec> FOCUS_STRIKE = new SimpleAttack<HamonSpec>(0, 8,
-            14, 1.5f, 4f, 9, 1.5f, 1.0f, 0f)
+            14, 1.5f, 5f, 9, 1.5f, 1.0f, 0f)
             .withImpactSound(JSoundRegistry.IMPACT_6)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             // Because Zoom Punch plays its own animations, the entry must have a null state. This is how we animate despite that.
@@ -79,7 +79,7 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
                     Component.literal("Charge with hamon for Zoom Punch, a slow yet far-reaching, launching strike. Can take one hit without being stopped.")
             );
     public static final ZoomPunchAttack ZOOM_PUNCH = new ZoomPunchAttack(0, 18,
-            24, 1f, 6f, 13, 1.5f, 1.5f, -0.5f)
+            24, 1f, 7f, 13, 1.5f, 1.5f, -0.5f)
             .withSound(JSoundRegistry.HAMON_CRASH)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withImpactSound(JSoundRegistry.HAMON_CRACKLE_IMPACT)
@@ -145,7 +145,7 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
                     Component.literal("Charge with hamon for Sendo Punch, which knocks the enemy down, and then props them back up with an aftershock of hamon.")
             );
     public static final SendoAttack SENDO_UPPERCUT = new SendoAttack(0, 10,
-            16, 1.0f, 6f, 18, 1.5f, 1.0f, -0.4f)
+            16, 1.0f, 6.5f, 18, 1.5f, 1.0f, -0.4f)
             .withSound(JSoundRegistry.HAMON_SWOOSH)
             .withImpactSound(JSoundRegistry.HAMON_CRACKLE_IMPACT)
             .withHitSpark(JParticleType.HIT_SPARK_2)
@@ -230,7 +230,7 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
 
         if (moveStun <= 0) {
             if (charge < MAX_CHARGE) {
-                float add = 0.2f;
+                float add = 0.1f;
 
                 if (user != null) {
                     float healthRatio = user.getHealth() / user.getMaxHealth();
@@ -268,6 +268,10 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
     public void drainCharge(float reduction) {
         charge = Mth.clamp(charge - reduction, 0.0F, MAX_CHARGE);
         misc.setHamonCharge(charge);
+    }
+
+    public void flashClientHamonBar() {
+        misc.setHamonizeReady(true);
     }
 
     public void updateClientHamonBar() {
