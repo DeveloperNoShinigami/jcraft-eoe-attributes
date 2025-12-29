@@ -45,7 +45,7 @@ public interface JEntityRendererRegister {
             new RendererData<>(JEntityTypeRegistry.C_MOON, CMoonRenderer::new),
             new RendererData<>(JEntityTypeRegistry.MADE_IN_HEAVEN, MadeInHeavenRenderer::new),
 
-            new RendererData<>(JEntityTypeRegistry.SHADOW_THE_WORLD, ShadowTheWorldRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.SHADOW_THE_WORLD, ShadowTheWorldRenderer::of),
             new RendererData<>(JEntityTypeRegistry.THE_WORLD, context -> new StandEntityRenderer<>(context, JStandTypeRegistry.THE_WORLD.get(), -0.1745329251f, -0.1745329251f)),
             new RendererData<>(JEntityTypeRegistry.THE_WORLD_OVER_HEAVEN, TheWorldOverHeavenRenderer::new),
 
