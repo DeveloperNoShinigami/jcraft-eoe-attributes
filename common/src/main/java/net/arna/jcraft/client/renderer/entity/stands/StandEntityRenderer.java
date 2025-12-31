@@ -154,6 +154,10 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
                 }
             }
 
+            if (animatable.isIdle()) {
+                animatable.playStateAnimation();
+            }
+
             float a = getAlpha(animatable, partialTick);
             a *= pc.alpha();
 

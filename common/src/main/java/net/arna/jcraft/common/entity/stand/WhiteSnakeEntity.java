@@ -372,9 +372,9 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
     // Animation code
     public enum State implements StandAnimationState<WhiteSnakeEntity> {
         // TODO reenable remote idle
-        IDLE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.idle", AzPlayBehaviors.LOOP)),
+        IDLE(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.whitesnake.idle", AzPlayBehaviors.LOOP)),
         LIGHT(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
-        BLOCK(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.block", AzPlayBehaviors.LOOP)),
+        BLOCK(AzCommand.create(JCraft.BASE_CONTROLLER, "animation.whitesnake.block", AzPlayBehaviors.LOOP)),
         MEDIUM(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.medium", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         BARRAGE(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.barrage", AzPlayBehaviors.LOOP)),
         LEG_CRUSHER(Attacks.createAnimationCommand(JCraft.BASE_CONTROLLER, "animation.whitesnake.legcrusher", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
