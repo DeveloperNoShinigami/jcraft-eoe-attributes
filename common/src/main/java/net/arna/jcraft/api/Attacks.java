@@ -438,7 +438,7 @@ public interface Attacks {
         damage = ((LivingEntityInvoker) ent).invokeModifyAppliedDamage(damageSource, damage);
 
         // Functionally a callback invocation; we can't copy the nuances of all damage effects, so we do this instead.
-        ent.hurt(damageSource, Float.MIN_NORMAL);
+        // ent.hurt(damageSource, Float.MIN_NORMAL);
 
         // Apply absorption
         applyAbsorptionAndStats(damage, damageSource, ent);
@@ -550,6 +550,7 @@ public interface Attacks {
         ent.setHealth(h - damage);
         ent.getCombatTracker().recordDamage(damageSource, damage);
         ent.gameEvent(GameEvent.ENTITY_DAMAGE);
+
         if (damageSource.getEntity() instanceof LivingEntity livingAttacker) {
             ent.setLastHurtByMob(livingAttacker);
             if (livingAttacker instanceof Player player) {
@@ -561,6 +562,7 @@ public interface Attacks {
                 ent.setLastHurtByPlayer(player);
             }
         }
+
         if (ent.isDeadOrDying()) {
             ent.die(damageSource);
         }

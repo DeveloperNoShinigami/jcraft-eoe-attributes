@@ -1489,7 +1489,7 @@
   "spec.jcraft.brawler.info.details": "Important hitconfirm: (any stand move)~stand.OFF>Combo>stand.ON+(any stand move)",
   "spec.jcraft.hamon": "Hamon",
   "spec.jcraft.hamon.info.desc": "Superpowered Mid-ranger",
-  "spec.jcraft.hamon.info.details": "PASSIVES: Hamon breath\nTap Barrage to toggle whether the next move uses Hamon or not.\n",
+  "spec.jcraft.hamon.info.details": "PASSIVES: Hamon breath\nTap Barrage to toggle whether the next move uses Hamon or not.\nHold Ultimate to charge Hamon. Executing a move during breath also activates the Hamon variant.\n",
   "spec.jcraft.none": "No Spec",
   "spec.jcraft.vampire": "Vampire",
   "spec.jcraft.vampire.info.desc": "Supernatural all-ranger",

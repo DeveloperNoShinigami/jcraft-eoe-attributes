@@ -49,9 +49,14 @@ public class ChargeHamonMove extends AbstractBarrageAttack<ChargeHamonMove, Hamo
         LivingEntity user = attacker.getUser();
         if (user instanceof Player) return;
 
-        // AI charge. Cancel automatically if charge is full.
-        if (attacker.getCharge() >= HamonSpec.MAX_CHARGE)
+        // Charging AI
+        final float charge = attacker.getCharge();
+        if (
+                charge >= HamonSpec.MAX_CHARGE || // Cancel if full
+                (charge >= HamonSpec.MAX_CHARGE / 2.0 && user.getRandom().nextFloat() > 0.1f) // Cancel randomly if one hamon move is usable
+        ) {
             attacker.cancelMove();
+        }
     }
 
     @Override

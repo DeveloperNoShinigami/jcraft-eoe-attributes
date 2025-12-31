@@ -6,6 +6,7 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
+import net.arna.jcraft.api.attack.enums.MobilityType;
 import net.arna.jcraft.api.attack.enums.MoveClass;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.api.component.living.CommonMiscComponent;
@@ -14,6 +15,8 @@ import net.arna.jcraft.api.registry.JSoundRegistry;
 import net.arna.jcraft.api.registry.JSpecTypeRegistry;
 import net.arna.jcraft.api.spec.JSpec;
 import net.arna.jcraft.api.spec.SpecData;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.common.ai.AttackerBrainInfo;
 import net.arna.jcraft.common.attack.actions.LaunchUpAction;
 import net.arna.jcraft.common.attack.actions.LungeAction;
 import net.arna.jcraft.common.attack.actions.UserAnimationAction;
@@ -37,6 +40,12 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.control.JumpControl;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
     public static final MoveSet<HamonSpec, HamonSpec.State> MOVE_SET = MoveSetManager.create(JSpecTypeRegistry.HAMON, HamonSpec::registerMoves, HamonSpec.State.class);
@@ -59,6 +68,11 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
     public HamonSpec(LivingEntity livingEntity) {
         super(JSpecTypeRegistry.HAMON.get(), livingEntity);
         misc = JComponentPlatformUtils.getMiscData(user);
+
+        zoomPunchAttack.onRegister(MoveClass.HEAVY);
+        rippleAttack.onRegister(MoveClass.SPECIAL1);
+        sendoUppercut.onRegister(MoveClass.SPECIAL2);
+        sendoKick.onRegister(MoveClass.SPECIAL2);
     }
 
     public static final ChargeHamonMove CHARGE_HAMON = new ChargeHamonMove(60 * 20, 0, 1)
@@ -87,6 +101,7 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
             .withLaunch()
             .withCondition(HamonChargeCondition.atLeast(ZoomPunchAttack.CHARGE_COST))
             .withExtraHitBox(1.5)
+            .withMobilityType(MobilityType.DASH)
             .withInfo(
                     Component.literal("Zoom Punch"),
                     Component.literal("")
@@ -108,6 +123,7 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
             .withStaticY()
             .withCondition(HamonChargeCondition.atLeast(RippleAttack.CHARGE_COST))
             .withAnim(State.RIPPLE)
+            .markRanged()
             .withInfo(
                     Component.literal("Ripple"),
                     Component.literal("")
@@ -129,6 +145,7 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
             .withCondition(HamonChargeCondition.atLeast(SendoAttack.CHARGE_COST))
             .withInitAction(LungeAction.lunge(0.5f, 0.25f))
             .withLaunch()
+            .withMobilityType(MobilityType.DASH)
             .withInfo(
                     Component.literal("Sendo Wave Kick"),
                     Component.literal("")
@@ -152,6 +169,7 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
             .withCondition(HamonChargeCondition.atLeast(SendoAttack.CHARGE_COST))
             .withAction(LaunchUpAction.launchUp(1.0f))
             .withAerialVariant(SENDO_KICK)
+            .withMobilityType(MobilityType.DASH)
             .withInfo(
                     Component.literal("Sendo Uppercut"),
                     Component.literal("Charge with hamon for Sendo Punch, which knocks the enemy down, and then props them back up with an aftershock of hamon.")
@@ -177,27 +195,31 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
             setUseHamonNext(!useHamonNext);
 
             if (useHamonNext) {
-                final ServerLevel level = (ServerLevel) user.level();
-
-                JCraft.createParticle(level, user.getX(), user.getY(), user.getZ(), JParticleType.FLASH);
-
-                var packet = new ClientboundLevelParticlesPacket(JParticleTypeRegistry.HAMON_SPARK.get(),
-                        false,
-                        user.getX(), user.getY(), user.getZ(),
-                        1, 1, 1,
-                        1.0f, 10);
-
-                for (ServerPlayer tracker : JUtils.around(level, user.position(), 128)) {
-                    tracker.connection.send(packet);
-                }
-
-                playAttackerSound(JSoundRegistry.HAMON_SURGE.get(), 1.0f, 1.0f);
+                flashHamonSurge();
             }
 
             return true;
         }
 
         return super.initMove(moveClass);
+    }
+
+    private void flashHamonSurge() {
+        final ServerLevel level = (ServerLevel) user.level();
+
+        JCraft.createParticle(level, user.getX(), user.getY(), user.getZ(), JParticleType.FLASH);
+
+        var packet = new ClientboundLevelParticlesPacket(JParticleTypeRegistry.HAMON_SPARK.get(),
+                false,
+                user.getX(), user.getY(), user.getZ(),
+                1, 1, 1,
+                1.0f, 10);
+
+        for (ServerPlayer tracker : JUtils.around(level, user.position(), 128)) {
+            tracker.connection.send(packet);
+        }
+
+        playAttackerSound(JSoundRegistry.HAMON_SURGE.get(), 1.0f, 1.0f);
     }
 
     @Override
@@ -247,6 +269,33 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
         rippleAttack.tick(this);
         sendoKick.tick(this);
         sendoUppercut.tick(this);
+    }
+
+    @Override
+    public List<AbstractMove<?, ? super HamonSpec>> allAttacks() {
+        final var movemapAttacks = super.allAttacks();
+        final var out = new ArrayList<>(movemapAttacks);
+        Collections.addAll(out, zoomPunchAttack, rippleAttack, sendoKick, sendoUppercut);
+        return out;
+    }
+
+    @Override
+    public boolean overrideMoveExecution(AbstractMove<?, ? super HamonSpec> selectedAttack, AttackerBrainInfo info,
+                                         Mob mob, LivingEntity target, JumpControl mobJumpControl, StandEntity<?, ?> enemyStand,
+                                         AbstractMove<?, ?> enemyAttack, double distance, int enemyMoveStun, int stunTicks) {
+        if (
+                (selectedAttack instanceof ZoomPunchAttack zoomPunch) ||
+                (selectedAttack instanceof RippleAttack ripple) ||
+                (selectedAttack instanceof SendoAttack sendo)
+        ) {
+            if (!willUseHamonNext() && charge >= 10.0) { // 10.0 is the universal hamon move minimum charge, for now.
+                useHamonNext = true;
+                flashHamonSurge();
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void processTarget(@NonNull LivingEntity target) {

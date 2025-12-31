@@ -16,6 +16,7 @@ import net.arna.jcraft.api.attack.enums.MoveInputType;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.api.attack.moves.AbstractMultiHitAttack;
 import net.arna.jcraft.api.component.living.CommonCooldownsComponent;
+import net.arna.jcraft.api.registry.JStatusRegistry;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.ai.AttackerBrainInfo;
 import net.arna.jcraft.common.ai.CombatEntityContext;
@@ -31,7 +32,6 @@ import net.arna.jcraft.common.util.DashData;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.SpecAnimationState;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.api.registry.JStatusRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -39,7 +39,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
@@ -55,8 +54,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
-
-import static net.arna.jcraft.JCraft.comboBreak;
 
 /**
  * Class that needs to be instantiated per-entity to contain temporary data relating to their current state.
@@ -121,7 +118,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
 
     @Override
     public DamageSource getDamageSource() {
-        return JDamageSources.create(user.level(), DamageTypes.PLAYER_ATTACK);
+        return JDamageSources.create(user.level(), DamageTypes.PLAYER_ATTACK, user);
     }
 
     @Override
@@ -485,8 +482,8 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
         final CombatEntityContext attackerCtx = combatCtx.getAttackerCtx();
         final CombatEntityContext targetCtx = combatCtx.getTargetCtx();
 
-        Mob mob = (Mob) attackerCtx.entity(); // Guaranteed by contract
-        PathfinderMob pathfinder = (mob instanceof PathfinderMob pathfinderMob) ? pathfinderMob : null;
+        final Mob mob = (Mob) attackerCtx.entity(); // Guaranteed by contract
+        final PathfinderMob pathfinder = (mob instanceof PathfinderMob pathfinderMob) ? pathfinderMob : null;
         final LivingEntity target = targetCtx.entity();
         final LookControl lookControl = mob.getLookControl();
         final JumpControl jumpControl = mob.getJumpControl();
@@ -562,28 +559,15 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
                 if (random.nextFloat() > 0.1f) DashData.tryDash(1, random.nextBoolean() ? -1 : 1, user);
             }
             case COMBOED -> {
-                if (aiLevel <= IJAttackerBrain.BEGINNER_LEVEL) return;
-                final MobEffectInstance stun = combatCtx.getAttackerCtx().stun();
-                if (stun == null) return;
-
-                final boolean lowHP = user.getHealth() < user.getMaxHealth() / 2.0f || user.getHealth() < 5f;
-                final boolean enemyIsActing = targetCtx.standAttack() != null || targetCtx.specAttack() != null;
-
-                boolean burstCondition;
-                if (aiLevel >= IJAttackerBrain.COMPETITIVE_LEVEL) burstCondition = lowHP && enemyIsActing || random.nextFloat() < 0.02f;
-                else if (aiLevel >= IJAttackerBrain.INTERMEDIATE_LEVEL) burstCondition = lowHP || enemyIsActing || random.nextFloat() < 0.05f;
-                else burstCondition = random.nextFloat() < 0.1f;
-
-                if (burstCondition) {
-                    comboBreak((ServerLevel) user.level(), user, stun);
-                }
+                decideComboBreak(aiLevel, combatCtx);
             }
             default -> throw new IllegalStateException("Unexpected value: " + info.getState());
         }
     }
-
     @Override
-    public AbstractMove<?, ? super A> doMoveSelection(AttackerBrainInfo info, Mob mob, LivingEntity target, JumpControl mobJumpControl, StandEntity<?, ?> enemyStand, AbstractMove<?, ?> enemyAttack, double distance, int enemyMoveStun, int stunTicks) {
+    public AbstractMove<?, ? super A> doMoveSelection(AttackerBrainInfo info, Mob mob, LivingEntity target, JumpControl mobJumpControl,
+                                                      StandEntity<?, ?> enemyStand, AbstractMove<?, ?> enemyAttack,
+                                                      double distance, int enemyMoveStun, int stunTicks) {
         final StandEntity<?, ?> stand = JUtils.getStand(mob);
         if (stand != null && stand.allowMoveHandling()) return null;
 
