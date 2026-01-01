@@ -3,6 +3,7 @@ package net.arna.jcraft.common.spec;
 import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.MoveSelectionResult;
 import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
@@ -280,9 +281,9 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
     }
 
     @Override
-    public boolean overrideMoveExecution(AbstractMove<?, ? super HamonSpec> selectedAttack, AttackerBrainInfo info,
-                                         Mob mob, LivingEntity target, JumpControl mobJumpControl, StandEntity<?, ?> enemyStand,
-                                         AbstractMove<?, ?> enemyAttack, double distance, int enemyMoveStun, int stunTicks) {
+    public MoveSelectionResult overrideMoveExecution(AbstractMove<?, ? super HamonSpec> selectedAttack, AttackerBrainInfo info,
+                                                     Mob mob, LivingEntity target, JumpControl mobJumpControl, StandEntity<?, ?> enemyStand,
+                                                     AbstractMove<?, ?> enemyAttack, double distance, int enemyMoveStun, int stunTicks) {
         if (
                 (selectedAttack instanceof ZoomPunchAttack zoomPunch) ||
                 (selectedAttack instanceof RippleAttack ripple) ||
@@ -291,11 +292,10 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
             if (!willUseHamonNext() && charge >= 10.0) { // 10.0 is the universal hamon move minimum charge, for now.
                 useHamonNext = true;
                 flashHamonSurge();
-                return true;
             }
         }
 
-        return false;
+        return MoveSelectionResult.PASS;
     }
 
     public void processTarget(@NonNull LivingEntity target) {

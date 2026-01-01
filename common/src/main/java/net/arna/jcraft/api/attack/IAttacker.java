@@ -1,5 +1,6 @@
 package net.arna.jcraft.api.attack;
 
+import dev.architectury.platform.Platform;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.Attacks;
 import net.arna.jcraft.api.MoveSelectionResult;
@@ -159,6 +160,10 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?
             else return;
         }
 
+        if (getMoveStun() <= 0) { // Uncrouch when not doing anything to prevent persisting crouching
+            getUser().setShiftKeyDown(false);
+        }
+
         final double distance = combatCtx.getDistanceBetween();
 
         if (distance <= getEngagementDistance()) {
@@ -202,7 +207,8 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?
 
         MoveMap.Entry<A, S> heavyEntry = getFirstValidEntry(MoveClass.HEAVY);
         if (heavyEntry == null) {
-            JCraft.LOGGER.warn("Couldn't find light or heavy attack entry while running selectAttack on attacker: {}", this);
+            if (Platform.isDevelopmentEnvironment())
+                JCraft.LOGGER.warn("Couldn't find light or heavy attack entry while running selectAttack on attacker: {}", this);
             return null;
         } else {
             return heavyEntry.getMove();
@@ -219,11 +225,11 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?
 
     /**
      * A preprocessor for move execution, right after selection and before any move initiation was done. Used to handle special cases in move execution.
-     * @return Whether to stop move execution.
+     * @return Whether to stop further attempts at move execution.
      */
-    default boolean overrideMoveExecution(AbstractMove<?, ? super A> selectedAttack, AttackerBrainInfo info, Mob mob, LivingEntity target, JumpControl mobJumpControl,
+    default MoveSelectionResult overrideMoveExecution(AbstractMove<?, ? super A> selectedAttack, AttackerBrainInfo info, Mob mob, LivingEntity target, JumpControl mobJumpControl,
                                           StandEntity<?, ?> enemyStand, AbstractMove<?, ?> enemyAttack, double distance, int enemyMoveStun, int stunTicks) {
-        return false;
+        return MoveSelectionResult.PASS;
     }
 
     /**
@@ -240,7 +246,9 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?
 
         if (selectedAttack == null) return null;
 
-        if (overrideMoveExecution(selectedAttack, info, mob, target, mobJumpControl, enemyStand, enemyAttack, distance, enemyMoveStun, stunTicks)) return selectedAttack;
+        final MoveSelectionResult result = overrideMoveExecution(selectedAttack, info, mob, target, mobJumpControl, enemyStand, enemyAttack, distance, enemyMoveStun, stunTicks);
+        if (result == MoveSelectionResult.STOP) return null;
+        else if (result == MoveSelectionResult.USE) return selectedAttack;
 
         boolean shouldPerformMove = this.getMoveStun() < 1;
 
