@@ -22,10 +22,7 @@ import net.arna.jcraft.common.attack.actions.LaunchUpAction;
 import net.arna.jcraft.common.attack.actions.LungeAction;
 import net.arna.jcraft.common.attack.actions.UserAnimationAction;
 import net.arna.jcraft.common.attack.conditions.HamonChargeCondition;
-import net.arna.jcraft.common.attack.moves.hamon.ChargeHamonMove;
-import net.arna.jcraft.common.attack.moves.hamon.RippleAttack;
-import net.arna.jcraft.common.attack.moves.hamon.SendoAttack;
-import net.arna.jcraft.common.attack.moves.hamon.ZoomPunchAttack;
+import net.arna.jcraft.common.attack.moves.hamon.*;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.util.CooldownType;
@@ -175,6 +172,10 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
                     Component.literal("Sendo Uppercut"),
                     Component.literal("Charge with hamon for Sendo Punch, which knocks the enemy down, and then props them back up with an aftershock of hamon.")
             );
+
+    public static final ImproviserAttack IMPROVISER = new ImproviserAttack(100, 12,
+            19, 1.0f, 6.5f, 20, 1.6f, 2.0f, -0.1f)
+            .withLaunch();
     // These aren't stored in any movemap and have fields that must be unique to them, so we make copies.
     private final ZoomPunchAttack zoomPunchAttack = ZOOM_PUNCH.copy();
     private final RippleAttack rippleAttack = RIPPLE_ATTACK.copy();

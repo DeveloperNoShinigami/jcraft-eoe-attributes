@@ -14,10 +14,7 @@ import net.arna.jcraft.common.attack.moves.goldexperience.LifeGiverAttack;
 import net.arna.jcraft.common.attack.moves.goldexperience.OverclockAttack;
 import net.arna.jcraft.common.attack.moves.goldexperience.TreeAttack;
 import net.arna.jcraft.common.attack.moves.goldexperience.requiem.*;
-import net.arna.jcraft.common.attack.moves.hamon.ChargeHamonMove;
-import net.arna.jcraft.common.attack.moves.hamon.RippleAttack;
-import net.arna.jcraft.common.attack.moves.hamon.SendoAttack;
-import net.arna.jcraft.common.attack.moves.hamon.ZoomPunchAttack;
+import net.arna.jcraft.common.attack.moves.hamon.*;
 import net.arna.jcraft.common.attack.moves.hierophantgreen.EmeraldSplashAttack;
 import net.arna.jcraft.common.attack.moves.hierophantgreen.NetSetMove;
 import net.arna.jcraft.common.attack.moves.horus.*;
@@ -259,6 +256,7 @@ public interface JMoveTypeRegistry {
     RegistrySupplier<MoveType<?>> HAMON_RIPPLE_ATTACK = register("hamon_ripple_attack", RippleAttack.Type.INSTANCE);
     RegistrySupplier<MoveType<?>> HAMON_SENDO_ATTACK = register("hamon_sendo_attack", SendoAttack.Type.INSTANCE);
     RegistrySupplier<MoveType<?>> HAMON_ZOOM_PUNCH_ATTACK = register("hamon_zoom_punch_attack", ZoomPunchAttack.Type.INSTANCE);
+    RegistrySupplier<MoveType<?>> HAMON_IMPROVISER_ATTACK = register("hamon_improviser_attack", ImproviserAttack.Type.INSTANCE);
 
 
     RegistrySupplier<MoveType<?>> WHITESNAKE_CHARGED_SPEW_ATTACK = register("whitesnake_charged_spew_attack", ChargedSpewAttack.Type.INSTANCE);
