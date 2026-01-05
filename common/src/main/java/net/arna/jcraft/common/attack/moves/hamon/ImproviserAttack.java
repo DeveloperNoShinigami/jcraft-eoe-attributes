@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.attack.moves.hamon;
 
+import com.google.common.collect.Multimap;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
@@ -9,7 +10,14 @@ import net.arna.jcraft.common.spec.HamonSpec;
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 
+import java.util.Collection;
 import java.util.Set;
 
 public final class ImproviserAttack extends AbstractSimpleAttack<ImproviserAttack, HamonSpec> {
@@ -30,10 +38,6 @@ public final class ImproviserAttack extends AbstractSimpleAttack<ImproviserAttac
 
         attacker.drainCharge(CHARGE_COST);
         attacker.setUseHamonNext(false);
-
-        final LivingEntity user = attacker.getUser();
-
-        boolean hasWeapon = !user.getMainHandItem().getAttributeModifiers(EquipmentSlot.MAINHAND).isEmpty();
     }
 
     @Override
@@ -43,15 +47,45 @@ public final class ImproviserAttack extends AbstractSimpleAttack<ImproviserAttac
 
     @Override
     public @NonNull Set<LivingEntity> perform(HamonSpec attacker, LivingEntity user) {
+        final ItemStack mainStack = user.getMainHandItem();
+        final Multimap<Attribute, AttributeModifier> modifiers = mainStack.getAttributeModifiers(EquipmentSlot.MAINHAND);
 
+        final float damage = (float) applyAttributeModifiers(1.0, modifiers.get(Attributes.ATTACK_DAMAGE));
+        withDamage(damage);
+
+        final float knockback = (float) applyAttributeModifiers(1.25, modifiers.get(Attributes.ATTACK_KNOCKBACK));
+        withKnockback(knockback);
 
         final Set<LivingEntity> targets = super.perform(attacker, user);
 
-        if (JUtils.getSpec(user) instanceof HamonSpec hamonSpec)
-            for (LivingEntity target : targets)
+        if (JUtils.getSpec(user) instanceof HamonSpec hamonSpec) {
+            for (LivingEntity target : targets) {
                 hamonSpec.processTarget(target);
+                EnchantmentHelper.doPostDamageEffects(user, target);
+
+                final int fireLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FIRE_ASPECT, mainStack);
+                if (fireLevel > 0) target.setSecondsOnFire(fireLevel * 4);
+            }
+        }
 
         return targets;
+    }
+
+    public static double applyAttributeModifiers(double baseValue, final Collection<AttributeModifier> modifiers) {
+        double add = 0;
+        double multBase = 0;
+        double multTotal = 1;
+
+        for (AttributeModifier mod : modifiers) {
+            final double amt = mod.getAmount();
+            switch (mod.getOperation()) {
+                case ADDITION -> add += amt;
+                case MULTIPLY_BASE -> multBase += amt;
+                case MULTIPLY_TOTAL -> multTotal *= 1 + amt;
+            }
+        }
+
+        return (baseValue + add) * (1 + multBase) * multTotal;
     }
 
     @Override

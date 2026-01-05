@@ -173,9 +173,18 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
                     Component.literal("Charge with hamon for Sendo Punch, which knocks the enemy down, and then props them back up with an aftershock of hamon.")
             );
 
-    public static final ImproviserAttack IMPROVISER = new ImproviserAttack(100, 12,
-            19, 1.0f, 6.5f, 20, 1.6f, 2.0f, -0.1f)
-            .withLaunch();
+    public static final ImproviserAttack IMPROVISER = new ImproviserAttack(100, 8,
+            19, 1.0f, 6.5f, 12, 1.6f, 2.0f, -0.1f)
+            .withLaunch()
+            .withSound(JSoundRegistry.HAMON_SURGE)
+            .withHitSpark(JParticleType.HIT_SPARK_2)
+            .withCondition(HamonChargeCondition.atLeast(SendoAttack.CHARGE_COST))
+            .withInfo(
+                    Component.literal("Improviser"),
+                    Component.literal("""
+                            Situational hamon application.
+                            When using a weapon, does a Hamon-infused strike with it. (CURRENTLY ONLY OPTION)""")
+            );
     // These aren't stored in any movemap and have fields that must be unique to them, so we make copies.
     private final ZoomPunchAttack zoomPunchAttack = ZOOM_PUNCH.copy();
     private final RippleAttack rippleAttack = RIPPLE_ATTACK.copy();
@@ -187,6 +196,7 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
         moves.register(MoveClass.SPECIAL1, STOMP, CooldownType.SPECIAL1, State.STOMP);
         moves.register(MoveClass.SPECIAL2, UPPERCUT, CooldownType.SPECIAL2, State.UPPERCUT)
                 .withAerialVariant(State.SENDO);
+        moves.register(MoveClass.SPECIAL3, IMPROVISER, CooldownType.SPECIAL3, State.IMPROVISER);
 
         moves.register(MoveClass.ULTIMATE, CHARGE_HAMON, CooldownType.ULTIMATE, null);
     }
@@ -350,7 +360,7 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
         STOMP("hm.stm"),
         RIPPLE("hm.rpl"),
 
-        TOSS("hm.toss"),
+        IMPROVISER("hm.imp.r"),
         ;
 
         private final String key;

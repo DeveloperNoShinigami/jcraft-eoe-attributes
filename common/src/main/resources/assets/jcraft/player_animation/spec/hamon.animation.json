@@ -1996,9 +1996,9 @@
 							"vector": [8.07442, -21.47473, -77.95784],
 							"easing": "easeInOutSine"
 						},
-						"0.6": {
-							"vector": [18.07442, -21.47473, -77.95784],
-							"easing": "easeInOutSine"
+						"0.76": {
+							"vector": [30.57442, -21.47473, -77.95784],
+							"easing": "linear"
 						}
 					},
 					"position": {
