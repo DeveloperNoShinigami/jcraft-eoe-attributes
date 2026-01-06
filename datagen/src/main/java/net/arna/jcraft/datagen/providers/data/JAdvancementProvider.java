@@ -99,6 +99,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 JStandTypeRegistry.METALLICA,
                 JStandTypeRegistry.THE_HAND,
                 JStandTypeRegistry.MANDOM
+                //, JStandTypeRegistry.CRAZY_DIAMOND
         );
         final Advancement.Builder obtainAllStandsBuilder = Advancement.Builder.advancement()
                 .display(JItemRegistry.STAND_DISC.get(),
@@ -235,7 +236,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         final var obtainableSpecs = List.of(
                 JSpecTypeRegistry.ANUBIS,
                 JSpecTypeRegistry.BRAWLER,
-                JSpecTypeRegistry.VAMPIRE
+                JSpecTypeRegistry.VAMPIRE,
+                JSpecTypeRegistry.HAMON
         );
         final Advancement.Builder obtainAllSpecsBuilder = Advancement.Builder.advancement()
                 .display(JItemRegistry.SPEC_DISC.get(),

@@ -46,6 +46,16 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
 
     protected static final Map<TypeSkin, ResourceLocation> TEXTURE_MAP = new HashMap<>();
 
+    protected static <T extends StandEntity<?, ?>> StandEntityRenderer<T> of(
+            final @NonNull AzEntityRendererConfig<T> config, final @NonNull EntityRendererProvider.Context context,
+            final @NonNull ResourceLocation model, final @NonNull ResourceLocation texture) {
+        return new StandEntityRenderer<>(config, context, model, texture);
+    }
+    private StandEntityRenderer(final @NonNull AzEntityRendererConfig<T> config, final @NonNull EntityRendererProvider.Context context,
+                                final @NonNull ResourceLocation model, final @NonNull ResourceLocation texture) {
+        super(config, context, model, texture);
+    }
+
     protected StandEntityRenderer(final @NonNull EntityRendererProvider.Context context, final @NonNull Function<AzEntityRendererConfig.Builder<T>, AzEntityRendererConfig.Builder<T>> additionalConfigs,
                                   final @NonNull Function<T, ResourceLocation> model, final @NonNull Function<T, ResourceLocation> texture,
                                   final @NonNull StandType type, final boolean flipBody, final boolean flipHead, final float torsoPitchOffset, final float headPitchOffset, final float velInfluence) {
@@ -142,6 +152,10 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends AbstractEn
                     // this is also probably what stops the summon from working as intended.
                     animatable.playStateAnimation();
                 }
+            }
+
+            if (animatable.isIdle()) {
+                animatable.playStateAnimation();
             }
 
             float a = getAlpha(animatable, partialTick);

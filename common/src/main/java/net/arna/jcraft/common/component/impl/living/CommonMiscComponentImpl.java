@@ -5,6 +5,8 @@ import lombok.NonNull;
 import net.arna.jcraft.api.component.living.CommonMiscComponent;
 import net.arna.jcraft.common.entity.stand.MetallicaEntity;
 import net.arna.jcraft.api.registry.JSoundRegistry;
+import net.arna.jcraft.common.spec.HamonSpec;
+import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -18,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 public class CommonMiscComponentImpl implements CommonMiscComponent {
-    private final Entity entity;
+    private final LivingEntity entity;
     @Getter
     private Vec3 desiredVelocity = Vec3.ZERO;
     @Getter
@@ -37,7 +39,7 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
     private float attackSpeedMult;
     private float metallicaIron = MetallicaEntity.IRON_MAX;
 
-    public CommonMiscComponentImpl(final Entity entity) {
+    public CommonMiscComponentImpl(final LivingEntity entity) {
         this.entity = entity;
     }
 
@@ -123,6 +125,26 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
         this.metallicaIron = iron;
     }
 
+    private float hamonCharge = 0.0f;
+    @Override
+    public float getHamonCharge() {
+        return hamonCharge;
+    }
+    @Override
+    public void setHamonCharge(float charge) {
+        hamonCharge = charge;
+        sync(entity);
+    }
+
+    private boolean hamonizeReady = false;
+    public boolean isHamonizeReady() {
+        return hamonizeReady;
+    }
+    public void setHamonizeReady(final boolean ready) {
+        hamonizeReady = ready;
+        sync(entity);
+    }
+
     public void tick() {
         if (damageTimer > 0) {
             damageTimer--;
@@ -170,6 +192,14 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
                 updateKnifeTimer();
             }
         }
+
+        if (hamonCharge > 0 || hamonizeReady) {
+            if (!(JUtils.getSpec(entity) instanceof HamonSpec)) {
+                hamonCharge = 0;
+                hamonizeReady = false;
+                sync(entity);
+            }
+        }
     }
 
     public LivingEntity getMaster() {
@@ -192,12 +222,16 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
         buf.writeVarInt(armoredHitTicks);
         buf.writeVarInt(stuckKnifeCount);
         buf.writeFloat(attackSpeedMult);
+        buf.writeFloat(hamonCharge);
+        buf.writeBoolean(hamonizeReady);
     }
 
     public void applySyncPacket(FriendlyByteBuf buf) {
         armoredHitTicks = buf.readVarInt();
         stuckKnifeCount = buf.readVarInt();
         attackSpeedMult = buf.readFloat();
+        hamonCharge = buf.readFloat();
+        hamonizeReady = buf.readBoolean();
     }
 
     public void readFromNbt(@NonNull CompoundTag tag) {
@@ -205,6 +239,7 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
         desiredVelocity = new Vec3(dvComp.getDouble("X"), dvComp.getDouble("Y"), dvComp.getDouble("Z"));
         damageTimer = tag.getInt("DamageTimer");
         metallicaIron = tag.getFloat("MetallicaIron");
+
         if (tag.hasUUID("SlavedTo")) {
             slavedTo = tag.getUUID("SlavedTo");
         }

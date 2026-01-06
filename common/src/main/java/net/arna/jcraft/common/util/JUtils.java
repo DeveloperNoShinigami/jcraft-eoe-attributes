@@ -222,6 +222,25 @@ public final class JUtils {
         return toReturn;
     }
 
+    public static Set<LivingEntity> generateHitboxNoDisplay(Level world, Vec3 center, double hitboxSize, Predicate<Entity> predicate) {
+        double size = hitboxSize / 2;
+
+        Vec3 v1 = center.subtract(size, size, size);
+        Vec3 v2 = center.add(size, size, size);
+
+        List<LivingEntity> hit = world.getEntitiesOfClass(LivingEntity.class, new AABB(v1, v2),
+                EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(predicate));
+        Set<LivingEntity> toReturn = new HashSet<>(hit);
+        for (LivingEntity l : hit)
+        {
+            if (l instanceof StandEntity<?, ?> stand && stand.hasUser()) {
+                toReturn.add(stand.getUserOrThrow());
+            }
+        }
+
+        return toReturn;
+    }
+
     public static JSpec<?, ?> getSpec(LivingEntity livingEntity) {
         return JComponentPlatformUtils.getSpecData(livingEntity).getSpec();
     }
