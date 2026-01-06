@@ -23,13 +23,14 @@ public class CrazyDiamondEntity extends StandEntity<CrazyDiamondEntity, CrazyDia
 
     // TODO Ayutac copied the values from CreamEntity
     public static final RestorationAttack<CrazyDiamondEntity> PUNCH = RestorationAttack.<CrazyDiamondEntity>lightAttack(
-            6, 14,0.75f, 5f, 20, 0.3f, -0.1f);
+            6, 14, 0.75f, 5f, 20, 0.3f, -0.1f);
 
     public static final StandData DATA = StandData.builder()
             .info(StandInfo.builder()
                     .name(Component.translatable("entity.jcraft.crazydiamond"))
                     .build())
-            .build();
+            .build()
+            .withObtainable(false);
 
     public CrazyDiamondEntity(final Level world) {
         super(JStandTypeRegistry.CRAZY_DIAMOND.get(), world);
