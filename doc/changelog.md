@@ -1,14 +1,19 @@
 # Changelog
 ## General
-* …
+* ### Added Hamon
+* Improved combat AI
 ### Blocks & Items
 * …
 ### NPCs & Stands
-* …
+* Whitesnake
+  * Poison Spew cooldowns increased by 4s
+  * Poison Spew Projectile no longer interrupts moves
 ### Configs
 * …
 ### Bug Fixes
-* …
+* Fix idle and blocking animations not playing sometimes
+* Fix Gold Experience's Snake not animating movement
+* Brawler spec user no longer attacks villagers
 ### Known Bugs
 * …
 

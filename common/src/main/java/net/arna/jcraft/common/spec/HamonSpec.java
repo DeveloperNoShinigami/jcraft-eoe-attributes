@@ -49,12 +49,8 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
     public static final MoveSet<HamonSpec, HamonSpec.State> MOVE_SET = MoveSetManager.create(JSpecTypeRegistry.HAMON, HamonSpec::registerMoves, HamonSpec.State.class);
     public static final SpecData DATA = SpecData.builder()
             .name(Component.translatable("spec.jcraft.hamon"))
-            .description(Component.literal("Superpowered Mid-ranger"))
-            .details(Component.literal("""
-                    PASSIVES: Hamon breath
-                    Tap Barrage to toggle whether the next move uses Hamon or not.
-                    Hold Ultimate to charge Hamon. Executing a move during breath also activates the Hamon variant.
-                    """))
+            .description(Component.translatable("spec.jcraft.hamon.info.desc"))
+            .details(Component.translatable("spec.jcraft.hamon.info.details"))
             .build();
     public static final float MAX_CHARGE = 20.0f;
 

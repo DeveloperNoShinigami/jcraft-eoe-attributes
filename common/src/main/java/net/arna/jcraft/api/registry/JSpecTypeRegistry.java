@@ -31,7 +31,6 @@ public interface JSpecTypeRegistry {
         map.put(1, BRAWLER);
         map.put(2, ANUBIS);
         map.put(3, VAMPIRE);
-        map.put(4, HAMON);
     });
 
     private static RegistrySupplier<SpecType> register(String name, Function<LivingEntity, JSpec<?,?>> factory) {
