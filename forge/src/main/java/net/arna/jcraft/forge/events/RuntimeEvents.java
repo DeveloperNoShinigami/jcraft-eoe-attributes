@@ -52,6 +52,7 @@ public class RuntimeEvents {
 
             event.addCapability(JCraft.id("stand_capability"), new JCapabilityProvider<>(StandCapability.CAPABILITY, () -> new StandCapability(living)));
 
+            event.addCapability(JCraft.id("hamon_capability"), new JCapabilityProvider<>(HamonCapability.CAPABILITY, () -> new HamonCapability(living)));
             event.addCapability(JCraft.id("vampire_capability"), new JCapabilityProvider<>(VampireCapability.CAPABILITY, () -> new VampireCapability(living)));
 
             event.addCapability(JCraft.id("gravity_shift_capability"), new JCapabilityProvider<>(GravityShiftCapability.CAPABILITY, () -> new GravityShiftCapability(living)));
@@ -111,6 +112,7 @@ public class RuntimeEvents {
         copyCapability(HitPropertyCapability.CAPABILITY, event.getOriginal(), event.getEntity());
         copyCapability(MiscCapability.CAPABILITY, event.getOriginal(), event.getEntity());
         copyCapability(StandCapability.CAPABILITY, event.getOriginal(), event.getEntity());
+        copyCapability(HamonCapability.CAPABILITY, event.getOriginal(), event.getEntity());
         copyCapability(VampireCapability.CAPABILITY, event.getOriginal(), event.getEntity());
         copyCapability(GrabCapability.CAPABILITY, event.getOriginal(), event.getEntity());
         copyCapability(TimeStopCapability.CAPABILITY, event.getOriginal(), event.getEntity());

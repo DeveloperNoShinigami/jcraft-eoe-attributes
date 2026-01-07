@@ -1,17 +1,18 @@
-package net.arna.jcraft.fabric.common.component.impl;
+package net.arna.jcraft.fabric.common.component.impl.living;
 
 import lombok.NonNull;
-import net.arna.jcraft.common.component.impl.CommonVampireComponentImpl;
+import net.arna.jcraft.common.component.impl.living.CommonHamonComponentImpl;
 import net.arna.jcraft.fabric.common.component.JComponents;
-import net.arna.jcraft.fabric.common.component.living.VampireComponent;
+import net.arna.jcraft.fabric.common.component.living.HamonComponent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
-public class VampireComponentImpl extends CommonVampireComponentImpl implements VampireComponent {
-    public VampireComponentImpl(LivingEntity entity) {
+public class HamonComponentImpl extends CommonHamonComponentImpl implements HamonComponent {
+
+    public HamonComponentImpl(LivingEntity entity) {
         super(entity);
     }
 
@@ -22,7 +23,7 @@ public class VampireComponentImpl extends CommonVampireComponentImpl implements 
 
     @Override
     public void sync(Entity entity) {
-        JComponents.VAMPIRE.sync(entity);
+        JComponents.HAMON.sync(entity);
     }
 
     @Override
@@ -49,4 +50,5 @@ public class VampireComponentImpl extends CommonVampireComponentImpl implements 
     public void writeToNbt(@NonNull CompoundTag tag) {
         super.writeToNbt(tag);
     }
+
 }

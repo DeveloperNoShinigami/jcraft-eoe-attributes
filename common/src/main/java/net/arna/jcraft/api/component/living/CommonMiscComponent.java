@@ -51,9 +51,4 @@ public interface CommonMiscComponent extends JComponent {
     float getMetallicaIron();
     void setMetallicaIron(final float iron);
 
-    // HamonSpec
-    float getHamonCharge();
-    void setHamonCharge(final float charge);
-    boolean isHamonizeReady();
-    void setHamonizeReady(final boolean ready);
 }

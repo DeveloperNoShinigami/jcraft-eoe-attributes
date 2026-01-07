@@ -41,6 +41,7 @@ public class SetupEvents {
         event.register(HitPropertyCapability.class);
         event.register(MiscCapability.class);
         event.register(StandCapability.class);
+        event.register(HamonCapability.class);
         event.register(VampireCapability.class);
 
         //World

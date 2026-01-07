@@ -194,6 +194,14 @@ public class JCraftForgeClient {
             }
         });
 
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, HamonCapability.HAMON_S2C, (buf, context) -> {
+            // Received by the HamonCapability holder and only them
+            LocalPlayer localPlayer = Minecraft.getInstance().player;
+            if (localPlayer != null) {
+                HamonCapability.getCapabilityOptional(localPlayer).ifPresent(c -> c.applySyncPacket(buf));
+            }
+        });
+
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, VAMP_S2C, (buf, context) -> {
             // Received by the VampireCapability holder and only them
             LocalPlayer localPlayer = Minecraft.getInstance().player;

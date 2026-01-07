@@ -36,9 +36,11 @@ public class HamonParticlesFeatureRenderer<T extends LivingEntity, M extends Age
     }
 
     protected int getHamonCharge(final T entity) {
-        final var misc = JComponentPlatformUtils.getMiscData(entity);
-        if (!misc.isHamonizeReady()) return 0;
-        return Mth.ceil(misc.getHamonCharge() / 5.0f);
+        final var hamon = JComponentPlatformUtils.getHamon(entity);
+        if (!hamon.isHamonizeReady()) {
+            return 0;
+        }
+        return Mth.ceil(hamon.getHamonCharge() / 5.0f);
     }
 
     public static void prepareHamonAura() {

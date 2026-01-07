@@ -10,7 +10,7 @@ import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.api.attack.enums.MobilityType;
 import net.arna.jcraft.api.attack.enums.MoveClass;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
-import net.arna.jcraft.api.component.living.CommonMiscComponent;
+import net.arna.jcraft.api.component.living.CommonHamonComponent;
 import net.arna.jcraft.api.registry.JParticleTypeRegistry;
 import net.arna.jcraft.api.registry.JSoundRegistry;
 import net.arna.jcraft.api.registry.JSpecTypeRegistry;
@@ -57,11 +57,11 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
     private boolean useHamonNext = false;
     @Getter
     private float charge = 0.0f;
-    private final CommonMiscComponent misc;
+    private final CommonHamonComponent hamon;
 
     public HamonSpec(LivingEntity livingEntity) {
         super(JSpecTypeRegistry.HAMON.get(), livingEntity);
-        misc = JComponentPlatformUtils.getMiscData(user);
+        hamon = JComponentPlatformUtils.getHamon(user);
 
         zoomPunchAttack.onRegister(MoveClass.HEAVY);
         rippleAttack.onRegister(MoveClass.SPECIAL1);
@@ -270,7 +270,7 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
                 charge += add;
             }
 
-            misc.setHamonCharge(charge);
+            hamon.setHamonCharge(charge);
         }
 
         zoomPunchAttack.tick(this);
@@ -323,15 +323,15 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
 
     public void drainCharge(float reduction) {
         charge = Mth.clamp(charge - reduction, 0.0F, MAX_CHARGE);
-        misc.setHamonCharge(charge);
+        hamon.setHamonCharge(charge);
     }
 
     public void flashClientHamonBar() {
-        misc.setHamonizeReady(true);
+        hamon.setHamonizeReady(true);
     }
 
     public void updateClientHamonBar() {
-        misc.setHamonizeReady(willUseHamonNext());
+        hamon.setHamonizeReady(willUseHamonNext());
     }
 
     public void setUseHamonNext(boolean use) {

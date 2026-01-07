@@ -109,9 +109,9 @@ public class JCraftHudOverlay {
                 BLOODLUST_GAUGE.render(ctx, gaugeX, height + gaugeHeightOffset, displayBloodlust);
             }
         } else if (spec instanceof HamonSpec) {
-            final var misc = JComponentPlatformUtils.getMiscData(player);
-            final int charge = (int) misc.getHamonCharge();
-            final Vector3f color = misc.isHamonizeReady() ? new Vector3f(1.0f, 1.0f, 0.6f) : HAMON_GAUGE.colorCopy();
+            final var hamon = JComponentPlatformUtils.getHamon(player);
+            final int charge = (int) hamon.getHamonCharge();
+            final Vector3f color = hamon.isHamonizeReady() ? new Vector3f(1.0f, 1.0f, 0.6f) : HAMON_GAUGE.colorCopy();
             HAMON_GAUGE.render(ctx, color.x, color.y, color.z, gaugeX, height + gaugeHeightOffset, charge);
         }
     }
