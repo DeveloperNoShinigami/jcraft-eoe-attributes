@@ -70,7 +70,6 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
     }
 
     public static final ChargeHamonMove CHARGE_HAMON = new ChargeHamonMove(60 * 20, 0, 1)
-            .withSound(JSoundRegistry.HAMON_BREATHE)
             .withInfo(
                     Component.literal("Charge Hamon"),
                     Component.literal("")
@@ -95,6 +94,7 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
             .withLaunch()
             .withCondition(HamonChargeCondition.atLeast(ZoomPunchAttack.CHARGE_COST))
             .withExtraHitBox(1.5)
+            .withExtraHitBox(-0.5, 0.0, 1.5)
             .withMobilityType(MobilityType.DASH)
             .withInfo(
                     Component.literal("Zoom Punch"),
@@ -111,7 +111,7 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
                     Component.literal("Charge with hamon for Ripple, a powerful stomp that creates a Hamon Wave.")
             );
     public static final RippleAttack RIPPLE_ATTACK = new RippleAttack(0, 9,
-            17, 1.1f, 6f, 8, 1.6f, 1.0f, 0.4f)
+            17, 1.1f, 6f, 18, 1.6f, 1.0f, 0.4f)
             .withSound(JSoundRegistry.HAMON_ECHO)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withStaticY()

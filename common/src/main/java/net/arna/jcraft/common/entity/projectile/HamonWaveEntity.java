@@ -28,6 +28,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HamonWaveEntity extends JAttackEntity {
@@ -63,6 +64,7 @@ public class HamonWaveEntity extends JAttackEntity {
 
         if (level() instanceof ServerLevel serverLevel) {
             HamonSpec hamonSpec = null;
+
             if (master == null) {
                 discard();
                 return;
@@ -72,57 +74,7 @@ public class HamonWaveEntity extends JAttackEntity {
                 JCraft.LOGGER.warn("HamonWaveEntity exists for owner without Hamon!");
             }
 
-            final List<Entity> potentialHits = serverLevel.getEntities(
-                    this,
-                    AABB.ofSize(position(), size * 2, size * 2, size * 2),
-                    EntitySelector.NO_CREATIVE_OR_SPECTATOR
-            );
-
-            boolean anyHit = false;
-
-            for (Entity potentialHit : potentialHits) {
-                if (potentialHit instanceof LivingEntity living) {
-                    if (potentialHit.isPassengerOfSameVehicle(master)) continue;
-
-                    Vec3 otherPos = living.position();
-                    double axisDistance;
-
-                    switch (gravity.getAxis()) {
-                        case X -> axisDistance = Math.abs(otherPos.x - position.x);
-                        case Y -> axisDistance = Math.abs(otherPos.y - position.y);
-                        case Z -> axisDistance = Math.abs(otherPos.z - position.z);
-                        default -> axisDistance = Double.MAX_VALUE;
-                    }
-
-                    // Vertically truncate hollow hitsphere
-                    if (axisDistance > 1.5) continue;
-
-                    final double distanceSqr = potentialHit.distanceToSqr(position);
-
-                    // Hollow hitsphere
-                    if (
-                            distanceSqr < ((size - 0.5) * (size - 0.5)) ||
-                            distanceSqr > ((size + 0.5) * (size + 0.5))
-                    ) {
-                        continue;
-                    }
-
-                    Attacks.damageLogic(serverLevel, living, new AttackData(
-                            living.position().subtract(position).scale(0.3),
-                            10, StunType.BURSTABLE.ordinal(), false, 1f, true, 2,
-                            damageSource, master, CommonHitPropertyComponent.HitAnimation.LAUNCH,
-                            null, false, false
-                    ));
-
-                    if (hamonSpec != null) hamonSpec.processTarget(living);
-
-                    anyHit = true;
-                }
-            }
-
-            if (anyHit) {
-                playSound(JSoundRegistry.TWOH_CHARGE.get());
-            }
+            if (tickCount % 3 == 0) tryHit(size, position, gravity, serverLevel, hamonSpec);
         } else if (level() instanceof ClientLevel clientLevel) {
             final float numParticles = size * 10;
 
@@ -167,6 +119,68 @@ public class HamonWaveEntity extends JAttackEntity {
         }
     }
 
+    protected void tryHit(float size, Vec3 position, Direction gravity, ServerLevel serverLevel, HamonSpec hamonSpec) {
+        final List<Entity> potentialHits = serverLevel.getEntities(
+                this,
+                AABB.ofSize(position(), size * 2, size * 2, size * 2),
+                EntitySelector.NO_CREATIVE_OR_SPECTATOR
+        );
+
+        final List<Entity> targets = new ArrayList<>();
+
+        for (Entity potentialHit : potentialHits) {
+            final Entity entity = JUtils.getUserIfStand(potentialHit);
+            if (targets.contains(entity)) continue;
+            targets.add(entity);
+        }
+
+        boolean anyHit = false;
+
+        for (Entity potentialHit : targets) {
+            if (potentialHit instanceof LivingEntity living) {
+                if (potentialHit.isPassengerOfSameVehicle(master)) continue;
+
+                final Vec3 otherPos = living.position();
+                double axisDistance;
+
+                switch (gravity.getAxis()) {
+                    case X -> axisDistance = Math.abs(otherPos.x - position.x);
+                    case Y -> axisDistance = Math.abs(otherPos.y - position.y);
+                    case Z -> axisDistance = Math.abs(otherPos.z - position.z);
+                    default -> axisDistance = Double.MAX_VALUE;
+                }
+
+                // Vertically truncate hollow hitsphere
+                if (axisDistance > 0.666) continue;
+
+                final double distanceSqr = potentialHit.distanceToSqr(position);
+
+                // Hollow hitsphere
+                if (
+                        distanceSqr < ((size - 0.5) * (size - 0.5)) ||
+                        distanceSqr > ((size + 0.5) * (size + 0.5))
+                ) {
+                    continue;
+                }
+
+                Attacks.damageLogic(serverLevel, living, new AttackData(
+                        living.position().subtract(position).scale(0.25),
+                        13, StunType.LAUNCH.ordinal(), false, 3f, true, 6,
+                        damageSource, master, CommonHitPropertyComponent.HitAnimation.LAUNCH,
+                        null, false, false
+                ));
+
+                if (hamonSpec != null) hamonSpec.processTarget(living);
+
+                anyHit = true;
+            }
+        }
+
+        if (anyHit) {
+            playSound(JSoundRegistry.TWOH_CHARGE.get());
+        }
+    }
+
     // Physical Properties
 
     @Override
@@ -185,12 +199,12 @@ public class HamonWaveEntity extends JAttackEntity {
     }
 
     @Override
-    public boolean isPushable() {
-        return false;
+    protected void pushEntities() {
+        // intentionally left empty
     }
 
     @Override
-    public boolean canBeAffected(@NotNull MobEffectInstance effectInstance) {
+    public boolean isPushable() {
         return false;
     }
 
@@ -202,5 +216,15 @@ public class HamonWaveEntity extends JAttackEntity {
     @Override
     public boolean canCollideWith(@NotNull Entity entity) {
         return false;
+    }
+
+    @Override
+    public boolean canBeAffected(@NotNull MobEffectInstance effectInstance) {
+        return false;
+    }
+
+    @Override
+    public @NotNull AABB getBoundingBoxForCulling() {
+        return AABB.ofSize(position(), 0.0, 0.0, 0.0);
     }
 }

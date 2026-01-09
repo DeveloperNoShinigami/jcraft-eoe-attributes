@@ -553,7 +553,9 @@ public interface JEntityTypeRegistry {
             () -> EntityType.Builder.of(
                     WorldOnlyEntityFactory.from(HamonWaveEntity::new),
                     MobCategory.MISC
-            ).sized(2.0f, 0.2f).build("hamon_wave")
+                    ).sized(2.0f, 0.2f)
+                    .fireImmune()
+                    .build("hamon_wave")
     );
 
     RegistrySupplier<EntityType<PetshopEntity>> PETSHOP = ENTITY_TYPE_REGISTRY.register(JCraft.id("petshop"),

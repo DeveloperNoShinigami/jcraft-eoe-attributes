@@ -8,6 +8,7 @@ import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.api.attack.enums.MoveInputType;
 import net.arna.jcraft.api.attack.moves.AbstractBarrageAttack;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
+import net.arna.jcraft.api.registry.JSoundRegistry;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.spec.HamonSpec;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,6 +17,9 @@ import net.minecraft.world.entity.player.Player;
 import java.util.Set;
 
 public class ChargeHamonMove extends AbstractBarrageAttack<ChargeHamonMove, HamonSpec> {
+    private static final int SOUND_COOLDOWN = 15;
+    private int lastUseTimestamp = 0;
+
     public ChargeHamonMove(int duration, float moveDistance, int interval) {
         super(0, 0, duration, moveDistance, 0, 0, 0, 0, 0, interval);
         withHoldable();
@@ -29,7 +33,17 @@ public class ChargeHamonMove extends AbstractBarrageAttack<ChargeHamonMove, Hamo
     @Override
     public void onInitiate(HamonSpec attacker) {
         super.onInitiate(attacker);
+
         attacker.flashClientHamonBar();
+
+        if (attacker.getCharge() >= HamonSpec.MAX_CHARGE) return;
+
+        final int currentTimestamp = attacker.getBaseEntity().tickCount;
+
+        if (currentTimestamp - lastUseTimestamp >= SOUND_COOLDOWN) {
+            attacker.playAttackerSound(JSoundRegistry.HAMON_BREATHE.get(), 1.0f, 1.0f);
+            lastUseTimestamp = currentTimestamp;
+        }
     }
 
     @Override

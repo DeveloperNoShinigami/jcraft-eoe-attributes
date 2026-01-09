@@ -2,6 +2,7 @@ package net.arna.jcraft.client.renderer.features;
 
 import com.google.common.collect.Streams;
 import com.mojang.blaze3d.vertex.PoseStack;
+import it.unimi.dsi.fastutil.ints.Int2IntArrayMap;
 import net.arna.jcraft.api.registry.JParticleTypeRegistry;
 import net.arna.jcraft.client.particle.AuraArcParticle;
 import net.arna.jcraft.client.particle.AuraBlobParticle;
@@ -29,7 +30,7 @@ import java.util.stream.Stream;
 
 public class HamonParticlesFeatureRenderer<T extends LivingEntity, M extends AgeableListModel<T>> extends RenderLayer<T, M> {
     private static final Vector3f HAMON_COLOR = new Vector3f(0.8f, 0.4f, 0.2f);
-    private int lastTickCount = 0;
+    private static final Int2IntArrayMap lastTickCounts = new Int2IntArrayMap();
 
     public HamonParticlesFeatureRenderer(final EntityRendererProvider.Context context, final LivingEntityRenderer<T, M> entityRenderer) {
         super(entityRenderer);
@@ -59,8 +60,9 @@ public class HamonParticlesFeatureRenderer<T extends LivingEntity, M extends Age
     public void render(final @NotNull PoseStack matrixStack, final @NotNull MultiBufferSource vertexConsumerProvider, final int packedLight,
                        final T livingEntity, final float limbSwing, final float limbSwingAmount, final float partialTick,
                        final float ageInTicks, final float netHeadYaw, final float headPitch) {
-        if (livingEntity.tickCount == lastTickCount) return;
-        lastTickCount = livingEntity.tickCount;
+        final int id = livingEntity.getId();
+        if (livingEntity.tickCount == lastTickCounts.get(id)) return;
+        lastTickCounts.put(id, livingEntity.tickCount);
 
         final int m = getHamonCharge(livingEntity);
         if (m <= 0) return;

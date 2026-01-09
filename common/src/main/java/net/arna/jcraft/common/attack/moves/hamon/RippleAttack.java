@@ -27,7 +27,7 @@ import java.util.Set;
 import static net.arna.jcraft.common.util.JUtils.syncVelocityUpdate;
 
 public final class RippleAttack extends AbstractSimpleAttack<RippleAttack, HamonSpec> {
-    public static final float CHARGE_COST = 10.0F;
+    public static final float CHARGE_COST = 15.0F;
     @Getter
     private boolean dive;
     private boolean diving = false;
