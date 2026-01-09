@@ -21,6 +21,9 @@ public class CrazyDiamondRecipe extends SingleItemRecipe {
 
     @Override
     public boolean matches(final @NonNull Container container, final @NonNull Level level) {
+        if (level.isClientSide()) {
+            return false;
+        }
         return ingredient.test(container.getItem(0));
     }
 
