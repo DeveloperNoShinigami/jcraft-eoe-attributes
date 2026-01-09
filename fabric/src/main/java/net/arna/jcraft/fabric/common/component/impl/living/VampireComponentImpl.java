@@ -1,7 +1,7 @@
-package net.arna.jcraft.fabric.common.component.impl;
+package net.arna.jcraft.fabric.common.component.impl.living;
 
 import lombok.NonNull;
-import net.arna.jcraft.common.component.impl.CommonVampireComponentImpl;
+import net.arna.jcraft.common.component.impl.living.CommonVampireComponentImpl;
 import net.arna.jcraft.fabric.common.component.JComponents;
 import net.arna.jcraft.fabric.common.component.living.VampireComponent;
 import net.minecraft.nbt.CompoundTag;

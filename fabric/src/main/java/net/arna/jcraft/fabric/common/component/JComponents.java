@@ -13,7 +13,7 @@ import net.arna.jcraft.fabric.common.component.entity.GrabComponent;
 import net.arna.jcraft.fabric.common.component.entity.GravityComponent;
 import net.arna.jcraft.fabric.common.component.entity.TimeStopComponent;
 import net.arna.jcraft.fabric.common.component.impl.GravityShiftComponentImpl;
-import net.arna.jcraft.fabric.common.component.impl.VampireComponentImpl;
+import net.arna.jcraft.fabric.common.component.impl.living.VampireComponentImpl;
 import net.arna.jcraft.fabric.common.component.impl.entity.GrabComponentImpl;
 import net.arna.jcraft.fabric.common.component.impl.entity.GravityComponentImpl;
 import net.arna.jcraft.fabric.common.component.impl.entity.TimeStopComponentImpl;
