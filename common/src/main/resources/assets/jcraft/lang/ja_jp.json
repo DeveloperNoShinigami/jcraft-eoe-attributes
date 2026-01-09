@@ -1490,8 +1490,6 @@
   "spec.jcraft.brawler.info.desc": "近距離でのプレッシャーとコンボ延長の選択肢",
   "spec.jcraft.brawler.info.details": "重要な攻撃の確認:(任意のスタンド技)~スタンド.OFF>コンボ>スタンド.ON+(任意のスタンド技)",
   "spec.jcraft.hamon": "波紋",
-  "spec.jcraft.hamon.info.desc": "超強力な中距離型",
-  "spec.jcraft.hamon.info.details": "パッシブ：波紋の呼吸\nラッシュをタップすると次の攻撃が波紋を使用するか否かを切り替える。\nアルティメットを長押しすると波紋をチャージ。呼吸中に攻撃を実行すると波紋の派生型が発動する。\n",
   "spec.jcraft.none": "スペックなし",
   "spec.jcraft.vampire": "吸血鬼",
   "spec.jcraft.vampire.info.desc": "超常な全距離型",

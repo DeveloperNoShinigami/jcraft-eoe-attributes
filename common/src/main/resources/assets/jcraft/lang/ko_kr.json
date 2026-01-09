@@ -1490,8 +1490,6 @@
   "spec.jcraft.brawler.info.desc": "근거리 압박, 콤보 연계",
   "spec.jcraft.brawler.info.details": "중요 콤보: (아무 스탠드 동작)~스탠드 끄기>콤보>스탠드 켜기+(아무 스탠드 동작)",
   "spec.jcraft.hamon": "파문",
-  "spec.jcraft.hamon.info.desc": "초강력한 중거리형",
-  "spec.jcraft.hamon.info.details": "패시브: 파문 호흡\n연타하면 다음 공격이 파문을 사용하는지 여부를 전환한다.\n궁극을 길게 누르면 파문을 충전. 호흡중에 공격을 실행하면 파문의 파생형이 발동한다.\n",
   "spec.jcraft.none": "종족 없음",
   "spec.jcraft.vampire": "흡혈귀",
   "spec.jcraft.vampire.info.desc": "슈퍼 내츄럴 올 레인저",
