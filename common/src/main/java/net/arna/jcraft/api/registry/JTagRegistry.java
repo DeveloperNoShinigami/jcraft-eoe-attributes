@@ -8,6 +8,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 
 public interface JTagRegistry {
 
@@ -47,6 +48,8 @@ public interface JTagRegistry {
     TagKey<EntityType<?>> SPEC_USER = TagKey.create(Registries.ENTITY_TYPE, JCraft.id("spec_user"));
 
     TagKey<Biome> METEORS_CAN_FALL = TagKey.create(Registries.BIOME, JCraft.id("meteors_can_fall"));
+
+    TagKey<StructureTemplatePool> STONE_BASE = TagKey.create(Registries.TEMPLATE_POOL, JCraft.id("stone_base"));
 
     static void init() {
         // intentionally left empty

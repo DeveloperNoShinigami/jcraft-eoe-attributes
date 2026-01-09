@@ -1,5 +1,6 @@
 package net.arna.jcraft.datagen.providers.data;
 
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.registry.JBlockRegistry;
 import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.arna.jcraft.api.registry.JItemRegistry;
@@ -23,6 +24,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -720,6 +722,18 @@ public class JTagProviders {
             getOrCreateTagBuilder(TagKey.create(Registries.ENTITY_TYPE,
                     new ResourceLocation("irons_spellbooks", "cant_root")))
                     .addTag(JTagRegistry.STANDS);
+        }
+    }
+
+    public static class JTemplatePoolTags extends FabricTagProvider<StructureTemplatePool> {
+
+        public JTemplatePoolTags(final FabricDataOutput output, final CompletableFuture<HolderLookup.Provider> registriesFuture) {
+            super(output, Registries.TEMPLATE_POOL, registriesFuture);
+        }
+
+        @Override
+        protected void addTags(final HolderLookup.Provider arg) {
+            getOrCreateRawBuilder(JTagRegistry.STONE_BASE).addOptionalElement(JCraft.id("monastery/lower_center_pool"));
         }
     }
 
