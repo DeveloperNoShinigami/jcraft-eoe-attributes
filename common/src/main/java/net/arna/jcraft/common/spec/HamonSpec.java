@@ -254,7 +254,7 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
     public void tickSpec() {
         super.tickSpec();
 
-        if (getEntityWorld().isClientSide) {
+        if (getEntityWorld().isClientSide || (user != null && user.isSpectator())) {
             return;
         }
 
