@@ -102,6 +102,10 @@ public class JCraftHudOverlay {
             }
         }
 
+        // don't display spec gauges in spectator
+        if (player == null || player.isSpectator()) {
+            return;
+        }
         final JSpec<?, ?> spec = JUtils.getSpec(player);
         if (spec instanceof AnubisSpec) {
             final int displayBloodlust = (int) ((JComponentPlatformUtils.getMiscData(player).getAttackSpeedMult() - 1.0f) * 5);
