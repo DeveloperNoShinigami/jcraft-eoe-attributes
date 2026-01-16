@@ -39,7 +39,7 @@ public class CommonHamonComponentImpl implements CommonHamonComponent {
     }
 
     public boolean shouldSyncWith(final ServerPlayer player) {
-        return player == entity;
+        return true;
     }
 
     public void writeSyncPacket(FriendlyByteBuf buf, ServerPlayer recipient) {
