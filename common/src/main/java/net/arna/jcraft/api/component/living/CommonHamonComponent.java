@@ -8,7 +8,16 @@ public interface CommonHamonComponent extends JComponent {
 
     void setHamonCharge(final float charge);
 
+    default void resetHamonCharge() {
+        setHamonCharge(0f);
+    }
+
+    default void reset() {
+        resetHamonCharge();
+    }
+
     boolean isHamonizeReady();
 
     void setHamonizeReady(final boolean ready);
+
 }

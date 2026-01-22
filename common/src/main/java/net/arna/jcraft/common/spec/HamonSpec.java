@@ -52,6 +52,7 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
             .description(Component.translatable("spec.jcraft.hamon.info.desc"))
             .details(Component.translatable("spec.jcraft.hamon.info.details"))
             .build();
+
     public static final float MAX_CHARGE = 20.0f;
 
     private boolean useHamonNext = false;

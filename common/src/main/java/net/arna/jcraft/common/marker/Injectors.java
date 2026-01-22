@@ -306,7 +306,7 @@ public interface Injectors {
                 vampire.setBlood(compoundTag.getFloat(BLOOD_GAUGE.toString()));
             }
             else {
-                vampire.setBlood(20);
+                vampire.resetBlood();
             }
         }
     };
@@ -321,7 +321,7 @@ public interface Injectors {
                 hamon.setHamonCharge(compoundTag.getFloat(HAMON_CHARGE.toString()));
             }
             else {
-                hamon.setHamonCharge(0);
+                hamon.resetHamonCharge();
             }
         }
     };
