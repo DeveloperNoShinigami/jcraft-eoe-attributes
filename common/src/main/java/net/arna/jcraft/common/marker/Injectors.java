@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.marker;
 
+import net.arna.jcraft.api.component.living.CommonHamonComponent;
 import net.arna.jcraft.api.component.living.CommonVampireComponent;
 import net.arna.jcraft.common.util.NbtUtils;
 import net.arna.jcraft.common.util.TriConsumer;
@@ -310,6 +311,21 @@ public interface Injectors {
         }
     };
 
+    TriConsumer<ResourceLocation, Entity, CompoundTag> HAMON = (id, entity, compoundTag) -> {
+        if (id == null || !(entity instanceof final LivingEntity livingEntity)) {
+            return;
+        }
+        final CommonHamonComponent hamon = JComponentPlatformUtils.getHamon(livingEntity);
+        if (hamon != null && id.equals(HAMON_CHARGE)) {
+            if (compoundTag.contains(HAMON_CHARGE.toString())) {
+                hamon.setHamonCharge(compoundTag.getFloat(HAMON_CHARGE.toString()));
+            }
+            else {
+                hamon.setHamonCharge(0);
+            }
+        }
+    };
+
     TriConsumer<ResourceLocation, Entity, CompoundTag> ALL = (id, entity, compoundTag) -> {
         ENTITY.accept(id, entity, compoundTag);
         LIVING_ENTITY.accept(id, entity, compoundTag);
@@ -317,6 +333,7 @@ public interface Injectors {
         MOB.accept(id, entity, compoundTag);
         AGABLE_MOB.accept(id, entity, compoundTag);
         VAMPIRE.accept(id, entity, compoundTag);
+        HAMON.accept(id, entity, compoundTag);
     };
 
 }
