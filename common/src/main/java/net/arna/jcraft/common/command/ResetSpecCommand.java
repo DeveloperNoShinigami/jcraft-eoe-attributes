@@ -7,9 +7,13 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.registry.JSpecTypeRegistry;
 import net.arna.jcraft.api.spec.SpecType;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -41,7 +45,12 @@ public class ResetSpecCommand {
                         JComponentPlatformUtils.getVampirism(living).resetBlood();
                     }
                     else if (specType == JSpecTypeRegistry.HAMON.get()) {
-                        JComponentPlatformUtils.getHamon(living).reset();
+                        JComponentPlatformUtils.getHamon(living).resetHamonCharge();
+                        if (living instanceof final ServerPlayer player) {
+                            revoke(player, JCraft.id("hamon1"));
+                            revoke(player, JCraft.id("hamon2"));
+                            revoke(player, JCraft.id("hamon3"));
+                        }
                     }
                     else if (specType == JSpecTypeRegistry.ANUBIS.get()) {
                         JComponentPlatformUtils.getMiscData(living).setAttackSpeedMult(1f);
@@ -54,5 +63,15 @@ public class ResetSpecCommand {
         }
 
         return 1;
+    }
+
+    private static void revoke(final ServerPlayer player, final ResourceLocation advancementLoc) {
+        final Advancement advancement = player.getServer().getAdvancements().getAdvancement(advancementLoc);
+        final AdvancementProgress progress = player.getAdvancements().getOrStartProgress(advancement);
+        if (progress.hasProgress()) {
+            for (final String crit : progress.getCompletedCriteria()) {
+                player.getAdvancements().revoke(advancement, crit);
+            }
+        }
     }
 }

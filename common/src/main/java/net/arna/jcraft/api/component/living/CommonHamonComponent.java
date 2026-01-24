@@ -12,10 +12,6 @@ public interface CommonHamonComponent extends JComponent {
         setHamonCharge(0f);
     }
 
-    default void reset() {
-        resetHamonCharge();
-    }
-
     boolean isHamonizeReady();
 
     void setHamonizeReady(final boolean ready);
