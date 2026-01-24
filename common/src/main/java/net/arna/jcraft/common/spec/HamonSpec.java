@@ -11,6 +11,7 @@ import net.arna.jcraft.api.attack.enums.MobilityType;
 import net.arna.jcraft.api.attack.enums.MoveClass;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.api.component.living.CommonHamonComponent;
+import net.arna.jcraft.api.registry.JAdvancementTriggerRegistry;
 import net.arna.jcraft.api.registry.JParticleTypeRegistry;
 import net.arna.jcraft.api.registry.JSoundRegistry;
 import net.arna.jcraft.api.registry.JSpecTypeRegistry;
@@ -269,6 +270,9 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
                 }
 
                 charge += add;
+                if (charge >= MAX_CHARGE && user instanceof ServerPlayer player) {
+                    JAdvancementTriggerRegistry.HAMON1.trigger(player);
+                }
             }
 
             hamon.setHamonCharge(charge);

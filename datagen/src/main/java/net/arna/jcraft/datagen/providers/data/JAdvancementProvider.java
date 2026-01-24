@@ -5,8 +5,10 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.registry.*;
 import net.arna.jcraft.api.spec.SpecType;
 import net.arna.jcraft.api.stand.StandType;
+import net.arna.jcraft.common.advancements.Hamon1Trigger;
 import net.arna.jcraft.common.advancements.ObtainedSpecTrigger;
 import net.arna.jcraft.common.advancements.ObtainedStandTrigger;
+import net.arna.jcraft.common.item.SpecDiscItem;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancements.Advancement;
@@ -17,6 +19,7 @@ import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.KilledTrigger;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -654,7 +657,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .rewards(AdvancementRewards.Builder.experience(800))
                 .build(JCraft.id("obtain_dios_diary"));
         consumer.accept(obtainDiosDiary);
-        // obtain stand
+        // kill dummy
         final Advancement killDummy = Advancement.Builder.advancement()
                 .display(JItemRegistry.TRAINING_DUMMY.get(),
                         Component.translatable("advancements.jcraft.kill_dummy.title"),
@@ -669,5 +672,20 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .rewards(AdvancementRewards.Builder.experience(1000))
                 .build(JCraft.id("kill_dummy"));
         consumer.accept(killDummy);
+        // hamon advancements
+        final ItemStack hamon = SpecDiscItem.createDiscStack(JSpecTypeRegistry.HAMON.get());
+        final Advancement hamon1 = Advancement.Builder.advancement()
+                .display(hamon,
+                        Component.translatable("advancements.jcraft.hamon1.title"),
+                        Component.translatable("advancements.jcraft.hamon1.description"),
+                        null,
+                        FrameType.TASK,
+                        true,
+                        true,
+                        false)
+                .parent(obtainAnySpec)
+                .addCriterion("breathed", Hamon1Trigger.TriggerInstance.trigger())
+                .build(JCraft.id("hamon1"));
+        consumer.accept(hamon1);
     }
 }
