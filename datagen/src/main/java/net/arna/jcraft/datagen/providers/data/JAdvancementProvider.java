@@ -713,7 +713,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         false)
                 .parent(hamon2)
                 .addCriterion("punched", Hamon3Trigger.TriggerInstance.trigger())
-                .build(JCraft.id("hamon2"));
+                .build(JCraft.id("hamon3"));
         consumer.accept(hamon3);
     }
 }
