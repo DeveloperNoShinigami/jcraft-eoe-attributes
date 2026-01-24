@@ -66,7 +66,13 @@ public class ResetSpecCommand {
     }
 
     private static void revoke(final ServerPlayer player, final ResourceLocation advancementLoc) {
+        if (player.getServer() == null) {
+            return;
+        }
         final Advancement advancement = player.getServer().getAdvancements().getAdvancement(advancementLoc);
+        if (advancement == null) {
+            return;
+        }
         final AdvancementProgress progress = player.getAdvancements().getOrStartProgress(advancement);
         if (progress.hasProgress()) {
             for (final String crit : progress.getCompletedCriteria()) {
