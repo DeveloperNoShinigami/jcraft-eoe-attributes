@@ -6,6 +6,8 @@ import net.arna.jcraft.api.registry.*;
 import net.arna.jcraft.api.spec.SpecType;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.common.advancements.Hamon1Trigger;
+import net.arna.jcraft.common.advancements.Hamon2Trigger;
+import net.arna.jcraft.common.advancements.Hamon3Trigger;
 import net.arna.jcraft.common.advancements.ObtainedSpecTrigger;
 import net.arna.jcraft.common.advancements.ObtainedStandTrigger;
 import net.arna.jcraft.common.item.SpecDiscItem;
@@ -696,9 +698,22 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         true,
                         true,
                         false)
-                .parent(obtainAnySpec)
-                .addCriterion("toggled", Hamon1Trigger.TriggerInstance.trigger())
+                .parent(hamon1)
+                .addCriterion("toggled", Hamon2Trigger.TriggerInstance.trigger())
                 .build(JCraft.id("hamon2"));
         consumer.accept(hamon2);
+        final Advancement hamon3 = Advancement.Builder.advancement()
+                .display(hamon,
+                        Component.translatable("advancements.jcraft.hamon3.title"),
+                        Component.translatable("advancements.jcraft.hamon3.description"),
+                        null,
+                        FrameType.TASK,
+                        true,
+                        true,
+                        false)
+                .parent(hamon2)
+                .addCriterion("punched", Hamon3Trigger.TriggerInstance.trigger())
+                .build(JCraft.id("hamon2"));
+        consumer.accept(hamon3);
     }
 }
