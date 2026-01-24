@@ -687,5 +687,18 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .addCriterion("breathed", Hamon1Trigger.TriggerInstance.trigger())
                 .build(JCraft.id("hamon1"));
         consumer.accept(hamon1);
+        final Advancement hamon2 = Advancement.Builder.advancement()
+                .display(hamon,
+                        Component.translatable("advancements.jcraft.hamon2.title"),
+                        Component.translatable("advancements.jcraft.hamon2.description"),
+                        null,
+                        FrameType.TASK,
+                        true,
+                        true,
+                        false)
+                .parent(obtainAnySpec)
+                .addCriterion("toggled", Hamon1Trigger.TriggerInstance.trigger())
+                .build(JCraft.id("hamon2"));
+        consumer.accept(hamon2);
     }
 }

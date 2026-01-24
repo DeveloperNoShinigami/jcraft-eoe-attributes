@@ -270,7 +270,7 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
                 }
 
                 charge += add;
-                if (charge >= MAX_CHARGE && user instanceof ServerPlayer player) {
+                if (charge >= MAX_CHARGE && user instanceof final ServerPlayer player) {
                     JAdvancementTriggerRegistry.HAMON1.trigger(player);
                 }
             }
@@ -341,6 +341,9 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
 
     public void setUseHamonNext(boolean use) {
         useHamonNext = use;
+        if (use && user instanceof final ServerPlayer player) {
+            JAdvancementTriggerRegistry.HAMON2.trigger(player);
+        }
         updateClientHamonBar();
     }
 
