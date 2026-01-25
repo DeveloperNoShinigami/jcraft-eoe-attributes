@@ -3,8 +3,7 @@ package net.arna.jcraft.common.advancements;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.api.JRegistries;
-import net.arna.jcraft.api.spec.SpecType;
+import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.DeserializationContext;
@@ -14,7 +13,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.GsonHelper;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class Hamon5Trigger extends SimpleCriterionTrigger<Hamon5Trigger.TriggerInstance> {
 
@@ -39,7 +37,7 @@ public class Hamon5Trigger extends SimpleCriterionTrigger<Hamon5Trigger.TriggerI
     }
 
     public void trigger(final ServerPlayer player, final int amount) {
-        this.trigger(player, trigger -> trigger.matches(amount));
+        this.trigger(player, trigger -> JUtils.hasAdvancement(player, Hamon4Trigger.ID) && trigger.matches(amount));
     }
 
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
