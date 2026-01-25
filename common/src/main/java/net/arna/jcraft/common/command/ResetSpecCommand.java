@@ -6,6 +6,9 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.registry.JSpecTypeRegistry;
 import net.arna.jcraft.api.spec.SpecType;
+import net.arna.jcraft.common.advancements.Hamon1Trigger;
+import net.arna.jcraft.common.advancements.Hamon2Trigger;
+import net.arna.jcraft.common.advancements.Hamon3Trigger;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
@@ -47,9 +50,9 @@ public class ResetSpecCommand {
                     else if (specType == JSpecTypeRegistry.HAMON.get()) {
                         JComponentPlatformUtils.getHamon(living).resetHamonCharge();
                         if (living instanceof final ServerPlayer player) {
-                            revoke(player, JCraft.id("hamon1"));
-                            revoke(player, JCraft.id("hamon2"));
-                            revoke(player, JCraft.id("hamon3"));
+                            revoke(player, Hamon1Trigger.ID);
+                            revoke(player, Hamon2Trigger.ID);
+                            revoke(player, Hamon3Trigger.ID);
                         }
                     }
                     else if (specType == JSpecTypeRegistry.ANUBIS.get()) {

@@ -687,7 +687,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         false)
                 .parent(obtainAnySpec)
                 .addCriterion("breathed", Hamon1Trigger.TriggerInstance.trigger())
-                .build(JCraft.id("hamon1"));
+                .build(Hamon1Trigger.ID);
         consumer.accept(hamon1);
         final Advancement hamon2 = Advancement.Builder.advancement()
                 .display(hamon,
@@ -700,7 +700,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         false)
                 .parent(hamon1)
                 .addCriterion("toggled", Hamon2Trigger.TriggerInstance.trigger())
-                .build(JCraft.id("hamon2"));
+                .build(Hamon2Trigger.ID);
         consumer.accept(hamon2);
         final Advancement hamon3 = Advancement.Builder.advancement()
                 .display(hamon,
@@ -713,7 +713,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         false)
                 .parent(hamon2)
                 .addCriterion("punched", Hamon3Trigger.TriggerInstance.trigger())
-                .build(JCraft.id("hamon3"));
+                .build(Hamon3Trigger.ID);
         consumer.accept(hamon3);
     }
 }
