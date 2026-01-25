@@ -79,7 +79,9 @@ public final class ZoomPunchAttack extends AbstractSimpleAttack<ZoomPunchAttack,
                 if (user instanceof final ServerPlayer player && target instanceof Enemy) {
                     JAdvancementTriggerRegistry.HAMON3.trigger(player);
                     final CommonHamonComponent hamon = JComponentPlatformUtils.getHamon(player);
-                    hamon.setLastZoomPunched(target.getUUID());
+                    if (player.getServer() != null) {
+                        hamon.setLastZoomPunched(target.getUUID(), player.getServer().getTickCount());
+                    }
                 }
             }
         }

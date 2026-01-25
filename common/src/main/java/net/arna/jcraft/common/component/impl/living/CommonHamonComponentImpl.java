@@ -2,7 +2,6 @@ package net.arna.jcraft.common.component.impl.living;
 
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 import net.arna.jcraft.api.component.living.CommonHamonComponent;
 import net.arna.jcraft.common.spec.HamonSpec;
 import net.arna.jcraft.common.util.JUtils;
@@ -25,8 +24,14 @@ public class CommonHamonComponentImpl implements CommonHamonComponent {
     private boolean hamonizeReady = false;
     // doesn't need to be synchronized to the client and also not persisted
     @Getter
-    @Setter
     private UUID lastZoomPunched;
+    @Getter
+    private int lastZoomPunchedTick = Integer.MIN_VALUE;
+    // doesn't need to be synchronized to the client and also not persisted
+    @Getter
+    private UUID lastSendoed;
+    @Getter
+    private int lastSendoedTick = Integer.MIN_VALUE;
 
     public CommonHamonComponentImpl(final LivingEntity entity) {
         this.entity = entity;
@@ -41,6 +46,28 @@ public class CommonHamonComponentImpl implements CommonHamonComponent {
     public void setHamonizeReady(final boolean ready) {
         hamonizeReady = ready;
         sync(entity);
+    }
+
+    @Override
+    public void setLastZoomPunched(final @NonNull UUID lastZoomPunched, final int tick) {
+        this.lastZoomPunched = lastZoomPunched;
+        lastZoomPunchedTick = tick;
+    }
+
+    public void resetLastZoomPunched() {
+        lastZoomPunched = null;
+        lastZoomPunchedTick = Integer.MIN_VALUE;
+    }
+
+    @Override
+    public void setLastSendoed(final @NonNull UUID lastSendoed, final int tick) {
+        this.lastSendoed = lastSendoed;
+        lastSendoedTick = tick;
+    }
+
+    public void resetLastSendoed() {
+        lastSendoed = null;
+        lastSendoedTick = Integer.MIN_VALUE;
     }
 
     public void sync(final Entity entity) {

@@ -18,7 +18,6 @@ import net.arna.jcraft.api.registry.JStatusRegistry;
 import net.arna.jcraft.api.spec.JSpec;
 import net.arna.jcraft.api.spec.SpecType;
 import net.arna.jcraft.api.stand.StandEntity;
-import net.arna.jcraft.common.attack.moves.hamon.SendoAttack;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.entity.TrainingDummyEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
@@ -28,6 +27,7 @@ import net.arna.jcraft.common.util.*;
 import net.arna.jcraft.mixin.LivingEntityInvoker;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -386,8 +386,15 @@ public interface Attacks {
             // combo acknowledger
             if (userSpecType == JSpecTypeRegistry.HAMON && livingAttacker instanceof ServerPlayer player) {
                 final CommonHamonComponent hamon = JComponentPlatformUtils.getHamon(player);
-                final AbstractMove<?,?> currentAttack = userSpec.getCurrentMove();
-                if (victim.getUUID().equals(hamon.getLastZoomPunched()) && !currentAttack.isAerialVariant() && !currentAttack.isCrouchingVariant() && currentAttack instanceof SendoAttack) {
+                final MinecraftServer server = player.getServer();
+                if (victim.getUUID().equals(hamon.getLastZoomPunched()) && victim.getUUID().equals(hamon.getLastSendoed()) &&
+                        // make sure sendo was used after zoom punch
+                        hamon.getLastSendoedTick() > hamon.getLastZoomPunchedTick() &&
+                        // but not too long ago (30 seconds)
+                        hamon.getLastSendoedTick() - hamon.getLastZoomPunchedTick() <= 600 &&
+                        // check that sendo was last used move TODO do something less hacky than "was it used within the last second"
+                        server != null && server.getTickCount() - hamon.getLastSendoedTick() <= 20
+                ) {
                     JAdvancementTriggerRegistry.HAMON4.trigger(player);
                 }
             }

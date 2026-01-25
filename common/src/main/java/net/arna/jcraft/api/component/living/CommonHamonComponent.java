@@ -1,5 +1,6 @@
 package net.arna.jcraft.api.component.living;
 
+import lombok.NonNull;
 import net.arna.jcraft.api.component.JComponent;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,6 +23,19 @@ public interface CommonHamonComponent extends JComponent {
     @Nullable
     UUID getLastZoomPunched();
 
-    void setLastZoomPunched(final @Nullable UUID lastZoomPunched);
+    int getLastZoomPunchedTick();
+
+    void setLastZoomPunched(final @NonNull UUID lastZoomPunched, int tick);
+
+    void resetLastZoomPunched();
+
+    @Nullable
+    UUID getLastSendoed();
+
+    int getLastSendoedTick();
+
+    void setLastSendoed(final @NonNull UUID lastSendoed, int tick);
+
+    void resetLastSendoed();
 
 }
