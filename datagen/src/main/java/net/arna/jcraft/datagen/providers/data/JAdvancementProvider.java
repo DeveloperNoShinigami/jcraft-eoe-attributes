@@ -9,6 +9,7 @@ import net.arna.jcraft.common.advancements.Hamon1Trigger;
 import net.arna.jcraft.common.advancements.Hamon2Trigger;
 import net.arna.jcraft.common.advancements.Hamon3Trigger;
 import net.arna.jcraft.common.advancements.Hamon4Trigger;
+import net.arna.jcraft.common.advancements.Hamon5Trigger;
 import net.arna.jcraft.common.advancements.ObtainedSpecTrigger;
 import net.arna.jcraft.common.advancements.ObtainedStandTrigger;
 import net.arna.jcraft.common.item.SpecDiscItem;
@@ -688,7 +689,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         false)
                 .parent(obtainAnySpec)
                 .addCriterion("breathed", Hamon1Trigger.TriggerInstance.trigger())
-                .build(Hamon1Trigger.ID);
+                .build(JCraft.id("hamon1"));
         consumer.accept(hamon1);
         final Advancement hamon2 = Advancement.Builder.advancement()
                 .display(hamon,
@@ -701,7 +702,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         false)
                 .parent(hamon1)
                 .addCriterion("toggled", Hamon2Trigger.TriggerInstance.trigger())
-                .build(Hamon2Trigger.ID);
+                .build(JCraft.id("hamon2"));
         consumer.accept(hamon2);
         final Advancement hamon3 = Advancement.Builder.advancement()
                 .display(hamon,
@@ -714,7 +715,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         false)
                 .parent(hamon2)
                 .addCriterion("punched", Hamon3Trigger.TriggerInstance.trigger())
-                .build(Hamon3Trigger.ID);
+                .build(JCraft.id("hamon3"));
         consumer.accept(hamon3);
         final Advancement hamon4 = Advancement.Builder.advancement()
                 .display(hamon,
@@ -727,7 +728,20 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         false)
                 .parent(hamon3)
                 .addCriterion("sendoed", Hamon4Trigger.TriggerInstance.trigger())
-                .build(Hamon4Trigger.ID);
+                .build(JCraft.id("hamon4"));
         consumer.accept(hamon4);
+        final Advancement hamon5 = Advancement.Builder.advancement()
+                .display(hamon,
+                        Component.translatable("advancements.jcraft.hamon5.title"),
+                        Component.translatable("advancements.jcraft.hamon5.description"),
+                        null,
+                        FrameType.TASK,
+                        true,
+                        true,
+                        false)
+                .parent(hamon4)
+                .addCriterion("waved", Hamon5Trigger.TriggerInstance.hitAtLeastEnemies(3))
+                .build(JCraft.id("hamon5"));
+        consumer.accept(hamon5);
     }
 }

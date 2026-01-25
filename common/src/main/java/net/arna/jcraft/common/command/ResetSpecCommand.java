@@ -54,10 +54,11 @@ public class ResetSpecCommand {
                         hamon.resetLastZoomPunched();
                         hamon.resetLastSendoed();
                         if (living instanceof final ServerPlayer player) {
-                            revoke(player, Hamon1Trigger.ID);
-                            revoke(player, Hamon2Trigger.ID);
-                            revoke(player, Hamon3Trigger.ID);
-                            revoke(player, Hamon4Trigger.ID);
+                            revoke(player, JCraft.id("hamon1"));
+                            revoke(player, JCraft.id("hamon2"));
+                            revoke(player, JCraft.id("hamon3"));
+                            revoke(player, JCraft.id("hamon4"));
+                            revoke(player, JCraft.id("hamon5"));
                         }
                     }
                     else if (specType == JSpecTypeRegistry.ANUBIS.get()) {
