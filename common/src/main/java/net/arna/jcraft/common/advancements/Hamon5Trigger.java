@@ -27,7 +27,6 @@ public class Hamon5Trigger extends SimpleCriterionTrigger<Hamon5Trigger.TriggerI
     protected TriggerInstance createInstance(final JsonObject json, final ContextAwarePredicate predicate, final DeserializationContext deserializationContext) {
         final int amount;
         if (json.has("amount")) {
-            final ResourceLocation resourceLocation = new ResourceLocation(GsonHelper.getAsString(json, "spec"));
             amount = GsonHelper.getAsInt(json, "amount");
         }
         else {
