@@ -2,6 +2,7 @@ package net.arna.jcraft.common.component.impl.living;
 
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import net.arna.jcraft.api.component.living.CommonHamonComponent;
 import net.arna.jcraft.common.spec.HamonSpec;
 import net.arna.jcraft.common.util.JUtils;
@@ -11,24 +12,31 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
+import java.util.UUID;
+
 public class CommonHamonComponentImpl implements CommonHamonComponent {
+
     private final LivingEntity entity;
+    // only needs to be synchronized to the client, not persisted
+    @Getter
+    private float hamonCharge = 0.0f;
+    // only needs to be synchronized to the client, not persisted
+    @Getter
+    private boolean hamonizeReady = false;
+    // doesn't need to be synchronized to the client and also not persisted
+    @Getter
+    @Setter
+    private UUID lastZoomPunched;
 
     public CommonHamonComponentImpl(final LivingEntity entity) {
         this.entity = entity;
     }
-
-    @Getter
-    private float hamonCharge = 0.0f;
 
     @Override
     public void setHamonCharge(float charge) {
         hamonCharge = charge;
         sync(entity);
     }
-
-    @Getter
-    private boolean hamonizeReady = false;
 
     public void setHamonizeReady(final boolean ready) {
         hamonizeReady = ready;

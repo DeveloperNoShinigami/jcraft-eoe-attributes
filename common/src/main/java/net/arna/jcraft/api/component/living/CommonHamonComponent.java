@@ -1,6 +1,9 @@
 package net.arna.jcraft.api.component.living;
 
 import net.arna.jcraft.api.component.JComponent;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
 
 public interface CommonHamonComponent extends JComponent {
 
@@ -15,5 +18,10 @@ public interface CommonHamonComponent extends JComponent {
     boolean isHamonizeReady();
 
     void setHamonizeReady(final boolean ready);
+
+    @Nullable
+    UUID getLastZoomPunched();
+
+    void setLastZoomPunched(final @Nullable UUID lastZoomPunched);
 
 }
