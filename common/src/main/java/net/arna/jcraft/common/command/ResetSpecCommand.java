@@ -48,11 +48,15 @@ public class ResetSpecCommand {
                         JComponentPlatformUtils.getVampirism(living).resetBlood();
                     }
                     else if (specType == JSpecTypeRegistry.HAMON.get()) {
-                        JComponentPlatformUtils.getHamon(living).resetHamonCharge();
+                        var hamon = JComponentPlatformUtils.getHamon(living);
+                        hamon.resetHamonCharge();
+                        hamon.resetLastZoomPunched();
+                        hamon.resetLastSendoed();
                         if (living instanceof final ServerPlayer player) {
                             revoke(player, Hamon1Trigger.ID);
                             revoke(player, Hamon2Trigger.ID);
                             revoke(player, Hamon3Trigger.ID);
+
                         }
                     }
                     else if (specType == JSpecTypeRegistry.ANUBIS.get()) {

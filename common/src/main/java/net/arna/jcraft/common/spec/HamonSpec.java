@@ -278,6 +278,13 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
             }
         }
 
+        if (hamon.getLastZoomPunchedTick() >= 0) {
+            hamon.increaseLastZoomPunchedTick();
+        }
+        if (hamon.getLastSendoedTick() >= 0) {
+            hamon.increaseLastSendoedTick();
+        }
+
         zoomPunchAttack.tick(this);
         rippleAttack.tick(this);
         sendoKick.tick(this);

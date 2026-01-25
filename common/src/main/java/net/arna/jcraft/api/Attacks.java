@@ -27,7 +27,6 @@ import net.arna.jcraft.common.util.*;
 import net.arna.jcraft.mixin.LivingEntityInvoker;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -384,16 +383,15 @@ public interface Attacks {
             final JSpec<?,?> userSpec = JUtils.getSpec(livingAttacker);
             final SpecType userSpecType = userSpec.getType();
             // combo acknowledger
-            if (userSpecType == JSpecTypeRegistry.HAMON && livingAttacker instanceof ServerPlayer player) {
+            if (userSpecType == JSpecTypeRegistry.HAMON.get() && livingAttacker instanceof ServerPlayer player) {
                 final CommonHamonComponent hamon = JComponentPlatformUtils.getHamon(player);
-                final MinecraftServer server = player.getServer();
                 if (victim.getUUID().equals(hamon.getLastZoomPunched()) && victim.getUUID().equals(hamon.getLastSendoed()) &&
                         // make sure sendo was used after zoom punch
-                        hamon.getLastSendoedTick() > hamon.getLastZoomPunchedTick() &&
+                        hamon.getLastSendoedTick() < hamon.getLastZoomPunchedTick() &&
                         // but not too long ago (30 seconds)
-                        hamon.getLastSendoedTick() - hamon.getLastZoomPunchedTick() <= 600 &&
+                        hamon.getLastZoomPunchedTick() - hamon.getLastSendoedTick() <= 600 &&
                         // check that sendo was last used move TODO do something less hacky than "was it used within the last second"
-                        server != null && server.getTickCount() - hamon.getLastSendoedTick() <= 20
+                        hamon.getLastSendoedTick() <= 20
                 ) {
                     JAdvancementTriggerRegistry.HAMON4.trigger(player);
                 }

@@ -49,9 +49,14 @@ public class CommonHamonComponentImpl implements CommonHamonComponent {
     }
 
     @Override
-    public void setLastZoomPunched(final @NonNull UUID lastZoomPunched, final int tick) {
+    public void setLastZoomPunched(final @NonNull UUID lastZoomPunched) {
         this.lastZoomPunched = lastZoomPunched;
-        lastZoomPunchedTick = tick;
+        lastZoomPunchedTick = 0;
+    }
+
+    @Override
+    public void increaseLastZoomPunchedTick() {
+        lastZoomPunchedTick++;
     }
 
     public void resetLastZoomPunched() {
@@ -60,9 +65,14 @@ public class CommonHamonComponentImpl implements CommonHamonComponent {
     }
 
     @Override
-    public void setLastSendoed(final @NonNull UUID lastSendoed, final int tick) {
+    public void setLastSendoed(final @NonNull UUID lastSendoed) {
         this.lastSendoed = lastSendoed;
-        lastSendoedTick = tick;
+        lastSendoedTick = 0;
+    }
+
+    @Override
+    public void increaseLastSendoedTick() {
+        lastSendoedTick++;
     }
 
     public void resetLastSendoed() {

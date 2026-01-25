@@ -23,18 +23,22 @@ public interface CommonHamonComponent extends JComponent {
     @Nullable
     UUID getLastZoomPunched();
 
+    void setLastZoomPunched(final @NonNull UUID lastZoomPunched);
+
     int getLastZoomPunchedTick();
 
-    void setLastZoomPunched(final @NonNull UUID lastZoomPunched, int tick);
+    void increaseLastZoomPunchedTick();
 
     void resetLastZoomPunched();
 
     @Nullable
     UUID getLastSendoed();
 
+    void setLastSendoed(final @NonNull UUID lastSendoed);
+
     int getLastSendoedTick();
 
-    void setLastSendoed(final @NonNull UUID lastSendoed, int tick);
+    void increaseLastSendoedTick();
 
     void resetLastSendoed();
 
