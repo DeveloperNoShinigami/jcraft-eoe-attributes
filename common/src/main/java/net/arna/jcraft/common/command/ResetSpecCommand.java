@@ -9,6 +9,7 @@ import net.arna.jcraft.api.spec.SpecType;
 import net.arna.jcraft.common.advancements.Hamon1Trigger;
 import net.arna.jcraft.common.advancements.Hamon2Trigger;
 import net.arna.jcraft.common.advancements.Hamon3Trigger;
+import net.arna.jcraft.common.advancements.Hamon4Trigger;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
@@ -56,7 +57,7 @@ public class ResetSpecCommand {
                             revoke(player, Hamon1Trigger.ID);
                             revoke(player, Hamon2Trigger.ID);
                             revoke(player, Hamon3Trigger.ID);
-
+                            revoke(player, Hamon4Trigger.ID);
                         }
                     }
                     else if (specType == JSpecTypeRegistry.ANUBIS.get()) {
