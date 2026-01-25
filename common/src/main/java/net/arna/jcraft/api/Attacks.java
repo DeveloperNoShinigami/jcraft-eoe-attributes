@@ -390,8 +390,8 @@ public interface Attacks {
                         hamon.getLastSendoedTick() < hamon.getLastZoomPunchedTick() &&
                         // but not too long ago (30 seconds)
                         hamon.getLastZoomPunchedTick() - hamon.getLastSendoedTick() <= 600 &&
-                        // check that sendo was last used move TODO do something less hacky than "was it used within the last second"
-                        hamon.getLastSendoedTick() <= 20
+                        // check that sendo was last used move TODO do something less hacky than "was it used within the last five seconds"
+                        hamon.getLastSendoedTick() <= 100
                 ) {
                     JAdvancementTriggerRegistry.HAMON4.trigger(player);
                 }
