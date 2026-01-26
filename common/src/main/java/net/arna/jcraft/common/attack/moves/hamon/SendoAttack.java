@@ -102,7 +102,7 @@ public class SendoAttack extends AbstractSimpleAttack<SendoAttack, HamonSpec> {
                 hamonSpec.processTarget(target);
                 if (user instanceof final ServerPlayer player && target instanceof Enemy) {
                     final CommonHamonComponent hamon = JComponentPlatformUtils.getHamon(player);
-                    if (player.getServer() != null) {
+                    if (!isAerialVariant() && !isCrouchingVariant()) {
                         hamon.setLastSendoed(target.getUUID());
                     }
                 }
