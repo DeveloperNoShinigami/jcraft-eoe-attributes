@@ -377,13 +377,13 @@ public interface Attacks {
             // combo acknowledger
             if (userSpecType == JSpecTypeRegistry.HAMON.get() && livingAttacker instanceof ServerPlayer player) {
                 final CommonHamonComponent hamon = JComponentPlatformUtils.getHamon(player);
-                if (hamon.getLastWaved() != null && hamon.getLastWaved().contains(victim.getUUID()) && victim.getUUID().equals(hamon.getLastSendoAired()) &&
+                if (hamon.getLastWaved() != null && hamon.getLastWaved().contains(victim.getUUID()) && victim.getUUID().equals(hamon.getLastStomped()) &&
                         // make sure sendo air was used after wave
-                        hamon.getLastSendoAiredTick() < hamon.getLastWavedTick() &&
+                        hamon.getLastStompedTick() < hamon.getLastWavedTick() &&
                         // but not too long ago (30 seconds)
-                        hamon.getLastWavedTick() - hamon.getLastSendoAiredTick() <= 600 &&
+                        hamon.getLastWavedTick() - hamon.getLastStompedTick() <= 600 &&
                         // check that sendo air was last used move TODO do something less hacky than "was it used within the last five seconds"
-                        hamon.getLastSendoAiredTick() <= 100
+                        hamon.getLastStompedTick() <= 100
                 ) {
                     JAdvancementTriggerRegistry.HAMON6.trigger(player);
                 }

@@ -44,17 +44,6 @@ public interface CommonHamonComponent extends JComponent {
     void resetLastSendoed();
 
     @Nullable
-    UUID getLastSendoAired();
-
-    void setLastSendoAired(final @NonNull UUID lastSendoAired);
-
-    int getLastSendoAiredTick();
-
-    void increaseLastSendoAiredTick();
-
-    void resetLastSendoAired();
-
-    @Nullable
     Set<UUID> getLastWaved();
 
     void setLastWaved(final @NonNull Set<UUID> lastSendoWaved);
@@ -64,5 +53,16 @@ public interface CommonHamonComponent extends JComponent {
     void increaseLastWavedTick();
 
     void resetLastWaved();
+
+    @Nullable
+    UUID getLastStomped();
+
+    void setLastStomped(final @NonNull UUID lastStomped);
+
+    int getLastStompedTick();
+
+    void increaseLastStompedTick();
+
+    void resetLastStomped();
 
 }

@@ -49,8 +49,8 @@ public class ResetSpecCommand {
                         hamon.resetHamonCharge();
                         hamon.resetLastZoomPunched();
                         hamon.resetLastSendoed();
-                        hamon.resetLastSendoAired();
                         hamon.resetLastWaved();
+                        hamon.resetLastStomped();
                         if (living instanceof final ServerPlayer player) {
                             revoke(player, JCraft.id("hamon1"));
                             revoke(player, JCraft.id("hamon2"));

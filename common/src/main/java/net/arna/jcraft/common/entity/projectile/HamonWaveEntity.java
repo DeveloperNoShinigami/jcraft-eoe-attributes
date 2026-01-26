@@ -14,7 +14,6 @@ import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.spec.HamonSpec;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -198,9 +197,6 @@ public class HamonWaveEntity extends JAttackEntity {
     public void discard() {
         if (master instanceof final ServerPlayer player) {
             JAdvancementTriggerRegistry.HAMON5.trigger(player, hitEnemies.size());
-            if (!hitEnemies.isEmpty()) {
-                JComponentPlatformUtils.getHamon(player).setLastWaved(hitEnemies);
-            }
         }
         super.discard();
     }

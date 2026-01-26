@@ -21,6 +21,7 @@ import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.ai.AttackerBrainInfo;
 import net.arna.jcraft.common.attack.actions.LaunchUpAction;
 import net.arna.jcraft.common.attack.actions.LungeAction;
+import net.arna.jcraft.common.attack.actions.NotifyHamonStompAction;
 import net.arna.jcraft.common.attack.actions.UserAnimationAction;
 import net.arna.jcraft.common.attack.conditions.HamonChargeCondition;
 import net.arna.jcraft.common.attack.moves.hamon.*;
@@ -108,6 +109,7 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
             .withImpactSound(JSoundRegistry.IMPACT_4)
             .withHitSpark(JParticleType.HIT_SPARK_1)
             .withStaticY()
+            .withAction(NotifyHamonStompAction.run())
             .withInfo(
                     Component.literal("Stomp"),
                     Component.literal("Charge with hamon for Ripple, a powerful stomp that creates a Hamon Wave.")
@@ -284,11 +286,11 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
         if (hamon.getLastSendoedTick() >= 0) {
             hamon.increaseLastSendoedTick();
         }
-        if (hamon.getLastSendoAiredTick() >= 0) {
-            hamon.increaseLastSendoAiredTick();
-        }
         if (hamon.getLastWavedTick() >= 0) {
             hamon.increaseLastWavedTick();
+        }
+        if (hamon.getLastStompedTick() >= 0) {
+            hamon.increaseLastStompedTick();
         }
 
         zoomPunchAttack.tick(this);

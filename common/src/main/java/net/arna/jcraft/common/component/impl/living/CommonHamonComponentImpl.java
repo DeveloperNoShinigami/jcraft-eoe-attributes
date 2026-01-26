@@ -35,14 +35,14 @@ public class CommonHamonComponentImpl implements CommonHamonComponent {
     private int lastSendoedTick = Integer.MIN_VALUE;
     // doesn't need to be synchronized to the client and also not persisted
     @Getter
-    private UUID lastSendoAired;
-    @Getter
-    private int lastSendoAiredTick = Integer.MIN_VALUE;
-    // doesn't need to be synchronized to the client and also not persisted
-    @Getter
     private Set<UUID> lastWaved;
     @Getter
     private int lastWavedTick = Integer.MIN_VALUE;
+    // doesn't need to be synchronized to the client and also not persisted
+    @Getter
+    private UUID lastStomped;
+    @Getter
+    private int lastStompedTick = Integer.MIN_VALUE;
 
     public CommonHamonComponentImpl(final LivingEntity entity) {
         this.entity = entity;
@@ -92,22 +92,6 @@ public class CommonHamonComponentImpl implements CommonHamonComponent {
     }
 
     @Override
-    public void setLastSendoAired(final @NonNull UUID lastSendoAired) {
-        this.lastSendoAired = lastSendoAired;
-        lastSendoAiredTick = 0;
-    }
-
-    @Override
-    public void increaseLastSendoAiredTick() {
-        lastSendoAiredTick++;
-    }
-
-    public void resetLastSendoAired() {
-        lastSendoAired = null;
-        lastSendoAiredTick = Integer.MIN_VALUE;
-    }
-
-    @Override
     public void setLastWaved(final @NonNull Set<UUID> lastWaved) {
         this.lastWaved = lastWaved;
     }
@@ -121,6 +105,22 @@ public class CommonHamonComponentImpl implements CommonHamonComponent {
     public void resetLastWaved() {
         lastWaved = null;
         lastWavedTick = Integer.MIN_VALUE;
+    }
+
+    @Override
+    public void setLastStomped(final @NonNull UUID lastStomped) {
+        this.lastStomped = lastStomped;
+    }
+
+    @Override
+    public void increaseLastStompedTick() {
+        lastStompedTick++;
+    }
+
+    @Override
+    public void resetLastStomped() {
+        lastStomped = null;
+        lastStompedTick = Integer.MIN_VALUE;
     }
 
     public void sync(final Entity entity) {
