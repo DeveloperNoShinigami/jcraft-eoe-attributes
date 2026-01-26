@@ -175,7 +175,6 @@ public class JRecipeProvider extends FabricRecipeProvider {
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, JItemRegistry.REQUIEM_ARROW.get())
                 .requires(JItemRegistry.STAND_ARROW.get())
                 .requires(JItemRegistry.REQUIEM_RUBY.get())
-                .requires(Items.TIPPED_ARROW)
                 .unlockedBy("has_arrow", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.STAND_ARROW.get()))
                 .unlockedBy("has_ruby", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.REQUIEM_RUBY.get()))
                 .save(exporter);
