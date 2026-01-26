@@ -10,6 +10,7 @@ import net.arna.jcraft.common.advancements.Hamon2Trigger;
 import net.arna.jcraft.common.advancements.Hamon3Trigger;
 import net.arna.jcraft.common.advancements.Hamon4Trigger;
 import net.arna.jcraft.common.advancements.Hamon5Trigger;
+import net.arna.jcraft.common.advancements.Hamon6Trigger;
 import net.arna.jcraft.common.advancements.ObtainedSpecTrigger;
 import net.arna.jcraft.common.advancements.ObtainedStandTrigger;
 import net.arna.jcraft.common.item.SpecDiscItem;
@@ -722,7 +723,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         Component.translatable("advancements.jcraft.hamon4.title"),
                         Component.translatable("advancements.jcraft.hamon4.description"),
                         null,
-                        FrameType.TASK,
+                        FrameType.GOAL,
                         true,
                         true,
                         false)
@@ -735,7 +736,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         Component.translatable("advancements.jcraft.hamon5.title"),
                         Component.translatable("advancements.jcraft.hamon5.description"),
                         null,
-                        FrameType.TASK,
+                        FrameType.GOAL,
                         true,
                         true,
                         false)
@@ -743,5 +744,18 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .addCriterion("waved", Hamon5Trigger.TriggerInstance.hitAtLeastEnemies(3))
                 .build(JCraft.id("hamon5"));
         consumer.accept(hamon5);
+        final Advancement hamon6 = Advancement.Builder.advancement()
+                .display(hamon,
+                        Component.translatable("advancements.jcraft.hamon6.title"),
+                        Component.translatable("advancements.jcraft.hamon6.description"),
+                        null,
+                        FrameType.CHALLENGE,
+                        true,
+                        true,
+                        false)
+                .parent(hamon5)
+                .addCriterion("waved", Hamon6Trigger.TriggerInstance.trigger())
+                .build(JCraft.id("hamon6"));
+        consumer.accept(hamon6);
     }
 }

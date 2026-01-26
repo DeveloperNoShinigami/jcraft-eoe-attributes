@@ -11,6 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
+import java.util.Set;
 import java.util.UUID;
 
 public class CommonHamonComponentImpl implements CommonHamonComponent {
@@ -32,6 +33,16 @@ public class CommonHamonComponentImpl implements CommonHamonComponent {
     private UUID lastSendoed;
     @Getter
     private int lastSendoedTick = Integer.MIN_VALUE;
+    // doesn't need to be synchronized to the client and also not persisted
+    @Getter
+    private UUID lastSendoAired;
+    @Getter
+    private int lastSendoAiredTick = Integer.MIN_VALUE;
+    // doesn't need to be synchronized to the client and also not persisted
+    @Getter
+    private Set<UUID> lastWaved;
+    @Getter
+    private int lastWavedTick = Integer.MIN_VALUE;
 
     public CommonHamonComponentImpl(final LivingEntity entity) {
         this.entity = entity;
@@ -78,6 +89,38 @@ public class CommonHamonComponentImpl implements CommonHamonComponent {
     public void resetLastSendoed() {
         lastSendoed = null;
         lastSendoedTick = Integer.MIN_VALUE;
+    }
+
+    @Override
+    public void setLastSendoAired(final @NonNull UUID lastSendoAired) {
+        this.lastSendoAired = lastSendoAired;
+        lastSendoAiredTick = 0;
+    }
+
+    @Override
+    public void increaseLastSendoAiredTick() {
+        lastSendoAiredTick++;
+    }
+
+    public void resetLastSendoAired() {
+        lastSendoAired = null;
+        lastSendoAiredTick = Integer.MIN_VALUE;
+    }
+
+    @Override
+    public void setLastWaved(final @NonNull Set<UUID> lastWaved) {
+        this.lastWaved = lastWaved;
+    }
+
+    @Override
+    public void increaseLastWavedTick() {
+        lastWavedTick++;
+    }
+
+    @Override
+    public void resetLastWaved() {
+        lastWaved = null;
+        lastWavedTick = Integer.MIN_VALUE;
     }
 
     public void sync(final Entity entity) {

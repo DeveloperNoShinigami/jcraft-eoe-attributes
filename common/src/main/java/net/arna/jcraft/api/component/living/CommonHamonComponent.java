@@ -4,6 +4,7 @@ import lombok.NonNull;
 import net.arna.jcraft.api.component.JComponent;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Set;
 import java.util.UUID;
 
 public interface CommonHamonComponent extends JComponent {
@@ -41,5 +42,27 @@ public interface CommonHamonComponent extends JComponent {
     void increaseLastSendoedTick();
 
     void resetLastSendoed();
+
+    @Nullable
+    UUID getLastSendoAired();
+
+    void setLastSendoAired(final @NonNull UUID lastSendoAired);
+
+    int getLastSendoAiredTick();
+
+    void increaseLastSendoAiredTick();
+
+    void resetLastSendoAired();
+
+    @Nullable
+    Set<UUID> getLastWaved();
+
+    void setLastWaved(final @NonNull Set<UUID> lastSendoWaved);
+
+    int getLastWavedTick();
+
+    void increaseLastWavedTick();
+
+    void resetLastWaved();
 
 }

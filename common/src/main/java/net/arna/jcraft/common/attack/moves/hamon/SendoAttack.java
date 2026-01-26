@@ -105,6 +105,9 @@ public class SendoAttack extends AbstractSimpleAttack<SendoAttack, HamonSpec> {
                     if (!isAerialVariant() && !isCrouchingVariant()) {
                         hamon.setLastSendoed(target.getUUID());
                     }
+                    else if (isAerialVariant()) {
+                        hamon.setLastSendoAired(target.getUUID());
+                    }
                 }
             }
         }

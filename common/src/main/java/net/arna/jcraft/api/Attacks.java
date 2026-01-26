@@ -371,6 +371,25 @@ public interface Attacks {
 
         damage(attacker, damage, source, victim);
 
+        if (livingAttacker != null) {
+            final JSpec<?, ?> userSpec = JUtils.getSpec(livingAttacker);
+            final SpecType userSpecType = userSpec.getType();
+            // combo acknowledger
+            if (userSpecType == JSpecTypeRegistry.HAMON.get() && livingAttacker instanceof ServerPlayer player) {
+                final CommonHamonComponent hamon = JComponentPlatformUtils.getHamon(player);
+                if (hamon.getLastWaved() != null && hamon.getLastWaved().contains(victim.getUUID()) && victim.getUUID().equals(hamon.getLastSendoAired()) &&
+                        // make sure sendo air was used after wave
+                        hamon.getLastSendoAiredTick() < hamon.getLastWavedTick() &&
+                        // but not too long ago (30 seconds)
+                        hamon.getLastWavedTick() - hamon.getLastSendoAiredTick() <= 600 &&
+                        // check that sendo air was last used move TODO do something less hacky than "was it used within the last five seconds"
+                        hamon.getLastSendoAiredTick() <= 100
+                ) {
+                    JAdvancementTriggerRegistry.HAMON6.trigger(player);
+                }
+            }
+        }
+
         if ( (victim.isDeadOrDying() || victim.getHealth() <= 0f) && livingAttacker != null) {
             final StandEntity<?, ?> standAttacker = JUtils.getStand(livingAttacker);
             if (standAttacker != null) {
