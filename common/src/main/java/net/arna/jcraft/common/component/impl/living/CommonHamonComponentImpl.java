@@ -11,7 +11,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
-import java.util.Set;
 import java.util.UUID;
 
 public class CommonHamonComponentImpl implements CommonHamonComponent {
@@ -35,9 +34,9 @@ public class CommonHamonComponentImpl implements CommonHamonComponent {
     private int lastSendoedTick = Integer.MIN_VALUE;
     // doesn't need to be synchronized to the client and also not persisted
     @Getter
-    private Set<UUID> lastWaved;
+    private UUID lastSendoAired;
     @Getter
-    private int lastWavedTick = Integer.MIN_VALUE;
+    private int lastSendoAiredTick = Integer.MIN_VALUE;
     // doesn't need to be synchronized to the client and also not persisted
     @Getter
     private UUID lastStomped;
@@ -92,19 +91,19 @@ public class CommonHamonComponentImpl implements CommonHamonComponent {
     }
 
     @Override
-    public void setLastWaved(final @NonNull Set<UUID> lastWaved) {
-        this.lastWaved = lastWaved;
+    public void setLastSendoAired(final @NonNull UUID lastSendoAired) {
+        this.lastSendoAired = lastSendoAired;
+        lastSendoAiredTick = 0;
     }
 
     @Override
-    public void increaseLastWavedTick() {
-        lastWavedTick++;
+    public void increaseLastSendoAiredTick() {
+        lastSendoAiredTick++;
     }
 
-    @Override
-    public void resetLastWaved() {
-        lastWaved = null;
-        lastWavedTick = Integer.MIN_VALUE;
+    public void resetLastSendoAired() {
+        lastSendoAired = null;
+        lastSendoAiredTick = Integer.MIN_VALUE;
     }
 
     @Override
