@@ -188,7 +188,7 @@ public class HamonSpec extends JSpec<HamonSpec, HamonSpec.State> {
     // These aren't stored in any movemap and have fields that must be unique to them, so we make copies.
     private final ZoomPunchAttack zoomPunchAttack = ZOOM_PUNCH.copy();
     private final RippleAttack rippleAttack = RIPPLE_ATTACK.copy();
-    private final SendoAttack sendoKick = SENDO_KICK.copy();
+    private final SendoAttack sendoKick = SENDO_KICK.copy().markAerialVariant();
     private final SendoAttack sendoUppercut = SENDO_UPPERCUT.copy();
 
     private static void registerMoves(MoveMap<HamonSpec, HamonSpec.State> moves) {
