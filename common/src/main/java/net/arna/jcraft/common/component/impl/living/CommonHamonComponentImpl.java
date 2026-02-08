@@ -109,6 +109,7 @@ public class CommonHamonComponentImpl implements CommonHamonComponent {
     @Override
     public void setLastStomped(final @NonNull UUID lastStomped) {
         this.lastStomped = lastStomped;
+        this.lastStompedTick = 0;
     }
 
     @Override
