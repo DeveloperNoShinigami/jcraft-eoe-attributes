@@ -8,7 +8,7 @@
 
 ### `/jcraft_attributes reset <player>`
 
-Wipes all attribute NBT data saved on the player for every Stand they have loaded, resetting everything to mod defaults.
+Wipes all attribute NBT data saved on the player for every Stand they have loaded, resetting everything to registry defaults.
 
 - **Permission**: Operator level 2
 - **Use when**: A stand's stats are corrupted, or you need a clean slate for a player
@@ -19,7 +19,7 @@ Wipes all attribute NBT data saved on the player for every Stand they have loade
 ## Vanilla `/attribute` Commands
 
 JCraft Attributes integrates with the standard Minecraft `/attribute` command.
-All custom attributes use the `jcraft:` namespace.
+All custom attributes use the `jcraft_attributes:` namespace.
 
 ---
 
@@ -33,7 +33,7 @@ Sets the attribute's base value directly. This is the simplest approach — no U
 
 **Example — give yourself +5 stand damage:**
 ```
-/attribute @s jcraft:stand_damage base set 5.0
+/attribute @s jcraft_attributes:stand_damage base set 5.0
 ```
 
 ---
@@ -52,7 +52,7 @@ Adds a fixed amount to the base value.
 
 **Example:**
 ```
-/attribute @s jcraft:stand_damage modifier add 00000001-0000-0000-0000-000000000001 "sword_bonus" 3 add_value
+/attribute @s jcraft_attributes:stand_damage modifier add 00000001-0000-0000-0000-000000000001 "sword_bonus" 3 add_value
 ```
 
 #### Multiply Base (`add_multiplied_base`)
@@ -65,7 +65,7 @@ Multiplies the base value by `(1 + amount)`. Applied after all ADDITION modifier
 
 **Example — 20% bonus on top of base:**
 ```
-/attribute @s jcraft:stand_damage modifier add 00000001-0000-0000-0000-000000000002 "ring_boost" 0.2 add_multiplied_base
+/attribute @s jcraft_attributes:stand_damage modifier add 00000001-0000-0000-0000-000000000002 "ring_boost" 0.2 add_multiplied_base
 ```
 
 #### Multiply Total (`add_multiplied_total`)
@@ -78,7 +78,7 @@ Multiplies the final computed value. Applied last; multiple MULTIPLY_TOTAL modif
 
 **Example — double all stand damage:**
 ```
-/attribute @s jcraft:stand_damage modifier add 00000001-0000-0000-0000-000000000003 "power_double" 1.0 add_multiplied_total
+/attribute @s jcraft_attributes:stand_damage modifier add 00000001-0000-0000-0000-000000000003 "power_double" 1.0 add_multiplied_total
 ```
 
 ---
@@ -91,7 +91,7 @@ Multiplies the final computed value. Applied last; multiple MULTIPLY_TOTAL modif
 
 **Example:**
 ```
-/attribute @s jcraft:stand_damage modifier remove 00000001-0000-0000-0000-000000000001
+/attribute @s jcraft_attributes:stand_damage modifier remove 00000001-0000-0000-0000-000000000001
 ```
 
 ---
@@ -106,34 +106,26 @@ Returns the fully-computed final value including all active modifiers.
 
 ---
 
-## Common Attribute IDs
+## All Attribute IDs
 
 | Attribute | ID |
 |---|---|
-| Stand Damage | `jcraft:stand_damage` |
-| Stand Resistance | `jcraft:stand_resistance` |
-| Stand Gauge Max | `jcraft:stand_gauge_max` |
-| Life Steal | `jcraft:life_steal` |
-| Armor Bonus | `jcraft:armor_bonus` |
-| Idle Distance | `jcraft:idle_distance` |
-| Idle Rotation | `jcraft:idle_rotation` |
-| Block Distance | `jcraft:block_distance` |
-| Engagement Distance | `jcraft:engagement_distance` |
-| Alpha Override | `jcraft:alpha_override` |
-| Cooldown Reduction | `jcraft:cooldown_reduction` |
-| Windup Reduction | `jcraft:windup_reduction` |
-| Duration Multiplier | `jcraft:duration_multiplier` |
-| Move Distance Multiplier | `jcraft:move_dist_multiplier` |
-| Charge Distance Multiplier | `jcraft:charge_dist_multiplier` |
-| Knockback Modifier | `jcraft:knockback_modifier` |
-| Block Stun Reduction | `jcraft:block_stun_reduction` |
-| Attack Range Bonus | `jcraft:attack_range_bonus` |
-| Time Stop Duration | `jcraft:time_stop_duration` |
-| Acceleration Duration | `jcraft:accel_duration` |
-| Erasure Duration | `jcraft:erasure_duration` |
-| Erasure Reach | `jcraft:erasure_reach` |
-| Erasure Size | `jcraft:erasure_size` |
-| Rewind Reach | `jcraft:rewind_reach` |
+| Stand Damage | `jcraft_attributes:stand_damage` |
+| Stand Resistance | `jcraft_attributes:stand_resistance` |
+| Stand Gauge Max | `jcraft_attributes:stand_gauge_max` |
+| Life Steal | `jcraft_attributes:life_steal` |
+| Armor Bonus | `jcraft_attributes:armor_bonus` |
+| Cooldown Reduction | `jcraft_attributes:cooldown_reduction` |
+| Duration Multiplier | `jcraft_attributes:duration_multiplier` |
+| Knockback Modifier | `jcraft_attributes:knockback_modifier` |
+| Block Stun Reduction | `jcraft_attributes:block_stun_reduction` |
+| Attack Range Bonus | `jcraft_attributes:attack_range_bonus` |
+| Time Stop Duration | `jcraft_attributes:time_stop_duration` |
+| Acceleration Duration | `jcraft_attributes:accel_duration` |
+| Erasure Duration | `jcraft_attributes:erasure_duration` |
+| Rewind Reach | `jcraft_attributes:rewind_reach` |
+| Erasure Reach | `jcraft_attributes:erasure_reach` |
+| Erasure Size | `jcraft_attributes:erasure_size` |
 
 ---
 

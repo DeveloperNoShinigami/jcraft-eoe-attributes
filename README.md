@@ -1,7 +1,7 @@
 # JCraft Attributes
 
 A modular attribute extension for **JCraft: Eyes of Ender** (v0.17.6).
-Adds 24 custom Stand attributes covering combat, positioning, move scaling, and ability-specific tuning.
+Adds 16 custom Stand attributes covering combat, move scaling, and ability-specific tuning.
 
 ---
 
@@ -21,7 +21,7 @@ Adds 24 custom Stand attributes covering combat, positioning, move scaling, and 
 |---|---|
 | JCraft: Eyes of Ender | 0.17.6 |
 
-> **Forge support is coming soon.**  The forge base is pratically built but untested at the moment.
+> **Forge support is coming soon.**  The forge base is practically built but untested at the moment.
 
 ---
 

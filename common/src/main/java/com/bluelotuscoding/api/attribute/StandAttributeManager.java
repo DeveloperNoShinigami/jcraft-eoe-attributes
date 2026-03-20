@@ -25,10 +25,20 @@ public class StandAttributeManager {
         if (entity.level().isClientSide || !(component instanceof JAttributesComponent jAttrs)) return;
         StandType newType = component.getType();
         if (newType == null) return;
+        resetToBase(entity);
         CompoundTag data = jAttrs.getStandAttributeMap().get(newType.getId().toString());
         if (data == null) return;
         for (JAttributeRegistry.AttributeEntry e : JAttributeRegistry.ALL)
             loadAttribute(entity, e.attribute(), e.nbtKey(), data);
+    }
+
+    private static void resetToBase(LivingEntity entity) {
+        for (JAttributeRegistry.AttributeEntry e : JAttributeRegistry.ALL) {
+            AttributeInstance inst = entity.getAttribute(e.attribute());
+            if (inst == null) continue;
+            inst.setBaseValue(e.attribute().getDefaultValue());
+            new java.util.HashSet<>(inst.getModifiers()).forEach(m -> inst.removeModifier(m.getId()));
+        }
     }
 
     public static void clearAttributes(LivingEntity entity) {
