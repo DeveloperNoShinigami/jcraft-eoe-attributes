@@ -9,11 +9,6 @@ pluginManagement {
 
 rootProject.name = 'jcraft_eoe_attributes'
 
-include 'jcraft-attributes-common'
-project(':jcraft-attributes-common').projectDir = file('common')
-
-include 'jcraft-attributes-fabric'
-project(':jcraft-attributes-fabric').projectDir = file('fabric')
-
-include 'jcraft-attributes-forge'
-project(':jcraft-attributes-forge').projectDir = file('forge')
+include 'common'
+include 'fabric'
+include 'forge'

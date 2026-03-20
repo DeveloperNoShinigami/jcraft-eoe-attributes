@@ -1,8 +1,12 @@
 {
   "required": true,
-  "package": "com.bluelotuscoding.fabric.mixin",
+  "package": "com.bluelotuscoding.mixin",
   "compatibilityLevel": "JAVA_17",
-  "mixins": [],
+  "minVersion": "0.8",
+  "client": [
+  ],
+  "mixins": [
+  ],
   "injectors": {
     "defaultRequire": 1
   }

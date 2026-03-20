@@ -4,7 +4,7 @@ plugins {
 
 loom {
     forge {
-        mixinConfig "jcraft_attributes.mixins.json"
+        mixinConfig "jcraft_eoe_attributes.mixins.json"
     }
 }
 
@@ -36,19 +36,8 @@ dependencies {
     // Architectury API. This is optional, and you can comment it out if you don't need it.
     modImplementation "dev.architectury:architectury-forge:$rootProject.architectury_api_version"
 
-    common(project(path: ':jcraft-attributes-common', configuration: 'namedElements')) { transitive = false }
-    shadowBundle project(path: ':jcraft-attributes-common', configuration: 'transformProductionForge')
-
-    // JCraft Base Mod (Forge — 0.17.6)
-    modImplementation "curse.maven:jcraft-eyes-of-ender-854974:7290797"
-
-    // AzureLib and PlayerAnimator — required by JCraft for Stand animations.
-    // Use Forge-specific file IDs.
-    modImplementation "curse.maven:azurelib-817423:7371538"
-    modImplementation "curse.maven:playeranimator-658587:4587214"
-
-    // Cloth Config for Forge (v11.1.118+)
-    modImplementation "me.shedaniel.cloth:cloth-config-forge:11.1.118"
+    common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
+    shadowBundle project(path: ':common', configuration: 'transformProductionForge')
 }
 
 processResources {

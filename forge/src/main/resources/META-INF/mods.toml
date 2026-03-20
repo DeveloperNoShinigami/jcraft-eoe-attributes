@@ -4,38 +4,32 @@ loaderVersion = "[47,)"
 license = "Insert License Here"
 
 [[mods]]
-modId = "jcraft_attributes"
+modId = "jcraft_eoe_attributes"
 version = "${version}"
 displayName = "Jcraft Attributes"
-authors = "bluelotuscoding"
+authors = "Me!"
 description = '''
-Addon for JCraft: Eyes of Ender that adds a modular Stand attribute system covering combat, positioning, move scaling, and ability-specific tuning.
+This is an example description! Tell everyone what your mod is about!
 '''
+#logoFile = ""
 
-[[dependencies.jcraft_attributes]]
+[[dependencies.jcraft_eoe_attributes]]
 modId = "forge"
 mandatory = true
 versionRange = "[47,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.jcraft_attributes]]
+[[dependencies.jcraft_eoe_attributes]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.20.1,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.jcraft_attributes]]
+[[dependencies.jcraft_eoe_attributes]]
 modId = "architectury"
 mandatory = true
 versionRange = "[9.2.14,)"
-ordering = "AFTER"
-side = "BOTH"
-
-[[dependencies.jcraft_attributes]]
-modId = "jcraft"
-mandatory = true
-versionRange = "[0.17.6,)"
 ordering = "AFTER"
 side = "BOTH"

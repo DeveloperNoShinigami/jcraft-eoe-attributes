@@ -1,27 +1,29 @@
 {
   "schemaVersion": 1,
-  "id": "jcraft_attributes",
+  "id": "jcraft_eoe_attributes",
   "version": "${version}",
   "name": "Jcraft Attributes",
-  "description": "Addon for JCraft that adds Stand Damage and Resistance attributes.",
+  "description": "This is an example description! Tell everyone what your mod is about!",
   "authors": [
-    "bluelotuscoding"
+    "Me!"
   ],
   "contact": {
     "homepage": "https://fabricmc.net/",
     "sources": "https://github.com/FabricMC/fabric-example-mod"
   },
   "license": "CC0-1.0",
-  "icon": "assets/jcraft_attributes/icon.png",
+  "icon": "assets/jcraft_eoe_attributes/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.bluelotuscoding.fabric.JCraftAttributesFabric"
+      "com.bluelotuscoding.fabric.ExampleModFabric"
+    ],
+    "client": [
+      "com.bluelotuscoding.fabric.client.ExampleModFabricClient"
     ]
   },
   "mixins": [
-    "jcraft_attributes.mixins.json",
-    "jcraft_attributes.fabric.mixins.json"
+    "jcraft_eoe_attributes.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.18.4",
