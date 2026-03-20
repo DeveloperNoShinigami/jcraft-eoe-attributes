@@ -27,7 +27,7 @@ public class JAttributeCommands {
         var standComponent = JComponentPlatformUtils.getStandComponent(player);
         if (standComponent instanceof JAttributesComponent jAttrs) {
             jAttrs.reset();
-            StandAttributeManager.updateAttributes(player);
+            StandAttributeManager.clearAttributes(player);
             
             context.getSource().sendSuccess(() -> Component.literal("Successfully reset all JCraft attributes for " + player.getScoreboardName()), true);
             return 1;

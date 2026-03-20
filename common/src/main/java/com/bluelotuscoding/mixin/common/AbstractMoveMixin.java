@@ -2,18 +2,17 @@ package com.bluelotuscoding.mixin.common;
 
 import com.bluelotuscoding.api.registry.JAttributeRegistry;
 import com.bluelotuscoding.util.MoveContext;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
+import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.lang.reflect.Field;
 
 /**
  * Class: AbstractMove
@@ -26,21 +25,16 @@ public abstract class AbstractMoveMixin {
     @Inject(method = "getDescription()Lnet/minecraft/class_2561;", at = @At("RETURN"), cancellable = true, remap = false)
     private void jcraft_attributes$appendAttributeStats(CallbackInfoReturnable<Component> cir) {
         LivingEntity user = MoveContext.getPlayer();
-        if (user == null) {
-            return;
-        }
+        if (user == null) return;
 
+        AbstractMove<?, ?> move = (AbstractMove<?, ?>) (Object) this;
+        int baseCooldown = move.getCooldown();
+        int baseDuration = move.getDuration();
+        float baseReach  = move.getMoveDistance();
+        float baseDamage = ((Object) this instanceof AbstractSimpleAttack<?, ?> atk) ? atk.getDamage() : 0f;
 
-        // System.out.println("[JCraft Attributes] Processing description for: " + this.getClass().getSimpleName());
-
-        Object instance = (Object) this;
         MutableComponent statsText = Component.empty();
         boolean hasStats = false;
-
-        // Base values from AbstractMove fields
-        int baseCooldown = jcraft_attributes$getInternalInt(instance, "cooldown");
-        int baseDuration = jcraft_attributes$getInternalInt(instance, "duration");
-        float baseReach = jcraft_attributes$getInternalFloat(instance, "moveDistance");
 
         // 1. Cooldown Calculation
         AttributeInstance cdrAttr = user.getAttribute(JAttributeRegistry.COOLDOWN_REDUCTION);
@@ -58,8 +52,7 @@ public abstract class AbstractMoveMixin {
         if (multAttr != null) durMult = multAttr.getValue();
 
         double durationBonus = 0;
-
-        String className = instance.getClass().getSimpleName();
+        String className = this.getClass().getSimpleName();
         if (className.contains("TimeStop")) {
             AttributeInstance tsAttr = user.getAttribute(JAttributeRegistry.TIME_STOP_DURATION);
             if (tsAttr != null) durationBonus = tsAttr.getValue();
@@ -89,8 +82,7 @@ public abstract class AbstractMoveMixin {
             hasStats = true;
         }
 
-        // 4. Damage Calculation (AbstractSimpleAttack and subclasses only)
-        float baseDamage = jcraft_attributes$getInternalFloat(instance, "damage");
+        // 4. Damage Calculation
         AttributeInstance sdAttr = user.getAttribute(JAttributeRegistry.STAND_DAMAGE);
         double sdBonus = (sdAttr != null) ? sdAttr.getValue() : 0.0;
         if (baseDamage > 0 && sdBonus != 0) {
@@ -106,45 +98,6 @@ public abstract class AbstractMoveMixin {
             MutableComponent newDescription = original.copy();
             newDescription.append(statsText);
             cir.setReturnValue(newDescription);
-
-            // Debug print for generated stats tooltip
-            // Note: The original instruction's `String stats = ...` and `cir.setReturnValue(originalDescription + stats);`
-            // would overwrite the carefully constructed MutableComponent.
-            // Instead, we'll just print the statsText that was appended.
         }
-    }
-
-    @Unique
-    private int jcraft_attributes$getInternalInt(Object obj, String fieldName) {
-        Class<?> current = obj.getClass();
-        while (current != null && current != Object.class) {
-            try {
-                Field f = current.getDeclaredField(fieldName);
-                f.setAccessible(true);
-                return f.getInt(obj);
-            } catch (NoSuchFieldException e) {
-                current = current.getSuperclass();
-            } catch (Exception e) {
-                break;
-            }
-        }
-        return 0;
-    }
-
-    @Unique
-    private float jcraft_attributes$getInternalFloat(Object obj, String fieldName) {
-        Class<?> current = obj.getClass();
-        while (current != null && current != Object.class) {
-            try {
-                Field f = current.getDeclaredField(fieldName);
-                f.setAccessible(true);
-                return f.getFloat(obj);
-            } catch (NoSuchFieldException e) {
-                current = current.getSuperclass();
-            } catch (Exception e) {
-                break;
-            }
-        }
-        return 0.0f;
     }
 }

@@ -34,7 +34,6 @@ import java.util.Map;
 public abstract class CommonStandComponentImplMixin implements JAttributesComponent {
 
     @Shadow @Final private net.minecraft.world.entity.Entity entity;
-    @Shadow private StandType type;
 
     @Unique
     private final Map<String, CompoundTag> jcraftAttributes_standAttributeMap = new HashMap<>();

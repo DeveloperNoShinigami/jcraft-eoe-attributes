@@ -1,81 +1,52 @@
 package com.bluelotuscoding.mixin.common;
 
+import com.bluelotuscoding.api.registry.JAttributeRegistry;
 import net.arna.jcraft.api.Attacks;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
 /**
  * Class: Attacks
  * Stand: Any
- * Purpose: Modifies damage and armor penetration based on stand attributes.
+ * Purpose: Intercepts the pre-armor damage value inside Attacks.damage() to apply
+ *          STAND_DAMAGE (flat bonus) and STAND_RESISTANCE (diminishing-returns reduction).
+ *          Uses @Redirect on getDamageThroughArmor so the rest of the original pipeline
+ *          (modifyAppliedDamage, applyAbsorptionAndStats) runs untouched.
  */
 @Mixin(value = Attacks.class, remap = false)
 public interface AttacksMixin {
 
-    /**
-     * @reason Add Stand Damage and Resistance attributes to the JCraft damage path.
-     */
-    @Overwrite
-    static void damage(@Nullable Entity attacker, float damage, DamageSource damageSource, LivingEntity ent) {
-        if (!net.arna.jcraft.common.util.JUtils.canDamage(damageSource, ent)) {
-            return;
-        }
+    @Redirect(
+        method = "damage(Lnet/minecraft/class_1297;FLnet/minecraft/class_1282;Lnet/minecraft/class_1309;)V",
+        at = @At(value = "INVOKE",
+                 target = "Lnet/arna/jcraft/common/util/JUtils;getDamageThroughArmor(FFF)F"),
+        remap = false
+    )
+    private static float jcraft_attributes$applyAttributesAndArmor(
+            float modified, float armor, float toughness,
+            @Nullable Entity attacker, float damage, DamageSource damageSource, LivingEntity ent) {
 
-        float baseDamage = damage;
-        
-        // --- Custom Attribute Logic (Stand Damage) ---
+        // STAND_DAMAGE — flat bonus from attacker's stand user, applied pre-armor
         if (attacker != null) {
             Entity user = net.arna.jcraft.common.util.JUtils.getUserIfStand(attacker);
             if (user instanceof LivingEntity livingUser) {
-                net.minecraft.world.entity.ai.attributes.AttributeInstance standDamageAttr = 
-                    livingUser.getAttribute(com.bluelotuscoding.api.registry.JAttributeRegistry.STAND_DAMAGE);
-                if (standDamageAttr != null) {
-                    baseDamage += (float) standDamageAttr.getValue();
-                }
-            }
-        }
-        // ---------------------------------------------
-
-        float scaling = ((net.arna.jcraft.common.util.IJCraftComboTracker) ent).jcraft$getDamageScaling();
-        float modified = baseDamage * scaling;
-
-        if (net.arna.jcraft.common.config.JServerConfig.HEALTH_TO_DAMAGE_SCALING.getValue()) {
-            float healthRatio = ent.getMaxHealth() / 20.0f;
-            float damageAdjustment = healthRatio - 1.0f;
-            if (damageAdjustment > 0.0f) {
-                modified *= (1.0f + damageAdjustment / 5.0f);
+                AttributeInstance sdAttr = livingUser.getAttribute(JAttributeRegistry.STAND_DAMAGE);
+                if (sdAttr != null && sdAttr.getValue() != 0)
+                    modified += (float) sdAttr.getValue();
             }
         }
 
-        // --- Custom Attribute Logic (Stand Resistance) ---
-        net.minecraft.world.entity.ai.attributes.AttributeInstance standResAttr = 
-            ent.getAttribute(com.bluelotuscoding.api.registry.JAttributeRegistry.STAND_RESISTANCE);
-        if (standResAttr != null && standResAttr.getValue() > 0) {
-            modified = (float) (modified * (1.0 / (1.0 + standResAttr.getValue())));
-        }
-        // -------------------------------------------------
+        // STAND_RESISTANCE — diminishing-returns reduction on victim, applied pre-armor
+        AttributeInstance srAttr = ent.getAttribute(JAttributeRegistry.STAND_RESISTANCE);
+        if (srAttr != null && srAttr.getValue() > 0)
+            modified = (float) (modified * (1.0 / (1.0 + srAttr.getValue())));
 
-        float armor = ent.getArmorValue();
-        float toughness = (float) ent.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.ARMOR_TOUGHNESS).getValue();
-
-        if (net.arna.jcraft.common.util.JUtils.getUserIfStand(attacker) instanceof net.minecraft.world.entity.player.Player player) {
-            player.awardStat(net.arna.jcraft.api.registry.JStatRegistry.RAW_DAMAGE.get(), (int)modified);
-        }
-
-        if (ent instanceof net.minecraft.world.entity.player.Player) {
-            armor = 20.0f;
-            toughness = 12.0f;
-        } else if (!(ent instanceof net.arna.jcraft.api.stand.StandEntity) && net.arna.jcraft.common.util.JUtils.getStand(ent) == null) {
-            modified *= net.arna.jcraft.common.config.JServerConfig.VS_STANDLESS_DAMAGE_MULTIPLIER.getValue();
-        }
-
-        modified = net.arna.jcraft.common.util.JUtils.getDamageThroughArmor(modified, armor * 0.9f, toughness * 0.9f);
-        modified = ((net.arna.jcraft.mixin.LivingEntityInvoker) ent).invokeModifyAppliedDamage(damageSource, modified);
-
-        Attacks.applyAbsorptionAndStats(modified, damageSource, ent);
+        return net.arna.jcraft.common.util.JUtils.getDamageThroughArmor(modified, armor, toughness);
     }
 }
