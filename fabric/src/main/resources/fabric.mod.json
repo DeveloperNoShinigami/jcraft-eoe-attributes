@@ -1,70 +1,36 @@
 {
   "schemaVersion": 1,
-  "id": "jcraft",
+  "id": "jcraft_attributes",
   "version": "${version}",
-  "name": "JCraft",
-  "description": "so yeah we wanted to add jojo stands to mc",
+  "name": "Jcraft Attributes",
+  "description": "Addon for JCraft that adds Stand Damage and Resistance attributes.",
   "authors": [
-    "Arna",
-    "Ayutac",
-    "PlanetTeamSpeak"
+    "bluelotuscoding"
   ],
   "contact": {
     "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/Arna577/jcraft-eoe/"
+    "sources": "https://github.com/FabricMC/fabric-example-mod"
   },
-  "license": "All Rights Reserved",
-  "icon": "assets/jcraft/icon.png",
+  "license": "CC0-1.0",
+  "icon": "assets/jcraft_attributes/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.arna.jcraft.fabric.JCraftFabric"
-    ],
-    "client": [
-      "net.arna.jcraft.fabric.client.JCraftFabricClient"
-    ],
-    "cardinal-components": [
-      "net.arna.jcraft.fabric.common.component.JComponents"
-    ],
-    "terrablender": [
-      "net.arna.jcraft.fabric.common.terrablender.JTerraFabric"
-    ],
-    "modmenu": [
-      "net.arna.jcraft.fabric.client.JModMenuIntegration"
-    ],
-    "fabric-datagen": [
-      "net.arna.jcraft.datagen.JDataGen"
+      "com.bluelotuscoding.fabric.JCraftAttributesFabric"
     ]
   },
-  "accessWidener": "jcraft.accesswidener",
   "mixins": [
-    "jcraft.mixins.json",
-    "jcraft-fabric.mixins.json"
+    "jcraft_attributes.mixins.json",
+    "jcraft_attributes.fabric.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.15.11",
+    "fabricloader": ">=0.18.4",
     "minecraft": "~1.20.1",
     "java": ">=17",
     "architectury": ">=9.2.14",
     "fabric-api": "*"
   },
-  "custom": {
-    "cardinal-components": [
-      "jcraft:gravity_direction",
-      "jcraft:stand",
-      "jcraft:spec",
-      "jcraft:ph",
-      "jcraft:cooldowns",
-      "jcraft:time_stop",
-      "jcraft:misc",
-      "jcraft:bomb_tracker",
-      "jcraft:grab",
-      "jcraft:hit_property",
-      "jcraft:shockwave_handler",
-      "jcraft:gravity_shift",
-      "jcraft:hamon",
-      "jcraft:vampire",
-      "jcraft:texas_hold_em"
-    ]
+  "suggests": {
+    "another-mod": "*"
   }
 }

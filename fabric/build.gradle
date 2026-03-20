@@ -7,10 +7,6 @@ architectury {
     fabric()
 }
 
-loom {
-    accessWidenerPath = project(":common").loom.accessWidenerPath
-}
-
 configurations {
     common {
         canBeResolved = true
@@ -32,62 +28,41 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
 
     // Fabric API. This is technically optional, but you probably want it anyway.
-    modImplementation "net.fabricmc.fabric-api:fabric-api:$rootProject.fabric_api_version"
+    modApi "net.fabricmc.fabric-api:fabric-api:$rootProject.fabric_api_version"
 
     // Architectury API. This is optional, and you can comment it out if you don't need it.
     modImplementation "dev.architectury:architectury-fabric:$rootProject.architectury_api_version"
 
-    common(project(path: ':common', configuration: 'namedElements')) { transitive false }
-    shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
+    common(project(path: ':jcraft-attributes-common', configuration: 'namedElements')) { transitive = false }
+    shadowBundle project(path: ':jcraft-attributes-common', configuration: 'transformProductionFabric')
 
-    // AzureLib
-    include modImplementation("mod.azure.azurelib:azurelib-fabric-${minecraft_version}:${azurelib_version}")
+    // JCraft Base Mod (Fabric — 0.17.6)
+    modImplementation "curse.maven:jcraft-eyes-of-ender-854974:7290801"
 
-    //Player Anim
-    include modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${rootProject.player_anim_version}")
+    // JCraft runtime dependencies
+    modImplementation "mod.azure.azurelib:azurelib-fabric-1.20.1:${rootProject.azurelib_version}"
+    modImplementation "dev.kosmx.player-anim:player-animation-lib-fabric:${rootProject.player_anim_version}"
+    modRuntimeOnly "curse.maven:terrablender-fabric-565956:5008701"
 
-    // Terrablender
-    include modImplementation("com.github.glitchfiend:TerraBlender-fabric:${minecraft_version}-${terrablender_version}")
+    // Cardinal Components API (Required by JCraft)
+    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.2.2"
+    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.2.2"
+    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-world:5.2.2"
 
-    // Trimmed
-    include modImplementation("maven.modrinth:trimmed:${minecraft_version}-${trimmed_version}+fabric")
+    // Cloth Config for Fabric
+    modApi "me.shedaniel.cloth:cloth-config-fabric:11.1.118"
 
-    //CCA
-    include modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.2.2")
-    include modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.2.2")
-    include modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-world:5.2.2")
-
-    //Cloth
-    include modApi("me.shedaniel.cloth:cloth-config-fabric:11.1.118")
-
-    //Modmenu
-    modApi "com.terraformersmc:modmenu:7.2.2"
-
-    //modImplementation "com.fusionflux:gravity_api-fabric-${gravity_api_version}"
-
-    modRuntimeOnly "com.ptsmods:devlogin:3.5"
-}
-
-tasks.register("copyAccessWidener", Copy) {
-    from(project(":common").file("src/main/resources/jcraft.accesswidener"))
-    into(sourceSets.named("main").get().resources.srcDirs.first())
+    // NightConfig dependencies
+    modImplementation "com.electronwill.night-config:core:3.6.6"
+    modImplementation "com.electronwill.night-config:toml:3.6.6"
 }
 
 processResources {
-    dependsOn("copyAccessWidener")
-    inputs.property "version", project.version
+    inputs.property 'version', project.version
 
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version
+    filesMatching('fabric.mod.json') {
+        expand version: inputs.properties.version
     }
-}
-
-sourcesJar {
-    dependsOn "copyAccessWidener"
-    duplicatesStrategy DuplicatesStrategy.EXCLUDE // Ignore duplicate jcraft.accesswidener files
-    def commonSources = project(":common").sourcesJar
-    dependsOn commonSources
-    from commonSources.archiveFile.map { zipTree(it) }
 }
 
 shadowJar {
@@ -96,5 +71,5 @@ shadowJar {
 }
 
 remapJar {
-    input.set shadowJar.archiveFile
+    inputFile.set shadowJar.archiveFile
 }

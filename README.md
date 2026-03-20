@@ -1,8 +1,32 @@
-license is all rights reserved
-all code is intellectual property of the JCraft team, and specifically me, lord me.
+# JCraft Attributes
 
-## Translations
-[![Translation status](https://i18n.jcraft-eoe.com/widget/jcraft/svg-badge.svg)](https://i18n.jcraft-eoe.com/engage/jcraft/)  
-You can contribute translations to this project over at [Weblate](https://i18n.jcraft-eoe.com/projects/jcraft/translations/).
-To get permissions to manage a language, please contact PlanetTeamSpeak in the [JCraft Discord](https://discord.gg/mFRbQmqrmc).
-Users without special permissions can only suggest translations, which will be reviewed by the translation team.
+A modular attribute extension for **JCraft: Eyes of Ender** (v0.17.6).
+Adds 24 custom Stand attributes covering combat, positioning, move scaling, and ability-specific tuning.
+
+---
+
+## Documentation
+
+| Document | Description |
+|---|---|
+| [Features](docs/features.md) | Full list of what this mod adds and how each system works |
+| [Attributes](docs/attributes.md) | Every attribute — ID, type, formula, and default |
+| [Commands](docs/commands.md) | All commands and how to apply attribute modifiers |
+
+---
+
+## Requirements
+
+| Mod | Version |
+|---|---|
+| JCraft: Eyes of Ender | 0.17.6 |
+
+> **Forge support is coming soon.**  The forge base is pratically built but untested at the moment.
+
+---
+
+*Developed by bluelotuscoding — addon for JCraft: Eyes of Ender by Arna. [CurseForge](https://www.curseforge.com/minecraft/mc-mods/jcraft-eyes-of-ender) · [Modrinth](https://modrinth.com/mod/jojo-eyes-of-ender)*
+
+---
+
+[Home](README.md) · [Next: Features →](docs/features.md)

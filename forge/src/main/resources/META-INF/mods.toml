@@ -1,57 +1,41 @@
 modLoader = "javafml"
 loaderVersion = "[47,)"
 #issueTrackerURL = ""
-license = "All Rights Reserved"
+license = "Insert License Here"
 
 [[mods]]
-modId = "jcraft"
-logoFile= "assets/jcraft/icon.png"
-logoBlur=false
+modId = "jcraft_attributes"
 version = "${version}"
-displayName = "JCraft"
-authors = "Arna, Ayutac, PlanetTeamSpeak"
+displayName = "Jcraft Attributes"
+authors = "bluelotuscoding"
 description = '''
-so yeah we wanted to add jojo stands to mc
+Addon for JCraft: Eyes of Ender that adds a modular Stand attribute system covering combat, positioning, move scaling, and ability-specific tuning.
 '''
 
-[[dependencies.jcraft]]
+[[dependencies.jcraft_attributes]]
 modId = "forge"
 mandatory = true
-versionRange = "[47.4,)"
+versionRange = "[47,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.jcraft]]
+[[dependencies.jcraft_attributes]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.20.1,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.jcraft]]
+[[dependencies.jcraft_attributes]]
 modId = "architectury"
 mandatory = true
 versionRange = "[9.2.14,)"
 ordering = "AFTER"
 side = "BOTH"
 
-[[dependencies.jcraft]]
-modId = "azurelib"
+[[dependencies.jcraft_attributes]]
+modId = "jcraft"
 mandatory = true
-versionRange = "[1.3.2,)"
-ordering = "AFTER"
-side = "BOTH"
-
-[[dependencies.jcraft]]
-modId = "playeranimator"
-mandatory = true
-versionRange = "[1.0.2-rc1+1.20,)"
-ordering = "AFTER"
-side = "CLIENT"
-
-[[dependencies.jcraft]]
-modId = "cloth_config"
-mandatory = true
-versionRange = "[11.1.118,)"
+versionRange = "[0.17.6,)"
 ordering = "AFTER"
 side = "BOTH"

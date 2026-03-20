@@ -1,0 +1,28 @@
+{
+  "required": true,
+  "package": "com.bluelotuscoding.mixin.common",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "CommonStandComponentImplMixin",
+    "AttacksMixin",
+    "AttributeSupplierBuilderMixin",
+    "StandEntityMixin",
+    "MobEntityAttributesMixin",
+    "IAttackerMixin",
+    "AbstractMoveMixin",
+    "CommonCooldownsComponentImplMixin",
+    "AbstractSimpleAttackMixin",
+    "AbstractChargeAttackMixin",
+    "AbstractTimeStopMoveMixin",
+    "TimeAccelerationMoveMixin",
+    "TimeEraseMoveMixin",
+    "RewindMoveMixin",
+    "EraseSpaceAttackMixin",
+    "ConsumeAttackMixin",
+    "AboutStandCommandMixin",
+    "LivingEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -2,9 +2,6 @@ plugins {
     id 'dev.architectury.loom' version '1.9-SNAPSHOT' apply false
     id 'architectury-plugin' version '3.4-SNAPSHOT'
     id 'com.gradleup.shadow' version '8.3.7' apply false
-    id 'io.freefair.lombok' version '8.13.1'
-    id 'maven-publish'
-    id 'signing'
 }
 
 architectury {
@@ -12,8 +9,6 @@ architectury {
 }
 
 allprojects {
-    apply plugin: "architectury-plugin"
-
     group = rootProject.maven_group
     version = rootProject.mod_version
 }
@@ -22,17 +17,16 @@ subprojects {
     apply plugin: 'dev.architectury.loom'
     apply plugin: 'architectury-plugin'
     apply plugin: 'maven-publish'
-    apply plugin: 'com.gradleup.shadow'
-    apply plugin: 'signing'
 
     base {
-        // Set up a suffixed format for the mod jar names, e.g. `example-fabric`.
-        archivesName = "$rootProject.archives_name-$project.name"
+        // Set up the mod jar names.
+        // project.name is already 'jcraft-attributes-fabric', etc.
+        archivesName = project.name
     }
 
     repositories {
         mavenCentral()
-
+        mavenLocal()
         maven { url 'https://maven.azuredoom.com/mods' }
         maven {
             name = 'GeckoLib'
@@ -53,25 +47,19 @@ subprojects {
             name = "Modrinth"
             url = "https://api.modrinth.com/maven"
         }
-        maven {
-            url "https://cursemaven.com"
-        }
-        maven {
-            url = "https://maven.minecraftforge.net/"
-        }
+        maven { url "https://cursemaven.com" }
+        maven { url = "https://maven.minecraftforge.net/" }
     }
 
     dependencies {
         minecraft "net.minecraft:minecraft:$rootProject.minecraft_version"
         mappings loom.layered() {
             officialMojangMappings()
-            parchment("org.parchmentmc.data:parchment-${project.minecraft_version}:${project.parchment_mappings}@zip")
+            // parchment("org.parchmentmc.data:parchment-${project.minecraft_version}:${project.parchment_mappings}@zip")
         }
-        compileOnly "com.google.guava:guava:32.1.2-jre" // To make TypeToken not 'unstable' :)
-        runtimeOnly "org.joml:joml:1.10.4"
 
-        compileOnly 'org.projectlombok:lombok:1.18.32'
-        annotationProcessor 'org.projectlombok:lombok:1.18.32'
+        compileOnly "org.projectlombok:lombok:${rootProject.lombok_version}"
+        annotationProcessor "org.projectlombok:lombok:${rootProject.lombok_version}"
     }
 
     java {
@@ -88,14 +76,9 @@ subprojects {
         it.options.release = 17
     }
 
-    tasks.withType(org.gradle.jvm.tasks.Jar).configureEach {
-        it.zip64 = true // Enable ZIP64 for large JARs
-    }
-
     // Configure Maven publishing.
     publishing {
         publications {
-            //noinspection GroovyAssignabilityCheck
             mavenJava(MavenPublication) {
                 artifactId = base.archivesName.get()
                 from components.java
@@ -104,19 +87,10 @@ subprojects {
 
         // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
         repositories {
-            maven {
-                name = 'planetMaven'
-                url = 'https://maven-up.jcraft-eoe.com/releases/'
-                credentials(org.gradle.api.credentials.PasswordCredentials)
-                authentication {
-                    //noinspection GroovyAssignabilityCheck
-                    basic(BasicAuthentication)
-                }
-            }
+            // Add repositories to publish to here.
+            // Notice: This block does NOT have the same function as the block in the top level.
+            // The repositories here will be used for publishing your artifact, not for
+            // retrieving dependencies.
         }
-    }
-
-    signing {
-        sign publishing.publications.mavenJava
     }
 }

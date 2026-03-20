@@ -1,16 +1,19 @@
 pluginManagement {
     repositories {
-        maven { url "https://maven.fabricmc.net/" }
-        maven { url "https://maven.architectury.dev/" }
-        maven { url "https://files.minecraftforge.net/maven/" }
+        maven { url = 'https://maven.fabricmc.net/' }
+        maven { url = 'https://maven.architectury.dev/' }
+        maven { url = 'https://files.minecraftforge.net/maven/' }
         gradlePluginPortal()
     }
 }
 
-rootProject.name = 'jcraft'
+rootProject.name = 'jcraft_eoe_attributes'
 
-include 'common'
-include 'fabric'
-include 'forge'
-include 'datagen'
-include 'datagen:api'
+include 'jcraft-attributes-common'
+project(':jcraft-attributes-common').projectDir = file('common')
+
+include 'jcraft-attributes-fabric'
+project(':jcraft-attributes-fabric').projectDir = file('fabric')
+
+include 'jcraft-attributes-forge'
+project(':jcraft-attributes-forge').projectDir = file('forge')

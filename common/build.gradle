@@ -2,18 +2,6 @@ architectury {
     common rootProject.enabled_platforms.split(',')
 }
 
-loom {
-    accessWidenerPath = file("src/main/resources/jcraft.accesswidener")
-}
-
-sourceSets {
-    main {
-        resources {
-            srcDirs("src/main/generated")
-        }
-    }
-}
-
 dependencies {
     // We depend on Fabric Loader here to use the Fabric @Environment annotations,
     // which get remapped to the correct annotations on each platform.
@@ -23,28 +11,10 @@ dependencies {
     // Architectury API. This is optional, and you can comment it out if you don't need it.
     modImplementation "dev.architectury:architectury:$rootProject.architectury_api_version"
 
-    // AzureLib
-    modImplementation "mod.azure.azurelib:azurelib-fabric-${minecraft_version}:${azurelib_version}"
+    // JCraft Base Mod — compile against Fabric variant for common module (0.17.6)
+    modImplementation "curse.maven:jcraft-eyes-of-ender-854974:7290801"
 
-    //Player Anim
-    modImplementation "dev.kosmx.player-anim:player-animation-lib:${rootProject.player_anim_version}"
-    modImplementation "dev.kosmx.player-anim:anim-core:${rootProject.player_anim_version}"
-
-
-    //Cloth
-    modApi "me.shedaniel.cloth:cloth-config:11.1.118"
-
-    //modImplementation "com.fusionflux:gravity_api-common-${gravity_api_version}"
-
-    // JUnit for testing
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-}
-
-shadowJar {
-    enabled = false // Disable the massive, useless shadow jar that Loom creates by default.
-}
-
-test {
-    useJUnitPlatform()
+    // API Dependencies referenced by JCraft
+    modImplementation "curse.maven:azurelib-817423:7371537"
+    modImplementation "curse.maven:playeranimator-658587:4587215"
 }
