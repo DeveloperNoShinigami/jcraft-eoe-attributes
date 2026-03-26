@@ -39,6 +39,8 @@ All attributes support the standard Minecraft three-slot modifier system:
 | `jcraft_attributes:knockback_modifier` | Flat | −10 – 10 | `0.0` | `finalKB = base + getValue()` |
 | `jcraft_attributes:block_stun_reduction` | Flat | −1024 – 1024 | `0.0` | `finalStun = base − getValue()` |
 | `jcraft_attributes:attack_range_bonus` | Flat | 0.0 – 32 | `0.0` | `finalRange = base + getValue()` |
+| `jcraft_attributes:windup_reduction` | Ratio | 0.0 – 1.0 | `0.0` | *Placeholder for future implementation* |
+
 
 ---
 

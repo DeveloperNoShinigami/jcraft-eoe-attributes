@@ -120,6 +120,8 @@ Returns the fully-computed final value including all active modifiers.
 | Knockback Modifier | `jcraft_attributes:knockback_modifier` |
 | Block Stun Reduction | `jcraft_attributes:block_stun_reduction` |
 | Attack Range Bonus | `jcraft_attributes:attack_range_bonus` |
+| Windup Reduction | `jcraft_attributes:windup_reduction` |
+
 | Time Stop Duration | `jcraft_attributes:time_stop_duration` |
 | Acceleration Duration | `jcraft_attributes:accel_duration` |
 | Erasure Duration | `jcraft_attributes:erasure_duration` |

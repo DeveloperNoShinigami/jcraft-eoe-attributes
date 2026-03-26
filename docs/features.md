@@ -53,6 +53,11 @@ Flat subtraction from the base stun value. Negative values increase stun.
 Extends the melee hitbox reach of moves.
 Flat addition to the `moveDistance` field used for hit detection.
 
+### Windup Reduction (`jcraft_attributes:windup_reduction`)
+*Current Placeholder.* Intended to reduce the "startup" time of Stand moves. 
+Maintained in the registry to ensure technical stability with existing player data.
+
+
 ---
 
 ## Specialized Ability Stats
