@@ -68,6 +68,21 @@ Example with `stand_damage`, base `0.0`:
 - MULTIPLY_BASE `+0.2` → `5.0 × 1.2 = 6.0`
 - MULTIPLY_TOTAL `+0.5` → `6.0 × 1.5 = 9.0`
 
+
 ---
+
+## Technical Implementation: Per-Stand Persistence
+
+To ensure each Stand has its own unique progression, the mod uses a **Snapshotted NBT System**:
+
+1. **Storage**: Attribute data is stored in the `CommonStandComponent` under the key `jcraft_attributes_StandData`.
+2. **Isolation**: When a player swaps stands (e.g., from *The World* to *Cream*):
+    - The current attributes are "snapshotted" and saved to the NBT entry for the old Stand.
+    - The attributes for the new Stand are "restored" from its own NBT entry.
+    - This allows for independent stat scaling (e.g., +50 damage on one Stand, but +0 on another).
+3. **Persistence**: These values are saved to the player's `level.dat` and automatically synchronized between the server and the client during stand swaps.
+
+> [!NOTE]
+> The `windup_reduction` attribute is maintained in the registry as a placeholder to ensure backward compatibility with older save files.
 
 [← Previous: Features](features.md) · [Home](../README.md) · [Next: Commands →](commands.md)
